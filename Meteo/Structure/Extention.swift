@@ -26,7 +26,7 @@ extension String {
 }
     
     func lessSpaces(citta : String) -> String{
-        var indice = 0
+        //var indice = 0
         for i in citta {
             if i == " "{
                 

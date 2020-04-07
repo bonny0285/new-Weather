@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
+   uuid = "A40D84D4-E653-4EF3-B45B-2BBACDD8F67D"
    type = "0"
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "6E0356FC-50AC-41FF-A486-FF61C65D73FE"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -17,38 +19,6 @@
             endingLineNumber = "14"
             landmarkName = "unknown"
             landmarkType = "0">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "globalinit_33_18C67A11DFA52CE984D992AA5F9ED127_func0"
-                  moduleName = "Meteo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/massimiliano/Desktop/Weather%20Update/Meteo/Meteo/Structure/JSON_CITY.swift"
-                  timestampString = "581277649.711923"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "14"
-                  endingLineNumber = "14"
-                  offsetFromSymbolStart = "58">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Meteo.json.unsafeMutableAddressor : Swift.Optional&lt;Foundation.Data&gt;"
-                  moduleName = "Meteo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/massimiliano/Desktop/Weather%20Update/Meteo/Meteo/Structure/JSON_CITY.swift"
-                  timestampString = "581277649.714895"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "14"
-                  endingLineNumber = "14"
-                  offsetFromSymbolStart = "4">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
