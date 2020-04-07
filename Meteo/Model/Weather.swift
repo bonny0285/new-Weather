@@ -9,6 +9,7 @@
 import UIKit
 
 
+//MARK: - WeatherStruct
 public struct WeatherStruct{
     var nome: String
     var population: Int

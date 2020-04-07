@@ -11,17 +11,21 @@ import Alamofire
 import SwiftyJSON
 
 
+
 public protocol WeatherDelegate: class {
     func getData(weather: WeatherStruct)
     func getDataForCell(weather: [WeatherCell])
 }
 
 
+//MARK: - WeatherModel
 public struct WeatherModel{
     
-    
+//MARK: - Var Delegate
     public static var delegate: WeatherDelegate?
     
+    
+//MARK: - GetMyWeatherData
     public static func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double){
         print(#function)
         
@@ -46,7 +50,7 @@ public struct WeatherModel{
     }
     
     
-    
+//MARK: - ParseJSON
    static func parseJSON(forJSON json: JSON) -> WeatherStruct{
     print(#function)
     let name = "\(json[0]["city"]["name"])" ?? ""
@@ -61,7 +65,7 @@ public struct WeatherModel{
     
     
     
-    
+//MARK: - WeatherJSONForCell
     static func weatherJSONForCell(forJSON json: JSON) -> [WeatherCell]{
         
         let list = json[0]["list"]
@@ -80,7 +84,8 @@ public struct WeatherModel{
         return myArray
     }
     
-    
+  
+//MARK: - GetMyWeatherDataByCity
     public static func getMyWeatherDataByCity(forCity city: String){
         
         guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric&q=\(city)") else { return }
@@ -99,7 +104,10 @@ public struct WeatherModel{
             }
         }
     }
+ 
     
+    
+//MARK: - GetCoordinate
     static func getCoordinate(forJSON json: JSON) -> (Double,Double){
         let latitude = Double("\(json[0]["coord"]["lat"])") ?? 0.0
         let longitude = Double("\(json[0]["coord"]["lon"])") ?? 0.0
@@ -107,6 +115,9 @@ public struct WeatherModel{
         return coordinate
     }
     
+    
+    
+ //MARK: - ParseJSONByCity
     static func parseJSONByCity(forJSON json: JSON) -> WeatherStruct{
         
         let name = json[0]["name"]
@@ -120,7 +131,7 @@ public struct WeatherModel{
     
     
     
-    
+//MARK: - SetImageBackground
     public static func setImageBackground(forID id: Int) -> String{
         
         switch id {

@@ -8,9 +8,11 @@
 
 import UIKit
 
-
+//MARK: - MyAlert
 public struct MyAlert{
     
+    
+//MARK: - AlertError
     public static func alertError(forError error: String, forViewController controller: UIViewController){
         let controller = UIAlertController(title: "Attention !!!", message: "\(error)", preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)

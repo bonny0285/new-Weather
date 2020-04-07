@@ -8,6 +8,7 @@
 
 import UIKit
 
+//MARK: - WeatherTableViewCell
 class WeatherTableViewCell: UITableViewCell {
     
     @IBOutlet weak var weatherImage: UIImageView!
@@ -17,7 +18,7 @@ class WeatherTableViewCell: UITableViewCell {
     @IBOutlet weak var weatherDescription: UILabel!
     
     
-    
+//MARK: - SetupCell
     func setupCell(forWeather weather: WeatherCell,forBackground background: String){
         
         temperatureMax.text = "Temp Max: \(weather.temperatureMax)"
@@ -39,7 +40,7 @@ class WeatherTableViewCell: UITableViewCell {
 
     
     
-    
+//MARK: - StringDateString
     func stringDateString(forString string: String) -> String{
         let dateFormatter1 = DateFormatter()
         dateFormatter1.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -53,7 +54,7 @@ class WeatherTableViewCell: UITableViewCell {
     
     
     
-    
+//MARK: - SetColorUIViewForBackground
     func setColorUIViewForBackground(forCell cell : WeatherTableViewCell,forBackground backgroundImage: String){
             
             switch backgroundImage {

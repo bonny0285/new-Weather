@@ -8,6 +8,7 @@
 
 import UIKit
 
+//MARK: - WeatherCell
 public struct WeatherCell{
     
     var temperatureMax: Double
