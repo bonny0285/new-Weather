@@ -37,11 +37,12 @@ public struct WeatherModel{
             case .success(let value):
                 
                 let json: JSON = JSON(arrayLiteral: value)
-                print(json)
+                debugPrint(json)
                 let weather = parseJSON(forJSON: json)
                 delegate?.getData(weather: weather)
                 let weatherCell = weatherJSONForCell(forJSON: json)
                 delegate?.getDataForCell(weather: weatherCell)
+                
             case .failure(let error):
                 print(error.localizedDescription)
                 MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
@@ -70,6 +71,7 @@ public struct WeatherModel{
         
         let list = json[0]["list"]
         var myArray : [WeatherCell] = []
+
         
         for i in 0 ... list.count - 1{
             let temperatureMax = Double("\(json[0]["list"][i]["main"]["temp_max"])")!
@@ -177,4 +179,18 @@ public struct WeatherModel{
     
     
     
+}
+
+extension WeatherModel {
+    enum WeatherCondition: String {
+        case tempesta = "tempesta"
+        case tempesta1 = "tempesta1"
+        case tempesta2 = "tempesta2"
+        case tempesta3 = "tempesta3"
+        case pioggia = "pioggia"
+        case neve = "neve"
+        case nebbia = "nebbia"
+        case sole = "sole"
+        case nuvole = "nuvole"
+    }
 }

@@ -302,7 +302,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
         
         
         cell.setupCell(forWeather: arrayForCell[indexPath.row], forBackground: weatherBackground)
-            
+        
         
         return cell
     }
