@@ -28,6 +28,9 @@ extension WeatherDataSource {
     struct DataOrganizer {
         
         let weathers: [WeatherCell]
+        var weatherCounting: Int {
+            weathers.count
+        }
         
         var weatherCount: Int {
             weathers.count

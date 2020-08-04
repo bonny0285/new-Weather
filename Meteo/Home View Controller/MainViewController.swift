@@ -23,7 +23,6 @@ class MainViewController: UIViewController {
     @IBOutlet weak var weatherTemperatureLabel: UILabel!
     @IBOutlet weak var myStackView: UIStackView!
     @IBOutlet weak var currentLocationButton: UIButton!
-    @IBOutlet weak var searchLocationTextField: UITextField!
     @IBOutlet weak var searchLocationButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var backgroundImage: UIImageView!
@@ -47,8 +46,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //loadingBar.startAnimating()
-        searchLocationTextField.isHidden = true
+        searchLocationButton.isHidden = true
         tableView.isHidden = true
         
         if #available(iOS 13.0, *) {
@@ -69,7 +67,6 @@ class MainViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        searchLocationTextField.delegate = self
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
@@ -113,8 +110,9 @@ class MainViewController: UIViewController {
     
     
     @IBAction func searchLocationButtonWasPressed(_ sender: UIButton) {
-
-        searchLocationTextField.endEditing(true)
+        loadingBar.isHidden = false
+        loadingBar.startAnimating()
+        self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)
         
     }
     
@@ -129,8 +127,6 @@ class MainViewController: UIViewController {
         switch backgroundImage {
         case "tempesta":
             print("Tempesta")
-            searchLocationTextField.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            searchLocationTextField.attributedPlaceholder = NSAttributedString(string:"Type something here!", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
             cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -141,11 +137,9 @@ class MainViewController: UIViewController {
             gradiClabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         case "pioggia":
             print("pioggia")
-            searchLocationTextField.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            searchLocationTextField.attributedPlaceholder = NSAttributedString(string:"Type something here!", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
             weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -153,9 +147,7 @@ class MainViewController: UIViewController {
             gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         case "neve":
             print("Neve")
-            searchLocationTextField.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             self.backgroundImage.alpha = 0.8
-            searchLocationTextField.attributedPlaceholder = NSAttributedString(string:"Type something here!", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
             cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -176,8 +168,6 @@ class MainViewController: UIViewController {
             gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         case "sole":
             print("Sole")
-            searchLocationTextField.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            searchLocationTextField.attributedPlaceholder = NSAttributedString(string:"Type something here!", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
             cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -188,8 +178,6 @@ class MainViewController: UIViewController {
             gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         case "nuvole":
             print("Nuvole")
-            searchLocationTextField.attributedPlaceholder = NSAttributedString(string:"Type something here!", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
-            searchLocationTextField.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -233,7 +221,8 @@ extension MainViewController: CLLocationManagerDelegate{
             self.loadingBar.isHidden = true
             self.myStackView.isHidden = false
             self.tableView.isHidden = false
-            self.searchLocationTextField.isHidden = false
+            self.searchLocationButton.isHidden = false
+//            self.searchLocationTextField.isHidden = false
             self.cityNameLabel.text = weather.nome
             self.populationLabel.text = "Population: \(weather.population)"
             self.weatherTemperatureLabel.text = weather.temperatureString
@@ -259,57 +248,6 @@ extension MainViewController: CLLocationManagerDelegate{
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
-    }
-    
-}
-
-
-//MARK: - UITextFieldDelegate
-extension MainViewController: UITextFieldDelegate{
-    
-    
-    //Delegate comunicate when the user tap "GO" on the keyboard
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        searchLocationTextField.endEditing(true)
-        return true
-    }
-    
-    //Delegate comunicate when you have finished to type and clean the TextField
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        
-        if let city = searchLocationTextField.text{
-            self.loadingBar.isHidden = true
-            self.loadingBar.startAnimating()
-            
-            fetchWeather.getJSONFromList(city: city, completion: {cities in
-                if cities.count > 1 {
-                    self.performSegue(withIdentifier: "ShowCitiesList", sender: cities)
-                } else if cities.count == 1 {
-                    self.fetchWeather.getMyWeatherData(forLatitude: cities[0].coord.lat, forLongitude: cities[0].coord.lon) { (weather, weatherCell) -> (Void)? in
-                        
-                        self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
-                    }
-                }
-            })
-            
-            self.fetchWeather.getMyWeatherDataByCity(forCity: city, completion: { weather, weatherCell in
-                
-                self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
-
-            })
-        }
-        searchLocationTextField.text = ""
-        searchLocationTextField.endEditing(true)
-    }
-    
-    
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if searchLocationTextField.text != "" {
-            return true
-        } else {
-            searchLocationTextField.placeholder = "Type something here!"
-            return false
-        }
     }
     
 }
@@ -341,8 +279,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
     
     
 }
-
-
 
 
 
