@@ -17,6 +17,7 @@
 		704F7AA224D86A99008359D7 /* CitiesListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F7AA024D86A99008359D7 /* CitiesListTableViewCell.swift */; };
 		704F7AA324D86A99008359D7 /* CitiesListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 704F7AA124D86A99008359D7 /* CitiesListTableViewCell.xib */; };
 		704F7AA524D86ABB008359D7 /* CitiesListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F7AA424D86ABB008359D7 /* CitiesListDataSource.swift */; };
+		704F7AAA24D9590A008359D7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 704F7AAC24D9590A008359D7 /* Localizable.strings */; };
 		B408AC8D229AB56B0000AE68 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B408AC8C229AB56B0000AE68 /* AppDelegate.swift */; };
 		B408AC92229AB56B0000AE68 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B408AC90229AB56B0000AE68 /* Main.storyboard */; };
 		B408AC94229AB56E0000AE68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B408AC93229AB56E0000AE68 /* Assets.xcassets */; };
@@ -55,6 +56,12 @@
 		704F7AA024D86A99008359D7 /* CitiesListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesListTableViewCell.swift; sourceTree = "<group>"; };
 		704F7AA124D86A99008359D7 /* CitiesListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CitiesListTableViewCell.xib; sourceTree = "<group>"; };
 		704F7AA424D86ABB008359D7 /* CitiesListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesListDataSource.swift; sourceTree = "<group>"; };
+		704F7AA624D9589B008359D7 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
+		704F7AA724D9589B008359D7 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		704F7AAB24D9590A008359D7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		704F7AAD24D95911008359D7 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		704F7AAF24D95923008359D7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		704F7AB124D95928008359D7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		85784B4ACB37652E0E8E4C72 /* Pods-Meteo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Meteo.release.xcconfig"; path = "Target Support Files/Pods-Meteo/Pods-Meteo.release.xcconfig"; sourceTree = "<group>"; };
 		868F8561D8325E5FA3F93332 /* Pods-MeteoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeteoTests.debug.xcconfig"; path = "Target Support Files/Pods-MeteoTests/Pods-MeteoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8E41C07D4A7AF13386E51144 /* Pods_Meteo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Meteo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +138,7 @@
 		B408AC80229AB56B0000AE68 = {
 			isa = PBXGroup;
 			children = (
+				704F7AAC24D9590A008359D7 /* Localizable.strings */,
 				B408AC8B229AB56B0000AE68 /* Meteo */,
 				B408ACA0229AB56E0000AE68 /* MeteoTests */,
 				B408AC8A229AB56B0000AE68 /* Products */,
@@ -294,6 +302,7 @@
 			knownRegions = (
 				en,
 				Base,
+				it,
 			);
 			mainGroup = B408AC80229AB56B0000AE68;
 			productRefGroup = B408AC8A229AB56B0000AE68 /* Products */;
@@ -312,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B408AC97229AB56E0000AE68 /* LaunchScreen.storyboard in Resources */,
+				704F7AAA24D9590A008359D7 /* Localizable.strings in Resources */,
 				704F7AA324D86A99008359D7 /* CitiesListTableViewCell.xib in Resources */,
 				704F7A9B24D862F4008359D7 /* cityList.json in Resources */,
 				B408AC94229AB56E0000AE68 /* Assets.xcassets in Resources */,
@@ -436,10 +446,21 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		704F7AAC24D9590A008359D7 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				704F7AAB24D9590A008359D7 /* en */,
+				704F7AAD24D95911008359D7 /* it */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		B408AC90229AB56B0000AE68 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				B408AC91229AB56B0000AE68 /* Base */,
+				704F7AA624D9589B008359D7 /* it */,
+				704F7AAF24D95923008359D7 /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -448,6 +469,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				B408AC96229AB56E0000AE68 /* Base */,
+				704F7AA724D9589B008359D7 /* it */,
+				704F7AB124D95928008359D7 /* en */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -459,6 +482,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -520,6 +544,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

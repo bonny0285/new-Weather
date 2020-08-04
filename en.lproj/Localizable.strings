@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  Meteo
+
+  Created by Massimiliano Bonafede on 04/08/2020.
+  Copyright © 2020 Massimiliano Bonafede. All rights reserved.
+*/
+
+
+"population_label" = "Population: ";

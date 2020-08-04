@@ -13,10 +13,10 @@ import CoreLocation
 
 
 class MainViewController: UIViewController {
-
+    
     
     //MARK: - Outlets
-
+    
     @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var populationLabel: UILabel!
     @IBOutlet weak var weatherImage: UIImageView!
@@ -32,20 +32,54 @@ class MainViewController: UIViewController {
     
     
     //MARK: - Properties
-
+    
     let locationManager = CLLocationManager()
     var arrayForCell: [WeatherCell] = []
     var weatherBackground: String = ""
     var fetchWeather = FetchWeather()
     var getResult: CitiesList?
+    var language: String = ""
     
+    var coverView: UIView {
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        
+        self.view.addSubview(backgroundView)
+        
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        
+        backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        backgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.color = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        if #available(iOS 13.0, *) {
+            debugPrint("iOS 13.0 is available")
+            activityIndicator.startAnimating()
+            activityIndicator.style = .large
+            self.overrideUserInterfaceStyle = .light
+        } else {
+            debugPrint("iOS 13.0 is not available")
+            activityIndicator.startAnimating()
+            activityIndicator.style = .white
+        }
+        
+        backgroundView.addSubview(activityIndicator)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor).isActive = true
+        activityIndicator.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
+        return backgroundView
+    }
     
     
     //MARK: - Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         searchLocationButton.isHidden = true
         tableView.isHidden = true
         
@@ -71,7 +105,8 @@ class MainViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         
-
+        language = Locale.current.languageCode!
+        
         myStackView.isHidden = true
     }
     
@@ -80,45 +115,43 @@ class MainViewController: UIViewController {
         super.viewWillAppear(animated)
         if let city = getResult {
             fetchWeather.getMyWeatherData(forLatitude: city.coord.lat, forLongitude: city.coord.lon) {(weather, weatherCell) in
-               
+                
                 self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
             }
-
+            
         }
     }
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        locationManager.stopUpdatingLocation()
+    }
     
     
     //MARK: - Navigation
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowCitiesList" {
             if let controller = segue.destination as? CitiesListViewController {
                 controller.citiesResult = sender as? [CitiesList]
+                
             }
         }
     }
     
     
-     @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {}
+    @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {}
     
     //MARK: - Actions & Functions
-
+    
     @IBAction func currentLocationButtonWasPressed(_ sender: UIButton) {
-        locationManager.requestLocation()
+        self.locationManager.requestLocation()
     }
     
     
     @IBAction func searchLocationButtonWasPressed(_ sender: UIButton) {
-        loadingBar.isHidden = false
-        loadingBar.startAnimating()
         self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)
-        
     }
-    
-    
-
-    
     
     
     
@@ -192,8 +225,8 @@ class MainViewController: UIViewController {
     }
     
     
-
-
+    
+    
 }
 
 //MARK: - CLLocationManagerDelegate
@@ -206,12 +239,12 @@ extension MainViewController: CLLocationManagerDelegate{
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
             
-            
-            fetchWeather.getMyWeatherData(forLatitude: lat, forLongitude: lon) { (weather, weatherCell) -> (Void)? in
+            self.fetchWeather.getMyWeatherData(forLatitude: lat, forLongitude: lon) { (weather, weatherCell) -> (Void)? in
                 
                 self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
             }
         }
+        locationManager.stopUpdatingLocation()
     }
     
     func fetchJSONAndSetupUI(weather: WeatherStruct, weatherCell: [WeatherCell]) {
@@ -222,15 +255,12 @@ extension MainViewController: CLLocationManagerDelegate{
             self.myStackView.isHidden = false
             self.tableView.isHidden = false
             self.searchLocationButton.isHidden = false
-//            self.searchLocationTextField.isHidden = false
             self.cityNameLabel.text = weather.nome
-            self.populationLabel.text = "Population: \(weather.population)"
+            let populationText = NSLocalizedString("population_label", comment: "")
+            self.populationLabel.text = "\(populationText)\(weather.population)"
             self.weatherTemperatureLabel.text = weather.temperatureString
             self.backgroundImage.image = UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionId).rawValue)
             self.weatherBackground = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionId).rawValue
-                
-                
-                
             
             if #available(iOS 13.0, *) {
                 self.weatherImage.image = UIImage(systemName: weather.conditionName)
@@ -239,7 +269,6 @@ extension MainViewController: CLLocationManagerDelegate{
             }
             
             self.setColorUIViewForBackground(forBackground: self.weatherBackground)
-            
             
             self.arrayForCell = weatherCell
             self.tableView.reloadData()
@@ -265,9 +294,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath) as? WeatherTableViewCell else {return UITableViewCell()}
         
-        
         cell.setupCell(forWeather: arrayForCell[indexPath.row], forBackground: weatherBackground)
-        
         
         return cell
     }

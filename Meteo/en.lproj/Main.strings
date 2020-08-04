@@ -1,0 +1,27 @@
+
+/* Class = "UILabel"; text = "C"; ObjectID = "6kO-Kp-6Jf"; */
+"6kO-Kp-6Jf.text" = "C";
+
+/* Class = "UILabel"; text = "City Name"; ObjectID = "E9t-MO-t19"; */
+"E9t-MO-t19.text" = "City Name";
+
+/* Class = "UILabel"; text = "Description"; ObjectID = "FWi-WL-9xM"; */
+"FWi-WL-9xM.text" = "Description";
+
+/* Class = "UILabel"; text = "17"; ObjectID = "RTr-hd-i4W"; */
+"RTr-hd-i4W.text" = "17";
+
+/* Class = "UILabel"; text = "°"; ObjectID = "SHy-ly-gaL"; */
+"SHy-ly-gaL.text" = "°";
+
+/* Class = "UILabel"; text = "Temp Min"; ObjectID = "X9W-7J-IJg"; */
+"X9W-7J-IJg.text" = "Temp Min";
+
+/* Class = "UILabel"; text = "Time"; ObjectID = "hlC-pD-zuh"; */
+"hlC-pD-zuh.text" = "Time";
+
+/* Class = "UILabel"; text = "Temp Max"; ObjectID = "nu1-cI-DHF"; */
+"nu1-cI-DHF.text" = "Temp Max";
+
+/* Class = "UILabel"; text = "Population:"; ObjectID = "oYK-Os-l3k"; */
+"oYK-Os-l3k.text" = "Population:";

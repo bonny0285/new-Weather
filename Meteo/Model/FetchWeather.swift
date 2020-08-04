@@ -18,12 +18,12 @@ class FetchWeather {
     var citiesResult: [CitiesList] = []
     
     
-    
     func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherStruct, [WeatherCell]) -> (Void)?){
         print(#function)
         
+        guard let language = Locale.current.languageCode else { return }
         
-        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
+        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
         
         AF.request(url).responseJSON { (response) in
             switch response.result{
@@ -124,87 +124,69 @@ class FetchWeather {
                     print(error.localizedDescription)
                     MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
                 }
-            }
         }
-     
-        
-        
+    }
+    
+    
+    
     //MARK: - GetCoordinate
-        func getCoordinate(forJSON json: JSON) -> (Double,Double){
-            let latitude = Double("\(json[0]["coord"]["lat"])") ?? 0.0
-            let longitude = Double("\(json[0]["coord"]["lon"])") ?? 0.0
-            let coordinate = (latitude,longitude)
-            return coordinate
-        }
+    func getCoordinate(forJSON json: JSON) -> (Double,Double){
+        let latitude = Double("\(json[0]["coord"]["lat"])") ?? 0.0
+        let longitude = Double("\(json[0]["coord"]["lon"])") ?? 0.0
+        let coordinate = (latitude,longitude)
+        return coordinate
+    }
+    
+    
+    
+    //MARK: - ParseJSONByCity
+    func parseJSONByCity(forJSON json: JSON) -> WeatherStruct{
         
-        
-        
-     //MARK: - ParseJSONByCity
-        func parseJSONByCity(forJSON json: JSON) -> WeatherStruct{
-            
-            let name = json[0]["name"]
-            let id = Int("\(json[0]["weather"][0]["id"])")
-            let temperature = Double("\(json[0]["main"]["temp"])")
-            let population = 0
-            let country = ""
-            let weather = WeatherStruct(nome: "\(name)", population: population, country: country, temperature: temperature!, conditionId: id!)
-            return weather
-        }
-        
-        
-        
+        let name = json[0]["name"]
+        let id = Int("\(json[0]["weather"][0]["id"])")
+        let temperature = Double("\(json[0]["main"]["temp"])")
+        let population = 0
+        let country = ""
+        let weather = WeatherStruct(nome: "\(name)", population: population, country: country, temperature: temperature!, conditionId: id!)
+        return weather
+    }
+    
+    
+    
     //MARK: - SetImageBackground
     func setImageBackground(forID id: Int) -> String{
-            
-            switch id {
-                
-            case 0...300 :
-                return "tempesta"
-                
-            case 301...500 :
-                return "pioggia"
-                
-            case 501...599 :
-                return "pioggia"
-                
-            case 600...700 :
-                return "neve"
-                
-            case 701...771 :
-                return "nebbia"
-                
-            case 772...799 :
-                return "tempesta"
-                
-            case 800 :
-                return "sole"
-                
-            case 801...804 :
-                return "nuvole"
-                
-            case 900...903, 905...1000  :
-                return "tempesta"
-                
-            case 903 :
-                return "neve"
-                
-            case 904 :
-                return "sole"
-                
-            default :
-                return "unknown"
-            }
+        
+        switch id {
+        case 200...202, 210...212, 221 ,230...232:
+            return "tempesta"
+        case 300...302, 310...314, 321:
+            return "pioggia_leggera"
+        case 500...504, 511, 520...522, 531:
+            return "pioggia"
+        case 600...602, 611...613, 615, 616, 620...622:
+            return "neve"
+        case 701, 711, 721, 731, 741, 751, 761, 762, 771, 781:
+            return "nebbia"
+        case 800:
+            return "sole"
+        case 801...804:
+            return "nuvole"
+        default:
+            return "unknown"
         }
         
-        
-        
-        
     }
+    
+    
+    
+    
+}
 
     extension FetchWeather {
         enum WeatherCondition: String {
             case tempesta = "tempesta"
             case pioggia = "pioggia"
+            case pioggiaLeggera = "pioggia_leggera"
             case neve = "neve"
             case nebbia = "nebbia"
             case sole = "sole"
@@ -214,15 +196,17 @@ class FetchWeather {
             func getWeatherConditionFromID(weatherID: Int) -> WeatherCondition {
                 var condition = self
                 switch weatherID {
-                case 0...300, 772...799, 900...903, 905...1000:
+                case 200...202, 210...212, 221 ,230...232:
                     condition = .tempesta
-                case 301...500, 501...599:
+                case 300...302, 310...314, 321:
+                    condition = .pioggiaLeggera
+                case 500...504, 511, 520...522, 531:
                     condition = .pioggia
-                case 600...700, 903:
+                case 600...602, 611...613, 615, 616, 620...622:
                     condition = .neve
-                case 701...771:
+                case 701, 711, 721, 731, 741, 751, 761, 762, 771, 781:
                     condition = .nebbia
-                case 800, 904:
+                case 800:
                     condition = .sole
                 case 801...804:
                     condition = .nuvole
@@ -231,9 +215,9 @@ class FetchWeather {
                 }
                 return condition
             }
-
+            
         }
-    }
+}
 
     
     
