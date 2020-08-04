@@ -14,6 +14,9 @@ import CoreLocation
 
 class MainViewController: UIViewController {
 
+    
+    //MARK: - Outlets
+
     @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var populationLabel: UILabel!
     @IBOutlet weak var weatherImage: UIImageView!
@@ -29,27 +32,34 @@ class MainViewController: UIViewController {
     @IBOutlet weak var loadingBar: UIActivityIndicatorView!
     
     
-    
+    //MARK: - Properties
+
     let locationManager = CLLocationManager()
     var arrayForCell: [WeatherCell] = []
     var weatherBackground: String = ""
+    var fetchWeather = FetchWeather()
+    var getResult: CitiesList?
     
+    
+    
+    //MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loadingBar.startAnimating()
+        //loadingBar.startAnimating()
         searchLocationTextField.isHidden = true
         tableView.isHidden = true
         
         if #available(iOS 13.0, *) {
-            print("iOS 13.0 is available")
+            debugPrint("iOS 13.0 is available")
             loadingBar.startAnimating()
             loadingBar.style = .large
             overrideUserInterfaceStyle = .light
             currentLocationButton.setImage(UIImage(systemName: "location.circle.fill"), for: .normal)
             searchLocationButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         } else {
-            print("iOS 13.0 is not available")
+            debugPrint("iOS 13.0 is not available")
             loadingBar.startAnimating()
             loadingBar.style = .white
             currentLocationButton.setImage(UIImage(named: "address"), for: .normal)
@@ -64,19 +74,39 @@ class MainViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         
-        
+
         myStackView.isHidden = true
-        
-        WeatherModel.delegate = self
-        
-//        WeatherModel.getMyWeatherData(forLatitude: 42.243, forLongitude: 12.346)
-        
     }
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let city = getResult {
+            fetchWeather.getMyWeatherData(forLatitude: city.coord.lat, forLongitude: city.coord.lon) {(weather, weatherCell) in
+               
+                self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
+            }
+
+        }
+    }
 
     
     
+    //MARK: - Navigation
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowCitiesList" {
+            if let controller = segue.destination as? CitiesListViewController {
+                controller.citiesResult = sender as? [CitiesList]
+            }
+        }
+    }
+    
+    
+     @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {}
+    
+    //MARK: - Actions & Functions
+
     @IBAction func currentLocationButtonWasPressed(_ sender: UIButton) {
         locationManager.requestLocation()
     }
@@ -89,11 +119,12 @@ class MainViewController: UIViewController {
     }
     
     
+
     
     
     
     
-    func setColorUIViewForBackground(forCell cell : WeatherTableViewCell,forBackground backgroundImage: String){
+    func setColorUIViewForBackground(forBackground backgroundImage: String){
         
         switch backgroundImage {
         case "tempesta":
@@ -177,63 +208,6 @@ class MainViewController: UIViewController {
 
 }
 
-
-//MARK: - WeatherDelegate
-
-extension MainViewController: WeatherDelegate{
-    
-    
-    
-    func getDataForCell(weather: [WeatherCell]) {
-        
-        DispatchQueue.main.async {
-            self.arrayForCell = weather
-            self.tableView.reloadData()
-        }
-        
-    }
-    
-    
-    
-    func getData(weather: WeatherStruct) {
-        print(#function)
-        print(weather.nome, weather.conditionId)
-        
-          DispatchQueue.main.async {
-            
-            self.loadingBar.stopAnimating()
-            self.loadingBar.isHidden = true
-            self.myStackView.isHidden = false
-            self.tableView.isHidden = false
-            self.searchLocationTextField.isHidden = false
-            self.cityNameLabel.text = weather.nome
-            self.populationLabel.text = "Population: \(weather.population)"
-            self.weatherTemperatureLabel.text = weather.temperatureString
-            self.backgroundImage.image = UIImage(named: WeatherModel.setImageBackground(forID: weather.conditionId))
-            self.weatherBackground = WeatherModel.setImageBackground(forID: weather.conditionId)
-            
-            
-            
-            
-            if #available(iOS 13.0, *) {
-                self.weatherImage.image = UIImage(systemName: weather.conditionName)
-            } else {
-                self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
-            }
-            
-            let cell = WeatherTableViewCell()
-            self.setColorUIViewForBackground(forCell: cell, forBackground: self.weatherBackground)
-            
-        }
-        
-        
-        
-    }
-    
-
-    
-}
-
 //MARK: - CLLocationManagerDelegate
 
 extension MainViewController: CLLocationManagerDelegate{
@@ -243,10 +217,45 @@ extension MainViewController: CLLocationManagerDelegate{
             locationManager.stopUpdatingLocation()
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
-            WeatherModel.getMyWeatherData(forLatitude: lat, forLongitude: lon)
+            
+            
+            fetchWeather.getMyWeatherData(forLatitude: lat, forLongitude: lon) { (weather, weatherCell) -> (Void)? in
+                
+                self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
+            }
         }
     }
     
+    func fetchJSONAndSetupUI(weather: WeatherStruct, weatherCell: [WeatherCell]) {
+        DispatchQueue.main.async {
+            
+            self.loadingBar.stopAnimating()
+            self.loadingBar.isHidden = true
+            self.myStackView.isHidden = false
+            self.tableView.isHidden = false
+            self.searchLocationTextField.isHidden = false
+            self.cityNameLabel.text = weather.nome
+            self.populationLabel.text = "Population: \(weather.population)"
+            self.weatherTemperatureLabel.text = weather.temperatureString
+            self.backgroundImage.image = UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionId).rawValue)
+            self.weatherBackground = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionId).rawValue
+                
+                
+                
+            
+            if #available(iOS 13.0, *) {
+                self.weatherImage.image = UIImage(systemName: weather.conditionName)
+            } else {
+                self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
+            }
+            
+            self.setColorUIViewForBackground(forBackground: self.weatherBackground)
+            
+            
+            self.arrayForCell = weatherCell
+            self.tableView.reloadData()
+        }
+    }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
@@ -257,8 +266,8 @@ extension MainViewController: CLLocationManagerDelegate{
 
 //MARK: - UITextFieldDelegate
 extension MainViewController: UITextFieldDelegate{
-
-   
+    
+    
     //Delegate comunicate when the user tap "GO" on the keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         searchLocationTextField.endEditing(true)
@@ -269,7 +278,25 @@ extension MainViewController: UITextFieldDelegate{
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         if let city = searchLocationTextField.text{
-            WeatherModel.getMyWeatherDataByCity(forCity: city)
+            self.loadingBar.isHidden = true
+            self.loadingBar.startAnimating()
+            
+            fetchWeather.getJSONFromList(city: city, completion: {cities in
+                if cities.count > 1 {
+                    self.performSegue(withIdentifier: "ShowCitiesList", sender: cities)
+                } else if cities.count == 1 {
+                    self.fetchWeather.getMyWeatherData(forLatitude: cities[0].coord.lat, forLongitude: cities[0].coord.lon) { (weather, weatherCell) -> (Void)? in
+                        
+                        self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
+                    }
+                }
+            })
+            
+            self.fetchWeather.getMyWeatherDataByCity(forCity: city, completion: { weather, weatherCell in
+                
+                self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
+
+            })
         }
         searchLocationTextField.text = ""
         searchLocationTextField.endEditing(true)
@@ -277,7 +304,7 @@ extension MainViewController: UITextFieldDelegate{
     
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if searchLocationTextField.text != ""{
+        if searchLocationTextField.text != "" {
             return true
         } else {
             searchLocationTextField.placeholder = "Type something here!"

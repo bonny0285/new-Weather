@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="HXK-tn-zPe">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="HXK-tn-zPe">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -230,11 +230,54 @@
                         <outlet property="tableView" destination="2LX-l5-mFA" id="2pC-di-NBN"/>
                         <outlet property="weatherImage" destination="EGK-Zi-c9n" id="uEy-Xh-Qe1"/>
                         <outlet property="weatherTemperatureLabel" destination="RTr-hd-i4W" id="fLU-Oc-0eW"/>
+                        <segue destination="tJK-O2-DXT" kind="show" identifier="ShowCitiesList" id="YNK-55-LtX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UG8-ej-oFe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-776.81159420289862" y="273.88392857142856"/>
+        </scene>
+        <!--Cities List View Controller-->
+        <scene sceneID="Fqa-Cj-2fO">
+            <objects>
+                <viewController storyboardIdentifier="CitiesListViewController" modalPresentationStyle="fullScreen" id="tJK-O2-DXT" customClass="CitiesListViewController" customModule="Meteo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mSy-rB-hPR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eQJ-KU-3wd">
+                                <rect key="frame" x="0.0" y="85" width="414" height="777"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Result for: Los Angeles" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qA4-S4-y2I">
+                                <rect key="frame" x="119" y="54" width="176" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="eQJ-KU-3wd" firstAttribute="leading" secondItem="OR0-gF-i3Y" secondAttribute="leading" id="752-bI-8Mq"/>
+                            <constraint firstItem="OR0-gF-i3Y" firstAttribute="trailing" secondItem="eQJ-KU-3wd" secondAttribute="trailing" id="Bha-SF-raz"/>
+                            <constraint firstItem="qA4-S4-y2I" firstAttribute="top" secondItem="OR0-gF-i3Y" secondAttribute="top" constant="10" id="DNa-8r-a6N"/>
+                            <constraint firstItem="OR0-gF-i3Y" firstAttribute="bottom" secondItem="eQJ-KU-3wd" secondAttribute="bottom" id="gaE-Ff-sCp"/>
+                            <constraint firstItem="eQJ-KU-3wd" firstAttribute="top" secondItem="qA4-S4-y2I" secondAttribute="bottom" constant="10" id="soT-Hz-wn4"/>
+                            <constraint firstItem="qA4-S4-y2I" firstAttribute="centerX" secondItem="mSy-rB-hPR" secondAttribute="centerX" id="z08-hw-CGE"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="OR0-gF-i3Y"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="VkT-Ga-ESt"/>
+                    <connections>
+                        <outlet property="headerLabel" destination="qA4-S4-y2I" id="KTM-ej-Ds4"/>
+                        <outlet property="tableView" destination="eQJ-KU-3wd" id="Oy2-sI-qZw"/>
+                        <segue destination="8zI-Pa-lb2" kind="unwind" identifier="ShowToMain" unwindAction="unwindToMain:" id="8kn-ih-JYj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yaq-pb-2Lo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="8zI-Pa-lb2" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="215.94202898550725" y="273.88392857142856"/>
         </scene>
     </scenes>
     <resources>
