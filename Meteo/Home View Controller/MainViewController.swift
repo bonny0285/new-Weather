@@ -35,10 +35,87 @@ class MainViewController: UIViewController {
     
     let locationManager = CLLocationManager()
     var arrayForCell: [WeatherCell] = []
-    var weatherBackground: String = ""
     var fetchWeather = FetchWeather()
     var getResult: CitiesList?
     var language: String = ""
+    
+    var condition: FetchWeather.WeatherCondition = .nebbia {
+        didSet {
+            switch condition {
+            case .tempesta:
+                debugPrint("Tempesta")
+                cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                gradiLabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                gradiClabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .pioggia:
+                debugPrint("pioggia")
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .pioggiaLeggera:
+                debugPrint("pioggia leggera")
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .neve:
+                debugPrint("Neve")
+                self.backgroundImage.alpha = 0.8
+                cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                gradiLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                gradiClabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                debugPrint("Nebbia")
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                debugPrint("Sole")
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                debugPrint("Nuvole")
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
     
     var coverView: UIView {
         let backgroundView = UIView()
@@ -155,78 +232,6 @@ class MainViewController: UIViewController {
     
     
     
-    func setColorUIViewForBackground(forBackground backgroundImage: String){
-        
-        switch backgroundImage {
-        case "tempesta":
-            print("Tempesta")
-            cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            gradiLabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            gradiClabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        case "pioggia":
-            print("pioggia")
-            cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        case "neve":
-            print("Neve")
-            self.backgroundImage.alpha = 0.8
-            cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            gradiLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            gradiClabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        case "nebbia":
-            print("Nebbia")
-            cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        case "sole":
-            print("Sole")
-            cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        case "nuvole":
-            print("Nuvole")
-            cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        default:
-            print("Default")
-        }
-    }
-    
-    
-    
-    
 }
 
 //MARK: - CLLocationManagerDelegate
@@ -239,8 +244,20 @@ extension MainViewController: CLLocationManagerDelegate{
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
             
+            
+//            let controller = (UIStoryboard(name: "", bundle: nil).instantiateViewController(withIdentifier: "LoadingViewController") as? LoadingViewController)!
+//            self.present(controller, animated: true) {
+//                            self.fetchWeather.getMyWeatherData(forLatitude: lat, forLongitude: lon) { (weather, weatherCell) -> (Void)? in
+//                    
+//                    self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
+//                             
+//                }
+//                   controller.dismiss(animated: true, completion: nil)
+//            }
+
+            
             self.fetchWeather.getMyWeatherData(forLatitude: lat, forLongitude: lon) { (weather, weatherCell) -> (Void)? in
-                
+
                 self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
             }
         }
@@ -260,23 +277,21 @@ extension MainViewController: CLLocationManagerDelegate{
             self.populationLabel.text = "\(populationText)\(weather.population)"
             self.weatherTemperatureLabel.text = weather.temperatureString
             self.backgroundImage.image = UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionId).rawValue)
-            self.weatherBackground = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionId).rawValue
+            self.condition = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionId)
             
             if #available(iOS 13.0, *) {
                 self.weatherImage.image = UIImage(systemName: weather.conditionName)
             } else {
                 self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
             }
-            
-            self.setColorUIViewForBackground(forBackground: self.weatherBackground)
-            
+                        
             self.arrayForCell = weatherCell
             self.tableView.reloadData()
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error)
+        debugPrint("Error Location Manager",error.localizedDescription)
     }
     
 }
@@ -285,7 +300,8 @@ extension MainViewController: CLLocationManagerDelegate{
 
 //MARK: - UITableViewDelegate, UITableViewDataSource
 
-extension MainViewController: UITableViewDelegate, UITableViewDataSource{
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return arrayForCell.count
     }
@@ -294,14 +310,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath) as? WeatherTableViewCell else {return UITableViewCell()}
         
-        cell.setupCell(forWeather: arrayForCell[indexPath.row], forBackground: weatherBackground)
+        cell.setupCell(forWeather: arrayForCell[indexPath.row], atCondition: condition)
         
         return cell
     }
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        120
     }
     
     

@@ -153,33 +153,6 @@ class FetchWeather {
     
     
     
-    //MARK: - SetImageBackground
-    func setImageBackground(forID id: Int) -> String{
-        
-        switch id {
-        case 200...202, 210...212, 221 ,230...232:
-            return "tempesta"
-        case 300...302, 310...314, 321:
-            return "pioggia_leggera"
-        case 500...504, 511, 520...522, 531:
-            return "pioggia"
-        case 600...602, 611...613, 615, 616, 620...622:
-            return "neve"
-        case 701, 711, 721, 731, 741, 751, 761, 762, 771, 781:
-            return "nebbia"
-        case 800:
-            return "sole"
-        case 801...804:
-            return "nuvole"
-        default:
-            return "unknown"
-        }
-        
-    }
-    
-    
-    
-    
 }
 
     extension FetchWeather {

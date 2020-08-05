@@ -18,29 +18,29 @@ class WeatherTableViewCell: UITableViewCell {
     @IBOutlet weak var weatherDescription: UILabel!
     
     
-//MARK: - SetupCell
-    func setupCell(forWeather weather: WeatherCell,forBackground background: String){
+    //MARK: - SetupCell
+    func setupCell(forWeather weather: WeatherCell,atCondition condition: FetchWeather.WeatherCondition){
         
         temperatureMax.text = "Temp Max: \(weather.temperatureMax)"
         temperatureMin.text = "Temp Min: \(weather.temperatureMin)"
         weatherDescription.text = "\(weather.weatherDescription.capitalized)"
         weatherTime.text = "\(stringDateString(forString: weather.weatherTime))"
         
-            if #available(iOS 13.0, *) {
-                print("iOS 13.0 Available")
-                self.weatherImage.image = UIImage(systemName: weather.conditionName)
-            } else {
-                print("iOS 13.0 Not Available")
-                self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
-            }
+        if #available(iOS 13.0, *) {
+            print("iOS 13.0 Available")
+            self.weatherImage.image = UIImage(systemName: weather.conditionName)
+        } else {
+            print("iOS 13.0 Not Available")
+            self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
+        }
         
         
-        setColorUIViewForBackground(forCell: self, forBackground: background)
+        setColorUIViewForBackground(condition)
     }
-
     
     
-//MARK: - StringDateString
+    
+    //MARK: - StringDateString
     func stringDateString(forString string: String) -> String{
         let dateFormatter1 = DateFormatter()
         dateFormatter1.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -50,59 +50,58 @@ class WeatherTableViewCell: UITableViewCell {
         let date = dateFormatter.string(from: dateFromString!)
         return date
     }
-
     
     
     
-//MARK: - SetColorUIViewForBackground
-    func setColorUIViewForBackground(forCell cell : WeatherTableViewCell,forBackground backgroundImage: String){
-            
-            switch backgroundImage {
-            case "tempesta":
-                print("Tempesta")
-                cell.weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                cell.weatherTime.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                cell.temperatureMax.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                cell.temperatureMin.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                cell.weatherDescription.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case "pioggia":
-                print("pioggia")
-                cell.weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.weatherTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.temperatureMax.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.temperatureMin.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.weatherDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case "neve":
-                print("Neve")
-                cell.weatherImage.tintColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
-                cell.weatherTime.textColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
-                cell.temperatureMax.textColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
-                cell.temperatureMin.textColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
-                cell.weatherDescription.textColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
-            case "nebbia":
-                print("Nebbia")
-                cell.weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.weatherTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.temperatureMax.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.temperatureMin.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.weatherDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case "sole":
-                print("Sole")
-                cell.weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.weatherTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.temperatureMax.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.temperatureMin.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.weatherDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case "nuvole":
-                print("Nuvole")
-                cell.weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.weatherTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.temperatureMax.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.temperatureMin.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                cell.weatherDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            default:
-                print("Default")
-            }
+    
+    //MARK: - SetColorUIViewForBackground
+    func setColorUIViewForBackground(_ condition: FetchWeather.WeatherCondition){
+        
+        switch condition {
+        case .tempesta:
+            weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            weatherTime.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            temperatureMax.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            temperatureMin.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            weatherDescription.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        case .pioggia:
+            weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMax.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMin.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        case .pioggiaLeggera:
+            weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMax.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMin.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        case .neve:
+            weatherImage.tintColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
+            weatherTime.textColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
+            temperatureMax.textColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
+            temperatureMin.textColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
+            weatherDescription.textColor = #colorLiteral(red: 0.9490196078, green: 0.9529411765, blue: 0.9568627451, alpha: 1)
+        case .nebbia:
+            weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMax.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMin.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        case .sole:
+            weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMax.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMin.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        case .nuvole:
+            weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMax.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            temperatureMin.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            weatherDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         }
-
+        
+    }
+    
 }
