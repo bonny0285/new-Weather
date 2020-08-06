@@ -18,7 +18,7 @@ class FetchWeather {
     var citiesResult: [CitiesList] = []
     
     
-    func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherStruct, [WeatherCell]) -> (Void)?){
+    func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherStruct, [WeatherCell]) -> ()){
         print(#function)
         
         guard let language = Locale.current.languageCode else { return }

@@ -11,6 +11,10 @@ import CoreLocation
 
 
 
+protocol MainViewControllerLocationDelegate: class {
+    func locationDidChange(_ response: CitiesList)
+}
+
 
 class MainViewController: UIViewController {
     
@@ -28,7 +32,6 @@ class MainViewController: UIViewController {
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var gradiLabel: UILabel!
     @IBOutlet weak var gradiClabel: UILabel!
-    @IBOutlet weak var loadingBar: UIActivityIndicatorView!
     
     
     //MARK: - Properties
@@ -38,6 +41,7 @@ class MainViewController: UIViewController {
     var fetchWeather = FetchWeather()
     var getResult: CitiesList?
     var language: String = ""
+    var delegate: MainViewControllerLocationDelegate?
     
     var condition: FetchWeather.WeatherCondition = .nebbia {
         didSet {
@@ -117,39 +121,41 @@ class MainViewController: UIViewController {
         }
     }
     
-    var coverView: UIView {
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        
-        self.view.addSubview(backgroundView)
-        
-        backgroundView.translatesAutoresizingMaskIntoConstraints = false
-        
-        backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-        backgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        
-        let activityIndicator = UIActivityIndicatorView()
-        activityIndicator.color = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        if #available(iOS 13.0, *) {
-            debugPrint("iOS 13.0 is available")
-            activityIndicator.startAnimating()
-            activityIndicator.style = .large
-            self.overrideUserInterfaceStyle = .light
-        } else {
-            debugPrint("iOS 13.0 is not available")
-            activityIndicator.startAnimating()
-            activityIndicator.style = .white
-        }
-        
-        backgroundView.addSubview(activityIndicator)
-        
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor).isActive = true
-        activityIndicator.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
-        return backgroundView
-    }
+    //    var coverView: UIView {
+    //        let backgroundView = UIView()
+    //        backgroundView.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+    //
+    //        self.view.addSubview(backgroundView)
+    //
+    //        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+    //
+    //        backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+    //        backgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+    //        backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+    //        backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+    //
+    //        let activityIndicator = UIActivityIndicatorView()
+    //        activityIndicator.color = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    //        if #available(iOS 13.0, *) {
+    //            debugPrint("iOS 13.0 is available")
+    //            activityIndicator.startAnimating()
+    //            activityIndicator.style = .large
+    //            self.overrideUserInterfaceStyle = .light
+    //        } else {
+    //            debugPrint("iOS 13.0 is not available")
+    //            activityIndicator.startAnimating()
+    //            activityIndicator.style = .white
+    //        }
+    //
+    //        backgroundView.addSubview(activityIndicator)
+    //
+    //        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+    //        activityIndicator.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor).isActive = true
+    //        activityIndicator.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
+    //        return backgroundView
+    //    }
+    
+    
     
     
     //MARK: - Lifecycle
@@ -162,25 +168,22 @@ class MainViewController: UIViewController {
         
         if #available(iOS 13.0, *) {
             debugPrint("iOS 13.0 is available")
-            loadingBar.startAnimating()
-            loadingBar.style = .large
             overrideUserInterfaceStyle = .light
             currentLocationButton.setImage(UIImage(systemName: "location.circle.fill"), for: .normal)
             searchLocationButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         } else {
             debugPrint("iOS 13.0 is not available")
-            loadingBar.startAnimating()
-            loadingBar.style = .white
             currentLocationButton.setImage(UIImage(named: "address"), for: .normal)
             searchLocationButton.setImage(UIImage(named: "search"), for: .normal)
         }
         
-        
-        tableView.delegate = self
-        tableView.dataSource = self
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
         
         language = Locale.current.languageCode!
         
@@ -190,19 +193,30 @@ class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        delegate = self
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if let city = getResult {
-            fetchWeather.getMyWeatherData(forLatitude: city.coord.lat, forLongitude: city.coord.lon) {(weather, weatherCell) in
-                
-                self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
-            }
-            
+            prova(city.coord.lat, city.coord.lon)
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        locationManager.stopUpdatingLocation()
+    
+    func prova(_ latitude: Double, _ longitude: Double){
+        
+        let storyboard = UIStoryboard(name: "loading", bundle: nil)
+        let loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
+        
+        present(loadingController, animated: true) {
+            self.fetchWeather.getMyWeatherData(forLatitude: latitude, forLongitude: longitude) { (weather, weatherCell) -> () in
+                self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
+                loadingController.dismiss(animated: true, completion: nil)
+            }
+        }
     }
+    
     
     
     //MARK: - Navigation
@@ -227,7 +241,8 @@ class MainViewController: UIViewController {
     
     
     @IBAction func searchLocationButtonWasPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)
+        
+        self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)   
     }
     
     
@@ -244,31 +259,16 @@ extension MainViewController: CLLocationManagerDelegate{
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
             
-            
-//            let controller = (UIStoryboard(name: "", bundle: nil).instantiateViewController(withIdentifier: "LoadingViewController") as? LoadingViewController)!
-//            self.present(controller, animated: true) {
-//                            self.fetchWeather.getMyWeatherData(forLatitude: lat, forLongitude: lon) { (weather, weatherCell) -> (Void)? in
-//                    
-//                    self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
-//                             
-//                }
-//                   controller.dismiss(animated: true, completion: nil)
-//            }
-
-            
-            self.fetchWeather.getMyWeatherData(forLatitude: lat, forLongitude: lon) { (weather, weatherCell) -> (Void)? in
-
-                self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
-            }
+            prova(lat, lon)
         }
         locationManager.stopUpdatingLocation()
     }
     
+    
+    
     func fetchJSONAndSetupUI(weather: WeatherStruct, weatherCell: [WeatherCell]) {
         DispatchQueue.main.async {
             
-            self.loadingBar.stopAnimating()
-            self.loadingBar.isHidden = true
             self.myStackView.isHidden = false
             self.tableView.isHidden = false
             self.searchLocationButton.isHidden = false
@@ -284,7 +284,7 @@ extension MainViewController: CLLocationManagerDelegate{
             } else {
                 self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
             }
-                        
+            
             self.arrayForCell = weatherCell
             self.tableView.reloadData()
         }
@@ -323,5 +323,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
-
+extension MainViewController: MainViewControllerLocationDelegate {
+    func locationDidChange(_ response: CitiesList) {
+        
+        DispatchQueue.main.async {
+            self.prova(response.coord.lat, response.coord.lon)
+        }
+    }
+    
+}
 

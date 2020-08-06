@@ -183,10 +183,6 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="0Xv-6N-2lP">
-                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
-                                <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -198,13 +194,11 @@
                             <constraint firstAttribute="bottom" secondItem="2LX-l5-mFA" secondAttribute="bottom" id="D1x-SN-qn1"/>
                             <constraint firstItem="2LX-l5-mFA" firstAttribute="top" secondItem="Yty-AR-7XT" secondAttribute="bottom" constant="60" id="DkZ-lF-mb3"/>
                             <constraint firstAttribute="bottom" secondItem="Ve2-Jr-hkw" secondAttribute="bottom" id="UY6-cV-NS6"/>
-                            <constraint firstItem="0Xv-6N-2lP" firstAttribute="centerY" secondItem="Bnr-dP-moE" secondAttribute="centerY" id="YNY-CI-Rxp"/>
                             <constraint firstItem="Yty-AR-7XT" firstAttribute="top" secondItem="rIZ-ta-ryX" secondAttribute="bottom" constant="50" id="bA8-1n-JB1"/>
                             <constraint firstItem="gmD-JP-700" firstAttribute="trailing" secondItem="rIZ-ta-ryX" secondAttribute="trailing" id="eGc-Zn-NkM"/>
                             <constraint firstItem="Ve2-Jr-hkw" firstAttribute="trailing" secondItem="gmD-JP-700" secondAttribute="trailing" id="ffa-zi-5bf"/>
                             <constraint firstItem="2LX-l5-mFA" firstAttribute="leading" secondItem="gmD-JP-700" secondAttribute="leading" id="j45-IP-5X5"/>
                             <constraint firstItem="Ve2-Jr-hkw" firstAttribute="leading" secondItem="gmD-JP-700" secondAttribute="leading" id="wKp-Hb-zeC"/>
-                            <constraint firstItem="0Xv-6N-2lP" firstAttribute="centerX" secondItem="Bnr-dP-moE" secondAttribute="centerX" id="xWt-vQ-Nxx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gmD-JP-700"/>
                     </view>
@@ -214,7 +208,6 @@
                         <outlet property="currentLocationButton" destination="urO-j6-gQ6" id="nI8-96-L2j"/>
                         <outlet property="gradiClabel" destination="6kO-Kp-6Jf" id="bma-1c-jsF"/>
                         <outlet property="gradiLabel" destination="SHy-ly-gaL" id="Dpp-Op-FbE"/>
-                        <outlet property="loadingBar" destination="0Xv-6N-2lP" id="v6E-yx-aTV"/>
                         <outlet property="myStackView" destination="Yty-AR-7XT" id="dFE-vj-sAC"/>
                         <outlet property="populationLabel" destination="oYK-Os-l3k" id="bzL-yu-Pi0"/>
                         <outlet property="searchLocationButton" destination="OnQ-oV-cph" id="LeZ-4t-G6i"/>

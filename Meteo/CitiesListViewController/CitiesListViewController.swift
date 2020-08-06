@@ -22,12 +22,12 @@ class CitiesListViewController: UIViewController {
     var citiesResult: [CitiesList]?
     var dataSource: CitiesListDataSource?
     var citiesArray: [CitiesList] = []
+    
     //MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         let nib = UINib(nibName: "CitiesListTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cityCell")
         
@@ -49,7 +49,7 @@ class CitiesListViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowToMain" {
             if let controller = segue.destination as? MainViewController {
-                controller.getResult = sender as? CitiesList
+                controller.delegate?.locationDidChange(sender as! CitiesList)
             }
         }
     }
@@ -91,10 +91,10 @@ extension CitiesListViewController: UITableViewDelegate {
             let cityToSendBack = citiesArray[indexPath.row]
             performSegue(withIdentifier: "ShowToMain", sender: cityToSendBack)
         }
-        
     }
 }
 
+//MARK: - UISearchBarDelegate
 
 extension CitiesListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

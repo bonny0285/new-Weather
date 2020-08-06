@@ -11,7 +11,7 @@
         <!--Loading View Controller-->
         <scene sceneID="Dou-NR-kXx">
             <objects>
-                <viewController storyboardIdentifier="LoadingViewController" id="gfw-mO-9Hh" customClass="LoadingViewController" customModule="Meteo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoadingViewController" modalPresentationStyle="fullScreen" id="gfw-mO-9Hh" customClass="LoadingViewController" customModule="Meteo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aG3-it-EfI">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
