@@ -30,9 +30,7 @@ class CitiesListViewController: UIViewController {
 
         let nib = UINib(nibName: "CitiesListTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cityCell")
-        
-        fetchCities()
-        
+                
         dataSource = CitiesListDataSource(cities: citiesArray)
         tableView.dataSource = dataSource
         tableView.delegate = self
@@ -54,26 +52,7 @@ class CitiesListViewController: UIViewController {
         }
     }
 
-    
-    
-    
-    func fetchCities() {
-        citiesArray.removeAll()
-        let file = Bundle.main.path(forResource: "cityList", ofType: "json")
-        
-        do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: file!))
-            let decoder = JSONDecoder()
-            let result = try decoder.decode([CitiesList].self, from: data)
-            
-            citiesArray = result.sorted { $0.name < $1.name}.compactMap { $0 }
-            debugPrint("Prima città",citiesArray[0].name)
-            print("Prima città",citiesArray[0].name)
-            tableView.reloadData()
-        } catch let error {
-            debugPrint(error.localizedDescription)
-        }
-    }
+
     
 }
 
@@ -85,12 +64,16 @@ extension CitiesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var result: CitiesList?
+        
         if let citiesResult = citiesResult {
-            performSegue(withIdentifier: "ShowToMain", sender: citiesResult[indexPath.row])
+            result = citiesResult[indexPath.row]
+            
         } else {
-            let cityToSendBack = citiesArray[indexPath.row]
-            performSegue(withIdentifier: "ShowToMain", sender: cityToSendBack)
+            result = citiesArray[indexPath.row]
         }
+        
+        performSegue(withIdentifier: "ShowToMain", sender: result)
     }
 }
 

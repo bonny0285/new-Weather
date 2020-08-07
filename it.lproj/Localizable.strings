@@ -8,3 +8,7 @@
 
 
 "population_label" = "Popolazione: ";
+
+"loading_controller_main_text" = "Stiamo caricando i dati relativi alla località scelta.";
+
+"loading_controller_sub_text" = "Il tempo di caricamento può variare a seconda della tua connessione.";

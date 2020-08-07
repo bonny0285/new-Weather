@@ -27,10 +27,8 @@ class WeatherTableViewCell: UITableViewCell {
         weatherTime.text = "\(stringDateString(forString: weather.weatherTime))"
         
         if #available(iOS 13.0, *) {
-            print("iOS 13.0 Available")
             self.weatherImage.image = UIImage(systemName: weather.conditionName)
         } else {
-            print("iOS 13.0 Not Available")
             self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
         }
         

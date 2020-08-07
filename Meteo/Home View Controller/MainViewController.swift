@@ -39,9 +39,11 @@ class MainViewController: UIViewController {
     let locationManager = CLLocationManager()
     var arrayForCell: [WeatherCell] = []
     var fetchWeather = FetchWeather()
-    var getResult: CitiesList?
     var language: String = ""
     var delegate: MainViewControllerLocationDelegate?
+    var citiesArray: [CitiesList] = []
+    typealias LocationForUser = (latitude: Double,longitude: Double)
+    var userLocation: LocationForUser = (0.0, 0.0)
     
     var condition: FetchWeather.WeatherCondition = .nebbia {
         didSet {
@@ -121,41 +123,6 @@ class MainViewController: UIViewController {
         }
     }
     
-    //    var coverView: UIView {
-    //        let backgroundView = UIView()
-    //        backgroundView.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-    //
-    //        self.view.addSubview(backgroundView)
-    //
-    //        backgroundView.translatesAutoresizingMaskIntoConstraints = false
-    //
-    //        backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-    //        backgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-    //        backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-    //        backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-    //
-    //        let activityIndicator = UIActivityIndicatorView()
-    //        activityIndicator.color = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-    //        if #available(iOS 13.0, *) {
-    //            debugPrint("iOS 13.0 is available")
-    //            activityIndicator.startAnimating()
-    //            activityIndicator.style = .large
-    //            self.overrideUserInterfaceStyle = .light
-    //        } else {
-    //            debugPrint("iOS 13.0 is not available")
-    //            activityIndicator.startAnimating()
-    //            activityIndicator.style = .white
-    //        }
-    //
-    //        backgroundView.addSubview(activityIndicator)
-    //
-    //        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-    //        activityIndicator.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor).isActive = true
-    //        activityIndicator.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
-    //        return backgroundView
-    //    }
-    
-    
     
     
     //MARK: - Lifecycle
@@ -163,31 +130,34 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchLocationButton.isHidden = true
-        tableView.isHidden = true
-        
-        if #available(iOS 13.0, *) {
-            debugPrint("iOS 13.0 is available")
-            overrideUserInterfaceStyle = .light
-            currentLocationButton.setImage(UIImage(systemName: "location.circle.fill"), for: .normal)
-            searchLocationButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        } else {
-            debugPrint("iOS 13.0 is not available")
-            currentLocationButton.setImage(UIImage(named: "address"), for: .normal)
-            searchLocationButton.setImage(UIImage(named: "search"), for: .normal)
-        }
-        
+
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         
+        
+        searchLocationButton.isHidden = true
+        tableView.isHidden = true
+        
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+            currentLocationButton.setImage(UIImage(systemName: "location.circle.fill"), for: .normal)
+            searchLocationButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        } else {
+            currentLocationButton.setImage(UIImage(named: "address"), for: .normal)
+            searchLocationButton.setImage(UIImage(named: "search"), for: .normal)
+        }
+        
+
+        
         tableView.delegate = self
         tableView.dataSource = self
-        
         
         language = Locale.current.languageCode!
         
         myStackView.isHidden = true
+        
+        fetchCitiesFromJONS()
     }
     
     
@@ -195,16 +165,36 @@ class MainViewController: UIViewController {
         super.viewWillAppear(animated)
         delegate = self
     }
+
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if let city = getResult {
-            prova(city.coord.lat, city.coord.lon)
+    //MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowCitiesList" {
+            if let controller = segue.destination as? CitiesListViewController {
+                controller.citiesResult = sender as? [CitiesList]
+                controller.citiesArray = citiesArray
+            }
         }
     }
     
     
-    func prova(_ latitude: Double, _ longitude: Double){
+    @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {}
+    
+    //MARK: - Actions & Functions
+    
+    @IBAction func currentLocationButtonWasPressed(_ sender: UIButton) {
+        prepareUIForWeather(userLocation.latitude, userLocation.longitude)
+    }
+    
+    
+    @IBAction func searchLocationButtonWasPressed(_ sender: UIButton) {
+        
+        self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)   
+    }
+    
+    
+    func prepareUIForWeather(_ latitude: Double, _ longitude: Double){
         
         let storyboard = UIStoryboard(name: "loading", bundle: nil)
         let loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
@@ -218,56 +208,8 @@ class MainViewController: UIViewController {
     }
     
     
-    
-    //MARK: - Navigation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowCitiesList" {
-            if let controller = segue.destination as? CitiesListViewController {
-                controller.citiesResult = sender as? [CitiesList]
-                
-            }
-        }
-    }
-    
-    
-    @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {}
-    
-    //MARK: - Actions & Functions
-    
-    @IBAction func currentLocationButtonWasPressed(_ sender: UIButton) {
-        self.locationManager.requestLocation()
-    }
-    
-    
-    @IBAction func searchLocationButtonWasPressed(_ sender: UIButton) {
-        
-        self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)   
-    }
-    
-    
-    
-}
-
-//MARK: - CLLocationManagerDelegate
-
-extension MainViewController: CLLocationManagerDelegate{
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last{
-            locationManager.stopUpdatingLocation()
-            let lat = location.coordinate.latitude
-            let lon = location.coordinate.longitude
-            
-            prova(lat, lon)
-        }
-        locationManager.stopUpdatingLocation()
-    }
-    
-    
-    
     func fetchJSONAndSetupUI(weather: WeatherStruct, weatherCell: [WeatherCell]) {
-        DispatchQueue.main.async {
+        //DispatchQueue.main.async {
             
             self.myStackView.isHidden = false
             self.tableView.isHidden = false
@@ -287,8 +229,43 @@ extension MainViewController: CLLocationManagerDelegate{
             
             self.arrayForCell = weatherCell
             self.tableView.reloadData()
+      //  }
+    }
+    
+    
+    func fetchCitiesFromJONS () {
+        citiesArray.removeAll()
+        let file = Bundle.main.path(forResource: "cityList", ofType: "json")
+        
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: file!))
+            let decoder = JSONDecoder()
+            let result = try decoder.decode([CitiesList].self, from: data)
+            
+            citiesArray = result.sorted { $0.name < $1.name}.compactMap { $0 }
+            print("DONE")
+        } catch let error {
+            debugPrint(error.localizedDescription)
         }
     }
+    
+}
+
+//MARK: - CLLocationManagerDelegate
+
+extension MainViewController: CLLocationManagerDelegate{
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last{
+            //locationManager.stopUpdatingLocation()
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            userLocation = (lat, lon)
+            prepareUIForWeather(lat, lon)
+        }
+        //locationManager.stopUpdatingLocation()
+    }
+    
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         debugPrint("Error Location Manager",error.localizedDescription)
@@ -323,11 +300,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
+
+//MARK: - MainViewControlloerLocationDelegate
+
 extension MainViewController: MainViewControllerLocationDelegate {
     func locationDidChange(_ response: CitiesList) {
         
         DispatchQueue.main.async {
-            self.prova(response.coord.lat, response.coord.lon)
+            self.prepareUIForWeather(response.coord.lat, response.coord.lon)
         }
     }
     

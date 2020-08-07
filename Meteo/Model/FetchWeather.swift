@@ -13,13 +13,11 @@ import SwiftyJSON
 
 class FetchWeather {
     
-    //var delegate: WeatherDelegate?
     var weatherCondition: WeatherCondition = .sole
     var citiesResult: [CitiesList] = []
     
     
     func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherStruct, [WeatherCell]) -> ()){
-        print(#function)
         
         guard let language = Locale.current.languageCode else { return }
         
@@ -31,10 +29,9 @@ class FetchWeather {
                 let json: JSON = JSON(arrayLiteral: value)
                 debugPrint(json)
                 let weather = self.parseJSON(forJSON: json)
-                //self.delegate?.getData(weather: weather)
                 let weatherCell = self.weatherJSONForCell(forJSON: json)
-                //self.delegate?.getDataForCell(weather: weatherCell)
                 completion(weather, weatherCell)
+                
             case .failure(let error):
                 print(error.localizedDescription)
                 MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
@@ -45,7 +42,6 @@ class FetchWeather {
     
     //MARK: - ParseJSON
    fileprivate func parseJSON(forJSON json: JSON) -> WeatherStruct{
-        debugPrint(#function)
         let name = "\(json[0]["city"]["name"])"
         let population = Int("\(json[0]["city"]["population"])") ?? 0
         let country = "\(json[0]["city"]["country"])"
@@ -87,10 +83,10 @@ class FetchWeather {
             let data = try Data(contentsOf: URL(fileURLWithPath: file!))
             let decoder = JSONDecoder()
             let result = try decoder.decode([CitiesList].self, from: data)
-            print(result[0])
+            //print(result[0])
             for (index, element) in result.enumerated() {
                 if result[index].name == city {
-                    print("TROVATO",element)
+                    //print("TROVATO",element)
                     citiesResult.append(element)
                 } else {
                     //print("NESSUNA CITTÀ")
