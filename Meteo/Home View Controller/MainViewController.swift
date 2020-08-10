@@ -247,6 +247,8 @@ class MainViewController: UIViewController {
     
     //MARK: - Properties
     
+    typealias LocationForUser = (latitude: Double,longitude: Double)
+    
     var currentWeather: WeatherModel?
     var arrayForCell: [WeatherModelCell] = []
     
@@ -256,7 +258,7 @@ class MainViewController: UIViewController {
     var language: String = ""
     var delegate: MainViewControllerLocationDelegate?
     var citiesArray: [CitiesList] = []
-    typealias LocationForUser = (latitude: Double,longitude: Double)
+    
     var userLocation: LocationForUser = (0.0, 0.0)
     var realmManager = RealmManager()
     var currentLocation: LocationForUser = (0.0, 0.0)
@@ -273,11 +275,10 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
+        title = "Smart Forecast"
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
-        
         
         searchLocationButton.isHidden = true
         tableView.isHidden = true
@@ -291,7 +292,6 @@ class MainViewController: UIViewController {
             searchLocationButton.setImage(UIImage(named: "search"), for: .normal)
         }
         
-
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -346,11 +346,13 @@ class MainViewController: UIViewController {
     }
     
     
+    
     func prepareUIForWeather(_ latitude: Double, _ longitude: Double){
         
         let storyboard = UIStoryboard(name: "loading", bundle: nil)
         let loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
-        
+        currentLocation.latitude = latitude
+        currentLocation.longitude = longitude
         present(loadingController, animated: true) {
             self.fetchWeather.getMyWeatherData(forLatitude: latitude, forLongitude: longitude) { weather in
                 
@@ -419,7 +421,6 @@ extension MainViewController: CLLocationManagerDelegate{
             userLocation = (lat, lon)
             prepareUIForWeather(lat, lon)
         }
-        //locationManager.stopUpdatingLocation()
     }
     
     

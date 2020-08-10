@@ -9,8 +9,15 @@
 import UIKit
 import RealmSwift
 
+protocol RealmManagerDelegate: class {
+    func retriveResultsDidFinished(_ weather: WeatherModel)
+}
+
 
 class RealmManager {
+    
+    var delegate: RealmManagerDelegate?
+    var fetchManager = FetchWeather()
     
     func saveWeather(_ cityName: String, _ latitude: Double, _ longitude: Double) {
         
@@ -31,21 +38,25 @@ class RealmManager {
     }
     
     
-    func retriveWeather() -> [RealmWeatherManager] {
-        var weatherResult: [RealmWeatherManager] = []
+    func retriveWeather() {
+        //var weatherResult: [WeatherModel] = []
         
         do {
             let realm = try Realm.init()
             
             let results = realm.objects(RealmWeatherManager.self)
             
-            results.forEach { weatherResult.append($0) }
+            for i in results {
+                DispatchQueue.main.async {
+                    self.fetchManager.getMyWeatherData(forLatitude: i.latitude, forLongitude: i.longitude) { (weather) in
+                    self.delegate?.retriveResultsDidFinished(weather)
+                }
+                }
+            }
             
         } catch let error {
             debugPrint(error.localizedDescription)
         }
-        
-        return weatherResult
     }
     
     func deleteWeather(_ index: IndexPath, completion: () -> ()) {
