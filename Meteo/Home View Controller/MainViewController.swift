@@ -276,6 +276,13 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Smart Forecast"
+        
+//        if #available(iOS 13.0, *) {
+//            // Always adopt a light interface style.
+//            overrideUserInterfaceStyle = .light
+//        }
+
+        
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
