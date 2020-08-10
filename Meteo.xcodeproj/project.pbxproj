@@ -38,9 +38,7 @@
 		B451590E243CF25E00EFD00A /* NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451590D243CF25E00EFD00A /* NSDate.swift */; };
 		B4A288C3243800C9002E857F /* MyAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A288C2243800C9002E857F /* MyAlert.swift */; };
 		B4A288C524380269002E857F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A288C424380269002E857F /* MainViewController.swift */; };
-		B4A288C7243808FA002E857F /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A288C6243808FA002E857F /* Weather.swift */; };
 		B4A288CA2438D38E002E857F /* WeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A288C92438D38E002E857F /* WeatherTableViewCell.swift */; };
-		B4FFE722243A4A810003A1C4 /* WeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FFE721243A4A810003A1C4 /* WeatherCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,9 +96,7 @@
 		B451590D243CF25E00EFD00A /* NSDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSDate.swift; sourceTree = "<group>"; };
 		B4A288C2243800C9002E857F /* MyAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAlert.swift; sourceTree = "<group>"; };
 		B4A288C424380269002E857F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		B4A288C6243808FA002E857F /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		B4A288C92438D38E002E857F /* WeatherTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTableViewCell.swift; sourceTree = "<group>"; };
-		B4FFE721243A4A810003A1C4 /* WeatherCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,8 +247,6 @@
 			isa = PBXGroup;
 			children = (
 				B4A288C2243800C9002E857F /* MyAlert.swift */,
-				B4A288C6243808FA002E857F /* Weather.swift */,
-				B4FFE721243A4A810003A1C4 /* WeatherCell.swift */,
 				704F7A9024D7E275008359D7 /* CitiesListModel.swift */,
 				704F7A9424D7F106008359D7 /* FetchWeather.swift */,
 				704F7A9A24D862F4008359D7 /* cityList.json */,
@@ -458,7 +452,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4A288C3243800C9002E857F /* MyAlert.swift in Sources */,
-				B4A288C7243808FA002E857F /* Weather.swift in Sources */,
 				70B1E4B924E050FF00D067DB /* PreferredWeatherViewController.swift in Sources */,
 				704F7AB824DA9545008359D7 /* LoadingViewController.swift in Sources */,
 				704F7A9124D7E275008359D7 /* CitiesListModel.swift in Sources */,
@@ -473,7 +466,6 @@
 				703F6F8A24E0A2180085A265 /* RealmManager.swift in Sources */,
 				B451590A243CF20E00EFD00A /* String Extention.swift in Sources */,
 				704F7AA524D86ABB008359D7 /* CitiesListDataSource.swift in Sources */,
-				B4FFE722243A4A810003A1C4 /* WeatherCell.swift in Sources */,
 				B408AC8D229AB56B0000AE68 /* AppDelegate.swift in Sources */,
 				B451590E243CF25E00EFD00A /* NSDate.swift in Sources */,
 				703F6F8C24E135010085A265 /* WeatherModel.swift in Sources */,

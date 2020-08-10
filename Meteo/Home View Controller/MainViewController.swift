@@ -21,25 +21,237 @@ class MainViewController: UIViewController {
     
     //MARK: - Outlets
     
-    @IBOutlet weak var cityNameLabel: UILabel!
-    @IBOutlet weak var populationLabel: UILabel!
-    @IBOutlet weak var weatherImage: UIImageView!
-    @IBOutlet weak var weatherTemperatureLabel: UILabel!
+    @IBOutlet weak var cityNameLabel: UILabel! {
+        didSet {
+            switch condition {
+            case .tempesta:
+                cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .pioggiaLeggera:
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .neve:
+                cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
+    
+    @IBOutlet weak var populationLabel: UILabel! {
+        didSet {
+            switch condition {
+            case .tempesta:
+                populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .pioggiaLeggera:
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .neve:
+                populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
+    @IBOutlet weak var weatherImage: UIImageView! {
+        didSet {
+            switch condition {
+            case .tempesta:
+                weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .pioggiaLeggera:
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .neve:
+                weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
+
+    @IBOutlet weak var weatherTemperatureLabel: UILabel! {
+        didSet {
+            switch condition {
+            case .tempesta:
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .pioggiaLeggera:
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .neve:
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
+    
     @IBOutlet weak var myStackView: UIStackView!
-    @IBOutlet weak var currentLocationButton: UIButton!
-    @IBOutlet weak var searchLocationButton: UIButton!
+    @IBOutlet weak var currentLocationButton: UIButton! {
+        didSet {
+            switch condition {
+            case .tempesta:
+                currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .pioggiaLeggera:
+                currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .neve:
+                currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
+    
+    @IBOutlet weak var searchLocationButton: UIButton! {
+        didSet {
+            switch condition {
+            case .tempesta:
+                searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .pioggiaLeggera:
+                searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .neve:
+                searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var backgroundImage: UIImageView!
-    @IBOutlet weak var gradiLabel: UILabel!
-    @IBOutlet weak var gradiClabel: UILabel!
-    @IBOutlet weak var preferredButton: UIButton!
-    @IBOutlet weak var addButton: UIButton!
+    
+    @IBOutlet weak var backgroundImage: UIImageView! {
+        didSet {
+            if case .neve = condition {
+                backgroundImage.alpha = 0.8
+            }
+        }
+    }
+    
+    @IBOutlet weak var gradiLabel: UILabel! {
+        didSet {
+            switch condition {
+            case .tempesta:
+                gradiLabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .pioggia:
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .pioggiaLeggera:
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .neve:
+                gradiLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
+    
+    @IBOutlet weak var gradiClabel: UILabel! {
+        didSet {
+            switch condition {
+            case .tempesta:
+                gradiClabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .pioggia:
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .pioggiaLeggera:
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .neve:
+                gradiClabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
+    
+    @IBOutlet weak var preferredButton: UIButton! {
+        didSet {
+            preferredButton.setTitle(NSLocalizedString("preferred_button_label", comment: ""), for: .normal)
+            
+            switch condition {
+            case .tempesta:
+                preferredButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .pioggiaLeggera:
+                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .neve:
+                preferredButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
+    
+    @IBOutlet weak var addButton: UIButton! {
+        didSet {
+            addButton.setTitle(NSLocalizedString("add_button_label", comment: ""), for: .normal)
+            
+            switch condition {
+            case .tempesta:
+                addButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .pioggiaLeggera:
+                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .neve:
+                addButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
     
     
     //MARK: - Properties
     
+    var currentWeather: WeatherModel?
+    var arrayForCell: [WeatherModelCell] = []
+    
     let locationManager = CLLocationManager()
-    var arrayForCell: [WeatherCell] = []
+    
     var fetchWeather = FetchWeather()
     var language: String = ""
     var delegate: MainViewControllerLocationDelegate?
@@ -50,97 +262,9 @@ class MainViewController: UIViewController {
     var currentLocation: LocationForUser = (0.0, 0.0)
     
     var state: State = .notSave
-    var condition: FetchWeather.WeatherCondition = .nebbia {
-        didSet {
-            switch condition {
-            case .tempesta:
-                debugPrint("Tempesta")
-                cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                preferredButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                addButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                gradiLabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-                gradiClabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .pioggia:
-                debugPrint("pioggia")
-                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-                searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .pioggiaLeggera:
-                debugPrint("pioggia leggera")
-                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-                searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .neve:
-                debugPrint("Neve")
-                self.backgroundImage.alpha = 0.8
-                cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                preferredButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                addButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                gradiLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                gradiClabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                debugPrint("Nebbia")
-                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                debugPrint("Sole")
-                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                debugPrint("Nuvole")
-                cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                gradiLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                gradiClabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
+    var condition: FetchWeather.WeatherCondition = .nebbia
+        
+    
     
     
     
@@ -228,26 +352,29 @@ class MainViewController: UIViewController {
         let loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
         
         present(loadingController, animated: true) {
-            self.fetchWeather.getMyWeatherData(forLatitude: latitude, forLongitude: longitude) { (weather, weatherCell) -> () in
-                self.fetchJSONAndSetupUI(weather: weather, weatherCell: weatherCell)
+            self.fetchWeather.getMyWeatherData(forLatitude: latitude, forLongitude: longitude) { weather in
+                
+                self.currentWeather = weather
+                
+                self.fetchJSONAndSetupUI(weather: weather)
+                
                 loadingController.dismiss(animated: true, completion: nil)
             }
         }
     }
     
     
-    func fetchJSONAndSetupUI(weather: WeatherStruct, weatherCell: [WeatherCell]) {
-        //DispatchQueue.main.async {
-            
+    func fetchJSONAndSetupUI(weather: WeatherModel) {
+        
             self.myStackView.isHidden = false
             self.tableView.isHidden = false
             self.searchLocationButton.isHidden = false
-            self.cityNameLabel.text = weather.nome
+        self.cityNameLabel.text = weather.name
             let populationText = NSLocalizedString("population_label", comment: "")
             self.populationLabel.text = "\(populationText)\(weather.population)"
             self.weatherTemperatureLabel.text = weather.temperatureString
-            self.backgroundImage.image = UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionId).rawValue)
-            self.condition = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionId)
+            self.backgroundImage.image = UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
+            self.condition = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID)
             
             if #available(iOS 13.0, *) {
                 self.weatherImage.image = UIImage(systemName: weather.conditionName)
@@ -255,9 +382,10 @@ class MainViewController: UIViewController {
                 self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
             }
             
-            self.arrayForCell = weatherCell
+        self.arrayForCell = weather.weatherForCell
+        
             self.tableView.reloadData()
-      //  }
+      
     }
     
     
@@ -315,7 +443,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath) as? WeatherTableViewCell else {return UITableViewCell()}
         
-        cell.setupCell(forWeather: arrayForCell[indexPath.row], atCondition: condition)
+        cell.setupCell(arrayForCell[indexPath.row], atCondition: condition)
         
         return cell
     }

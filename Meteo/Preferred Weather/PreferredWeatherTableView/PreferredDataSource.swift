@@ -13,13 +13,13 @@ class PreferredDataSource: NSObject {
     
     
     var arrayName: [String]
-    var arrayForCell: [[WeatherCell]]
+    var arrayForCell: [WeatherModelCell]
     var arrayConditon: [FetchWeather.WeatherCondition]
     var arrayImages: [UIImage]
     
     let organizer: DataOrganizer
     
-    init(arrayName: [String], arrayForCell: [[WeatherCell]], arrayConditon: [FetchWeather.WeatherCondition], arrayImages: [UIImage]) {
+    init(arrayName: [String], arrayForCell: [WeatherModelCell], arrayConditon: [FetchWeather.WeatherCondition], arrayImages: [UIImage]) {
         self.arrayName = arrayName
         self.arrayForCell = arrayForCell
         self.arrayConditon = arrayConditon
@@ -38,7 +38,7 @@ extension PreferredDataSource {
     struct DataOrganizer {
         
         var arrayName: [String]
-        var arrayForCell: [[WeatherCell]]
+        var arrayForCell: [WeatherModelCell]
         var arrayConditon: [FetchWeather.WeatherCondition]
         var arrayImages: [UIImage]
         
@@ -46,7 +46,7 @@ extension PreferredDataSource {
             arrayName.count
         }
         
-        init(arrayName: [String], arrayForCell: [[WeatherCell]], arrayConditon: [FetchWeather.WeatherCondition], arrayImages: [UIImage]) {
+        init(arrayName: [String], arrayForCell: [WeatherModelCell], arrayConditon: [FetchWeather.WeatherCondition], arrayImages: [UIImage]) {
             self.arrayName = arrayName
             self.arrayForCell = arrayForCell
             self.arrayConditon = arrayConditon
@@ -58,8 +58,8 @@ extension PreferredDataSource {
             arrayName[index.row]
         }
         
-        func weatherCell(_ index: IndexPath) -> WeatherCell {
-            arrayForCell[index.row][0]
+        func weatherCell(_ index: IndexPath) -> WeatherModelCell {
+            arrayForCell[index.row]
         }
         
         func condition(_ index: IndexPath) -> FetchWeather.WeatherCondition {
@@ -97,7 +97,7 @@ extension PreferredDataSource: UITableViewDataSource {
 
 extension PreferredTableViewCell {
     
-    func configure(_ row: String,_ weather: WeatherCell, _ condition: FetchWeather.WeatherCondition, _ background: UIImage) {
+    func configure(_ row: String,_ weather: WeatherModelCell, _ condition: FetchWeather.WeatherCondition, _ background: UIImage) {
         
         self.name.text = row
         

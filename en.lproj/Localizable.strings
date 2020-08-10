@@ -12,3 +12,6 @@
 "loading_controller_main_text" = "We are loading data relative at your choice.";
 
 "loading_controller_sub_text" = "Loading time depend about your connection.";
+
+"preferred_button_label" = "Favorite";
+"add_button_label" = "Add";

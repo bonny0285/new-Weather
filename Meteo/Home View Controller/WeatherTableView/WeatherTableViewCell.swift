@@ -19,12 +19,12 @@ class WeatherTableViewCell: UITableViewCell {
     
     
     //MARK: - SetupCell
-    func setupCell(forWeather weather: WeatherCell,atCondition condition: FetchWeather.WeatherCondition){
+    func setupCell(_ weather: WeatherModelCell,atCondition condition: FetchWeather.WeatherCondition){
         
         temperatureMax.text = "Temp Max: \(weather.temperatureMax)"
         temperatureMin.text = "Temp Min: \(weather.temperatureMin)"
-        weatherDescription.text = "\(weather.weatherDescription.capitalized)"
-        weatherTime.text = "\(stringDateString(forString: weather.weatherTime))"
+        weatherDescription.text = "\(weather.description.capitalized)"
+        weatherTime.text = "\(stringDateString(forString: weather.time))"
         
         if #available(iOS 13.0, *) {
             self.weatherImage.image = UIImage(systemName: weather.conditionName)
