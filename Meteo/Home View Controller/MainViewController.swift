@@ -32,6 +32,8 @@ class MainViewController: UIViewController {
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var gradiLabel: UILabel!
     @IBOutlet weak var gradiClabel: UILabel!
+    @IBOutlet weak var preferredButton: UIButton!
+    @IBOutlet weak var addButton: UIButton!
     
     
     //MARK: - Properties
@@ -44,13 +46,18 @@ class MainViewController: UIViewController {
     var citiesArray: [CitiesList] = []
     typealias LocationForUser = (latitude: Double,longitude: Double)
     var userLocation: LocationForUser = (0.0, 0.0)
+    var realmManager = RealmManager()
+    var currentLocation: LocationForUser = (0.0, 0.0)
     
+    var state: State = .notSave
     var condition: FetchWeather.WeatherCondition = .nebbia {
         didSet {
             switch condition {
             case .tempesta:
                 debugPrint("Tempesta")
                 cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                preferredButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                addButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -61,6 +68,8 @@ class MainViewController: UIViewController {
             case .pioggia:
                 debugPrint("pioggia")
                 cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -72,6 +81,8 @@ class MainViewController: UIViewController {
                 debugPrint("pioggia leggera")
                 cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -83,6 +94,8 @@ class MainViewController: UIViewController {
                 self.backgroundImage.alpha = 0.8
                 cityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                preferredButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                addButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 weatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 weatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -93,6 +106,8 @@ class MainViewController: UIViewController {
                 debugPrint("Nebbia")
                 cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -103,6 +118,8 @@ class MainViewController: UIViewController {
                 debugPrint("Sole")
                 cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -113,6 +130,8 @@ class MainViewController: UIViewController {
                 debugPrint("Nuvole")
                 cityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                preferredButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                addButton.titleLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 weatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -163,6 +182,7 @@ class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        state = .notSave
         delegate = self
     }
 
@@ -187,6 +207,14 @@ class MainViewController: UIViewController {
         prepareUIForWeather(userLocation.latitude, userLocation.longitude)
     }
     
+    @IBAction func addButtonWasPressed(_ sender: Any) {
+        realmManager.saveWeather(cityNameLabel.text ?? "", currentLocation.latitude, currentLocation.longitude)
+    }
+    
+    
+    @IBAction func preferredButtonWasPressed(_ sender: Any) {
+        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: nil)
+    }
     
     @IBAction func searchLocationButtonWasPressed(_ sender: UIButton) {
         
@@ -311,5 +339,14 @@ extension MainViewController: MainViewControllerLocationDelegate {
         }
     }
     
+}
+
+
+extension MainViewController {
+    
+    enum State {
+        case save
+        case notSave
+    }
 }
 

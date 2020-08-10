@@ -6,17 +6,17 @@
 //  Copyright © 2020 Massimiliano Bonafede. All rights reserved.
 //
 
-import Foundation
-
-
-extension Double {
-    
-    
-//MARK: - TwoDecimalNumbers
-    func twoDecimalNumbers(place: Int) -> Double{
-        let divisor = pow(10.0, Double(place))
-        return (self * divisor).rounded() / divisor
-    }
-}
-
+//import Foundation
+//
+//
+//extension Double {
+//    
+//    
+////MARK: - TwoDecimalNumbers
+//    func twoDecimalNumbers(place: Int) -> Double{
+//        let divisor = pow(10.0, Double(place))
+//        return (self * divisor).rounded() / divisor
+//    }
+//}
+//
 

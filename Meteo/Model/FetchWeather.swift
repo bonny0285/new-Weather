@@ -40,6 +40,34 @@ class FetchWeather {
     }
     
     
+
+    fileprivate func JSONTransform(_ json: JSON) -> WeatherModel {
+        let name = "\(json[0]["city"]["name"])"
+        let population = Int("\(json[0]["city"]["population"])") ?? 0
+        let country = "\(json[0]["city"]["country"])"
+        let temperature = Double("\(json[0]["list"][0]["main"]["temp"])") ?? 0.0
+        let id = Int("\(json[0]["list"][0]["weather"][0]["id"])") ?? 0
+        
+        let list = json[0]["list"]
+        
+        var weatherCell: [WeatherModelCell] = []
+        for i in 0 ... list.count - 1{
+            let temperatureMax = Double("\(json[0]["list"][i]["main"]["temp_max"])")!
+            let temperatureMin = Double("\(json[0]["list"][i]["main"]["temp_min"])")!
+            let weatherID = Int("\(json[0]["list"][i]["weather"][0]["id"])")!
+            let description = "\(json[0]["list"][i]["weather"][0]["description"])"
+            let time = "\(json[0]["list"][i]["dt_txt"])"
+            
+            let cell = WeatherModelCell(temperatureMax: temperatureMax, temperatureMin: temperatureMin, conditionID: weatherID, description: description, time: time)
+            weatherCell.append(cell)
+        }
+        
+        let weather = WeatherModel(name: name, population: population, country: country, temperature: temperature, conditionID: id, weatherForCell: weatherCell, condition: weatherCondition.getWeatherConditionFromID(weatherID: id))
+        
+        return weather
+    }
+    
+    
     //MARK: - ParseJSON
    fileprivate func parseJSON(forJSON json: JSON) -> WeatherStruct{
         let name = "\(json[0]["city"]["name"])"

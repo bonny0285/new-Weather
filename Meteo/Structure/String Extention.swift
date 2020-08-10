@@ -6,30 +6,30 @@
 //  Copyright © 2020 Massimiliano Bonafede. All rights reserved.
 //
 
-import Foundation
-
-
-extension String {
-    
-//MARK: - ToDate
-    func toDate(dateFormat: String) -> Date? {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = dateFormat
-        
-        let date: Date? = dateFormatter.date(from: self)
-        return date
-}
-    
-    
-//MARK: - LessSpaces
-    func lessSpaces(citta : String) -> String{
-        //var indice = 0
-        for i in citta {
-            if i == " "{
-                
-            }
-        }
-        return ""
-    }
-}
+//import Foundation
+//
+//
+//extension String {
+//    
+////MARK: - ToDate
+//    func toDate(dateFormat: String) -> Date? {
+//        
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = dateFormat
+//        
+//        let date: Date? = dateFormatter.date(from: self)
+//        return date
+//}
+//    
+//    
+////MARK: - LessSpaces
+//    func lessSpaces(citta : String) -> String{
+//        //var indice = 0
+//        for i in citta {
+//            if i == " "{
+//                
+//            }
+//        }
+//        return ""
+//    }
+//}

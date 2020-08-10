@@ -95,6 +95,24 @@
                                             <action selector="currentLocationButtonWasPressed:" destination="HXK-tn-zPe" eventType="touchUpInside" id="TZH-wm-iyH"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9aq-kc-Hhn">
+                                        <rect key="frame" x="113" y="0.0" width="54" height="40"/>
+                                        <state key="normal" title="Preferiti">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="preferredButtonWasPressed:" destination="HXK-tn-zPe" eventType="touchUpInside" id="8ds-1T-Tsq"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c8F-A7-Syj">
+                                        <rect key="frame" x="240" y="0.0" width="61" height="40"/>
+                                        <state key="normal" title="Aggiungi">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addButtonWasPressed:" destination="HXK-tn-zPe" eventType="touchUpInside" id="PcG-Np-gNg"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OnQ-oV-cph">
                                         <rect key="frame" x="374" y="0.0" width="40" height="40"/>
                                         <constraints>
@@ -203,6 +221,7 @@
                         <viewLayoutGuide key="safeArea" id="gmD-JP-700"/>
                     </view>
                     <connections>
+                        <outlet property="addButton" destination="c8F-A7-Syj" id="Att-n0-x0v"/>
                         <outlet property="backgroundImage" destination="Ve2-Jr-hkw" id="5td-sM-65v"/>
                         <outlet property="cityNameLabel" destination="E9t-MO-t19" id="Tkq-vH-NRe"/>
                         <outlet property="currentLocationButton" destination="urO-j6-gQ6" id="nI8-96-L2j"/>
@@ -210,16 +229,49 @@
                         <outlet property="gradiLabel" destination="SHy-ly-gaL" id="Dpp-Op-FbE"/>
                         <outlet property="myStackView" destination="Yty-AR-7XT" id="dFE-vj-sAC"/>
                         <outlet property="populationLabel" destination="oYK-Os-l3k" id="bzL-yu-Pi0"/>
+                        <outlet property="preferredButton" destination="9aq-kc-Hhn" id="wf7-s7-Jq7"/>
                         <outlet property="searchLocationButton" destination="OnQ-oV-cph" id="LeZ-4t-G6i"/>
                         <outlet property="tableView" destination="2LX-l5-mFA" id="2pC-di-NBN"/>
                         <outlet property="weatherImage" destination="EGK-Zi-c9n" id="uEy-Xh-Qe1"/>
                         <outlet property="weatherTemperatureLabel" destination="RTr-hd-i4W" id="fLU-Oc-0eW"/>
                         <segue destination="tJK-O2-DXT" kind="show" identifier="ShowCitiesList" id="YNK-55-LtX"/>
+                        <segue destination="nqN-7M-k50" kind="show" identifier="ShowPreferredWeather" id="1vm-fa-CVa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UG8-ej-oFe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-852" y="274"/>
+        </scene>
+        <!--Preferred Weather View Controller-->
+        <scene sceneID="pG2-0B-clm">
+            <objects>
+                <viewController id="nqN-7M-k50" customClass="PreferredWeatherViewController" customModule="Meteo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="u25-E3-5zk">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bIc-r0-Bdc">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="bIc-r0-Bdc" firstAttribute="top" secondItem="ciJ-JB-jCR" secondAttribute="top" id="RE2-0P-FS4"/>
+                            <constraint firstItem="ciJ-JB-jCR" firstAttribute="trailing" secondItem="bIc-r0-Bdc" secondAttribute="trailing" id="Vyt-oE-O8m"/>
+                            <constraint firstItem="bIc-r0-Bdc" firstAttribute="leading" secondItem="ciJ-JB-jCR" secondAttribute="leading" id="W8t-n1-AXv"/>
+                            <constraint firstAttribute="bottom" secondItem="bIc-r0-Bdc" secondAttribute="bottom" id="XAe-bB-o9V"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ciJ-JB-jCR"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="beg-ku-Z0e"/>
+                    <connections>
+                        <outlet property="tableView" destination="bIc-r0-Bdc" id="vKc-gA-qK9"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oMp-OJ-IBA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-852.17391304347836" y="1027.9017857142858"/>
         </scene>
         <!--Cities List View Controller-->
         <scene sceneID="Fqa-Cj-2fO">
