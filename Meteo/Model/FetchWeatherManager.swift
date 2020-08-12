@@ -1,8 +1,8 @@
 //
-//  FetchWeather.swift
+//  FetchWeatherManager.swift
 //  Meteo
 //
-//  Created by Massimiliano Bonafede on 03/08/2020.
+//  Created by Massimiliano Bonafede on 12/08/2020.
 //  Copyright © 2020 Massimiliano Bonafede. All rights reserved.
 //
 
@@ -10,14 +10,22 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
-
-class FetchWeather {
+class FetchWeatherManager {
     
-    var weatherCondition: WeatherCondition = .sole
-    //var citiesResult: [CitiesList] = []
+    var weather: WeatherModel!
+    fileprivate var weatherCondition: WeatherCondition = .sole
     
     
-    func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherModel) -> ()){
+    init(latitude: Double, longitude: Double, completion: @escaping (WeatherModel) -> ())  {
+        DispatchQueue.main.async {
+            self.getMyWeatherData(forLatitude: latitude, forLongitude: longitude) {
+                self.weather = $0
+                completion($0)
+            }
+        }
+    }
+    
+    private func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherModel) -> ()){
         
         guard let language = Locale.current.languageCode else { return }
         
@@ -48,6 +56,7 @@ class FetchWeather {
         let temperature = Double("\(json[0]["list"][0]["main"]["temp"])") ?? 0.0
         let id = Int("\(json[0]["list"][0]["weather"][0]["id"])") ?? 0
         
+        
         let list = json[0]["list"]
         
         var weatherCell: [WeatherModelCell] = []
@@ -62,15 +71,14 @@ class FetchWeather {
             weatherCell.append(cell)
         }
         
-        let weather = WeatherModel(name: name, population: population, country: country, temperature: temperature, conditionID: id, weatherForCell: weatherCell, condition: FetchWeatherManager.WeatherCondition.nebbia)
+        let weather = WeatherModel(name: name, population: population, country: country, temperature: temperature, conditionID: id, weatherForCell: weatherCell, condition: weatherCondition.getWeatherConditionFromID(weatherID: id))
         
         return weather
     }
- 
-    
 }
 
-    extension FetchWeather {
+
+    extension FetchWeatherManager {
         enum WeatherCondition: String {
             case tempesta = "tempesta"
             case pioggia = "pioggia"
@@ -106,9 +114,3 @@ class FetchWeather {
             
         }
 }
-
-    
-    
-    
-    
-

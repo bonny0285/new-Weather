@@ -12,7 +12,7 @@ import UIKit
 class WeatherManagerModel {
     var arrayName: [String] = []
     var arrayForCell: [WeatherModelCell] = []
-    var arrayConditon: [FetchWeather.WeatherCondition] = []
+    var arrayConditon: [FetchWeatherManager.WeatherCondition] = []
     var arrayImages: [UIImage] = []
     var arrayGradi: [String] = []
 }
@@ -23,6 +23,7 @@ class WeatherManager {
     var weather = WeatherManagerModel()
     fileprivate var cell: [[WeatherModelCell]] = []
     fileprivate var fetchWeather = FetchWeather()
+    fileprivate var fetchWeatherManager: FetchWeatherManager?
     var isEmptyDataBase: Bool {
         realmManager.isElementsAreEmpty
     }
@@ -42,7 +43,7 @@ extension WeatherManager: RealmManagerDelegate {
         
         self.weather.arrayGradi.append(weather.temperatureString)
         self.weather.arrayName.append(weather.name)
-        self.weather.arrayConditon.append(self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID))
+        self.weather.arrayConditon.append(weather.condition)
         self.weather.arrayImages.append(UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
         self.weather.arrayForCell = cell.first!
 

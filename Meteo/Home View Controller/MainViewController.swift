@@ -176,16 +176,11 @@ class MainViewController: UIViewController {
     var userLocation: LocationForUser = (0.0, 0.0)
     var realmManager = RealmManager()
     var currentLocation: LocationForUser = (0.0, 0.0)
+
+    var weatherManager: WeatherManager?
+
     
-    /// Properties for Prefered Weather
-        
-        var arrayName: [String] = []
-        var arrayCell: [WeatherModelCell] = []
-        var arrayConditon: [FetchWeather.WeatherCondition] = []
-        var arrayImages: [UIImage] = []
-        var weatherManager: WeatherManager?
-        var cell: [[WeatherModelCell]] = []
-    ///
+    var fetchWeatherManager: FetchWeatherManager?
     
     var state: State = .notSave {
         didSet {
@@ -195,6 +190,10 @@ class MainViewController: UIViewController {
             case .notSave:
                 print("NOT SAVE")
             case .loading:
+                if #available(iOS 13.0, *) {
+                    overrideUserInterfaceStyle = .light
+                }
+                
                 navigationController?.navigationBar.isHidden = true
             case .endLoading:
                 navigationController?.navigationBar.isHidden = false
@@ -204,7 +203,6 @@ class MainViewController: UIViewController {
                 var searchImage = UIImage()
                 
                 if #available(iOS 13.0, *) {
-                    overrideUserInterfaceStyle = .light
                     locationImage = UIImage(systemName: "location.circle.fill")!
                     searchImage = UIImage(systemName: "magnifyingglass")!
                 } else {
@@ -219,7 +217,7 @@ class MainViewController: UIViewController {
                 let addButtonItem = UIBarButtonItem(title: "Aggiungi", style: .plain, target: self, action: #selector(addButtonItemWasPressed(_:)))
                 
                 
-                if weatherManager?.isEmptyDataBase == true {
+                if realmManager.isElementsAreEmpty == true {
                     navigationItem.leftBarButtonItem = leftButton
                 } else {
                     navigationItem.leftBarButtonItems = [leftButton, preferredButtonItem]
@@ -248,12 +246,12 @@ class MainViewController: UIViewController {
         
         state = .loading
         
-        if #available(iOS 13.0, *) {
-            // Always adopt a light interface style.
-            overrideUserInterfaceStyle = .light
-        }
-        
-        weatherManager = WeatherManager.init()
+//        if #available(iOS 13.0, *) {
+//            // Always adopt a light interface style.
+//            overrideUserInterfaceStyle = .light
+//        }
+//
+        weatherManager = WeatherManager()
         
         
         
@@ -317,29 +315,32 @@ class MainViewController: UIViewController {
     }
     
     @objc func preferedButtonItemPressed(_ sender: UIBarButtonItem) {
+//        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: weatherManager?.weather)
         self.performSegue(withIdentifier: "ShowPreferredWeather", sender: weatherManager?.weather)
     }
     
     
-    func prepareUIForWeather(_ latitude: Double, _ longitude: Double){
+    func prepareUIForWeather(_ latitude: Double, _ longitude: Double) {
         
         let storyboard = UIStoryboard(name: "loading", bundle: nil)
         let loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
+        
         currentLocation.latitude = latitude
         currentLocation.longitude = longitude
+        
         present(loadingController, animated: true) {
-            self.fetchWeather.getMyWeatherData(forLatitude: latitude, forLongitude: longitude) { weather in
-                
+            
+            self.fetchWeatherManager = FetchWeatherManager(latitude: latitude, longitude: longitude) { weather in
                 self.currentWeather = weather
-                
                 self.fetchJSONAndSetupUI(weather: weather)
                 self.state = .endLoading
                 loadingController.dismiss(animated: true, completion: nil)
             }
+            
         }
     }
-    
-    
+            
+
     func fetchJSONAndSetupUI(weather: WeatherModel) {
         
         self.myStackView.isHidden = false
@@ -429,6 +430,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     
 }
+
+
 
 
 //MARK: - MainViewControlloerLocationDelegate

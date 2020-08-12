@@ -93,7 +93,7 @@ struct WeatherModel {
     var temperature: Double
     var conditionID: Int
     var weatherForCell: [WeatherModelCell]
-    var condition: FetchWeather.WeatherCondition
+    var condition: FetchWeatherManager.WeatherCondition
     
     var temperatureString: String {
         String(format: "%.1f", temperature)

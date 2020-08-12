@@ -17,8 +17,9 @@ protocol RealmManagerDelegate: class {
 class RealmManager {
     
     var delegate: RealmManagerDelegate?
-    var fetchManager = FetchWeather()
+    var fetchWeatherManager: FetchWeatherManager?
     var isElementsAreEmpty: Bool = false
+    
     func saveWeather(_ cityName: String, _ latitude: Double, _ longitude: Double) {
         
         do {
@@ -54,9 +55,9 @@ class RealmManager {
             
             for i in results {
                 DispatchQueue.main.async {
-                    self.fetchManager.getMyWeatherData(forLatitude: i.latitude, forLongitude: i.longitude) { (weather) in
-                    self.delegate?.retriveResultsDidFinished(weather)
-                }
+                    self.fetchWeatherManager = FetchWeatherManager(latitude: i.latitude, longitude: i.longitude, completion: { (weather) in
+                        self.delegate?.retriveResultsDidFinished(weather)
+                    })
                 }
             }
             
