@@ -19,7 +19,7 @@ class WeatherTableViewCell: UITableViewCell {
     
     
     //MARK: - SetupCell
-    func setupCell(_ weather: WeatherModelCell,atCondition condition: FetchWeather.WeatherCondition){
+    func setupCell(_ weather: WeatherModelCell,atCondition condition: FetchWeatherManager.WeatherCondition){
         
         temperatureMax.text = "Temp Max: \(weather.temperatureMax)"
         temperatureMin.text = "Temp Min: \(weather.temperatureMin)"
@@ -53,7 +53,7 @@ class WeatherTableViewCell: UITableViewCell {
     
     
     //MARK: - SetColorUIViewForBackground
-    func setColorUIViewForBackground(_ condition: FetchWeather.WeatherCondition){
+    func setColorUIViewForBackground(_ condition: FetchWeatherManager.WeatherCondition){
         
         switch condition {
         case .tempesta:

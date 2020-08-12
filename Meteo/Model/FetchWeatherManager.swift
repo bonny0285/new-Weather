@@ -13,7 +13,10 @@ import SwiftyJSON
 class FetchWeatherManager {
     
     var weather: WeatherModel!
-    fileprivate var weatherCondition: WeatherCondition = .sole
+    var weatherCondition: WeatherCondition = .sole
+    
+    
+    init() {}
     
     
     init(latitude: Double, longitude: Double, completion: @escaping (WeatherModel) -> ())  {

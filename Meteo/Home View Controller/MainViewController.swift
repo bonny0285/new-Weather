@@ -168,7 +168,7 @@ class MainViewController: UIViewController {
     
     let locationManager = CLLocationManager()
     
-    var fetchWeather = FetchWeather()
+    //var fetchWeather = FetchWeather()
     var language: String = ""
     var delegate: MainViewControllerLocationDelegate?
     var citiesArray: [CitiesList] = []
@@ -227,7 +227,7 @@ class MainViewController: UIViewController {
             }
         }
     }
-    var condition: FetchWeather.WeatherCondition = .nebbia {
+    var condition: FetchWeatherManager.WeatherCondition = .nebbia {
         didSet {
             navigationController?.navigationBar.tintColor = .black
         }
@@ -349,9 +349,10 @@ class MainViewController: UIViewController {
         let populationText = NSLocalizedString("population_label", comment: "")
         self.populationLabel.text = "\(populationText)\(weather.population)"
         self.weatherTemperatureLabel.text = weather.temperatureString
-        self.backgroundImage.image = UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
-        self.condition = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID)
-        
+        //self.backgroundImage.image = UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
+        self.backgroundImage.image = UIImage(named: (self.fetchWeatherManager?.weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
+        //self.condition = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID)
+        self.condition = self.fetchWeatherManager?.weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID) as! FetchWeatherManager.WeatherCondition
         if #available(iOS 13.0, *) {
             self.weatherImage.image = UIImage(systemName: weather.conditionName)
         } else {

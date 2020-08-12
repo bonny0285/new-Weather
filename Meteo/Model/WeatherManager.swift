@@ -22,8 +22,8 @@ class WeatherManager {
     
     var weather = WeatherManagerModel()
     fileprivate var cell: [[WeatherModelCell]] = []
-    fileprivate var fetchWeather = FetchWeather()
-    fileprivate var fetchWeatherManager: FetchWeatherManager?
+    //fileprivate var fetchWeather = FetchWeather()
+    fileprivate var fetchWeatherManager = FetchWeatherManager()
     var isEmptyDataBase: Bool {
         realmManager.isElementsAreEmpty
     }
@@ -44,8 +44,11 @@ extension WeatherManager: RealmManagerDelegate {
         self.weather.arrayGradi.append(weather.temperatureString)
         self.weather.arrayName.append(weather.name)
         self.weather.arrayConditon.append(weather.condition)
-        self.weather.arrayImages.append(UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
+        self.weather.arrayImages.append(UIImage(named:self.fetchWeatherManager.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
+            
+        //self.weather.arrayImages.append(UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
+            
         self.weather.arrayForCell = cell.first!
-
+        
     }
 }
