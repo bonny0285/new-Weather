@@ -187,7 +187,48 @@ class MainViewController: UIViewController {
         var cell: [[WeatherModelCell]] = []
     ///
     
-    var state: State = .notSave
+    var state: State = .notSave {
+        didSet {
+            switch state {
+            case .save:
+                print("SAVE")
+            case .notSave:
+                print("NOT SAVE")
+            case .loading:
+                navigationController?.navigationBar.isHidden = true
+            case .endLoading:
+                navigationController?.navigationBar.isHidden = false
+                
+                navigationController?.navigationBar.barTintColor = .gray
+                var locationImage = UIImage()
+                var searchImage = UIImage()
+                
+                if #available(iOS 13.0, *) {
+                    overrideUserInterfaceStyle = .light
+                    locationImage = UIImage(systemName: "location.circle.fill")!
+                    searchImage = UIImage(systemName: "magnifyingglass")!
+                } else {
+                    locationImage = UIImage(named: "address")!
+                    searchImage = UIImage(named: "search")!
+                    
+                }
+                
+                let leftButton = UIBarButtonItem(image: locationImage, style: .plain, target: self, action: #selector(leftButtonWasPressed(_:)))
+                let rightButton = UIBarButtonItem(image: searchImage, style: .plain, target: self, action: #selector(rightButtonWasPressed(_:)))
+                let preferredButtonItem = UIBarButtonItem(title: "Preferiti", style: .plain, target: self, action: #selector(preferedButtonItemPressed(_:)))
+                let addButtonItem = UIBarButtonItem(title: "Aggiungi", style: .plain, target: self, action: #selector(addButtonItemWasPressed(_:)))
+                
+                
+                if weatherManager?.isEmptyDataBase == true {
+                    navigationItem.leftBarButtonItem = leftButton
+                } else {
+                    navigationItem.leftBarButtonItems = [leftButton, preferredButtonItem]
+                }
+                
+                navigationItem.rightBarButtonItems = [rightButton, addButtonItem]
+            }
+        }
+    }
     var condition: FetchWeather.WeatherCondition = .nebbia {
         didSet {
             navigationController?.navigationBar.tintColor = .black
@@ -203,16 +244,18 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.barTintColor = .gray
         
+        
+        state = .loading
         
         if #available(iOS 13.0, *) {
             // Always adopt a light interface style.
             overrideUserInterfaceStyle = .light
         }
         
-        realmManager.delegate = self
-        realmManager.retriveWeather()
+        weatherManager = WeatherManager.init()
+        
+        
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -220,27 +263,7 @@ class MainViewController: UIViewController {
         
         tableView.isHidden = true
         
-        var locationImage = UIImage()
-        var searchImage = UIImage()
-        
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = .light
-            locationImage = UIImage(systemName: "location.circle.fill")!
-            searchImage = UIImage(systemName: "magnifyingglass")!
-        } else {
-            locationImage = UIImage(named: "address")!
-            searchImage = UIImage(named: "search")!
-            
-        }
-        
-        
-        let leftButton = UIBarButtonItem(image: locationImage, style: .plain, target: self, action: #selector(leftButtonWasPressed(_:)))
-        let rightButton = UIBarButtonItem(image: searchImage, style: .plain, target: self, action: #selector(rightButtonWasPressed(_:)))
-        let preferredButtonItem = UIBarButtonItem(title: "Preferiti", style: .plain, target: self, action: #selector(preferedButtonItemPressed(_:)))
-        let addButtonItem = UIBarButtonItem(title: "Aggiungi", style: .plain, target: self, action: #selector(addButtonItemWasPressed(_:)))
-        
-        navigationItem.leftBarButtonItems = [leftButton, preferredButtonItem]
-        navigationItem.rightBarButtonItems = [rightButton, addButtonItem]
+
         
         
         tableView.delegate = self
@@ -271,7 +294,7 @@ class MainViewController: UIViewController {
             }
         } else if segue.identifier == "ShowPreferredWeather" {
             if let controller = segue.destination as? PreferredWeatherViewController {
-                controller.weatherManager = sender as? WeatherManager
+                controller.weatherManager = sender as? WeatherManagerModel
             }
         }
     }
@@ -294,7 +317,7 @@ class MainViewController: UIViewController {
     }
     
     @objc func preferedButtonItemPressed(_ sender: UIBarButtonItem) {
-        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: weatherManager)
+        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: weatherManager?.weather)
     }
     
     
@@ -310,7 +333,7 @@ class MainViewController: UIViewController {
                 self.currentWeather = weather
                 
                 self.fetchJSONAndSetupUI(weather: weather)
-                
+                self.state = .endLoading
                 loadingController.dismiss(animated: true, completion: nil)
             }
         }
@@ -426,26 +449,9 @@ extension MainViewController {
     enum State {
         case save
         case notSave
+        case loading
+        case endLoading
     }
 }
 
 
-extension MainViewController: RealmManagerDelegate {
-    
-    func retriveResultsDidFinished(_ weather: WeatherModel) {
-        
-        self.cell.append(weather.weatherForCell)
-        
-        self.arrayName.append(weather.name)
-        self.arrayConditon.append(self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID))
-        self.arrayImages.append(UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
-        DispatchQueue.main.async {
-            
-            self.weatherManager = WeatherManager()
-            self.weatherManager?.arrayName = self.arrayName
-            self.weatherManager?.arrayForCell = self.cell.first!
-            self.weatherManager?.arrayImages = self.arrayImages
-            self.weatherManager?.arrayConditon = self.arrayConditon
-        }
-    }
-}

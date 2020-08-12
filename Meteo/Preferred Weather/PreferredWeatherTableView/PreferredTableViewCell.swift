@@ -15,6 +15,7 @@ class PreferredTableViewCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var weatherImage: UIImageView!
+    @IBOutlet weak var degreesLabel: UILabel!
     
 
     override func awakeFromNib() {

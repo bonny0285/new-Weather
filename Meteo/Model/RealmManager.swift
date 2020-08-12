@@ -18,7 +18,7 @@ class RealmManager {
     
     var delegate: RealmManagerDelegate?
     var fetchManager = FetchWeather()
-    
+    var isElementsAreEmpty: Bool = false
     func saveWeather(_ cityName: String, _ latitude: Double, _ longitude: Double) {
         
         do {
@@ -45,6 +45,12 @@ class RealmManager {
             let realm = try Realm.init()
             
             let results = realm.objects(RealmWeatherManager.self)
+            
+            if results.count == 0 {
+                isElementsAreEmpty = true
+            } else {
+                isElementsAreEmpty = false
+            }
             
             for i in results {
                 DispatchQueue.main.async {

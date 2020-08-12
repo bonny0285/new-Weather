@@ -14,9 +14,9 @@ class PreferredDataSource: NSObject {
 
     
     let organizer: DataOrganizer
-    let weatherManager: WeatherManager
+    let weatherManager: WeatherManagerModel
     
-    init(weatherManager: WeatherManager) {
+    init(weatherManager: WeatherManagerModel) {
         self.weatherManager = weatherManager
         self.organizer = DataOrganizer(weatherManager: weatherManager)
     }
@@ -32,9 +32,9 @@ extension PreferredDataSource {
             weatherManager.arrayName.count
         }
         
-        let weatherManager: WeatherManager
+        let weatherManager: WeatherManagerModel
         
-        init(weatherManager: WeatherManager) {
+        init(weatherManager: WeatherManagerModel) {
             self.weatherManager = weatherManager
 
         }
@@ -54,6 +54,10 @@ extension PreferredDataSource {
         func image(_ index: IndexPath) -> UIImage {
             weatherManager.arrayImages[index.row]
         }
+        
+        func gradi(_ index: IndexPath) -> String {
+            weatherManager.arrayGradi[index.row]
+        }
          
     }
         
@@ -72,8 +76,9 @@ extension PreferredDataSource: UITableViewDataSource {
         let weatherCell = organizer.weatherCell(indexPath)
         let condition = organizer.condition(indexPath)
         let image = organizer.image(indexPath)
+        let gradi = organizer.gradi(indexPath)
         
-        cell.configure(name, weatherCell, condition, image)
+        cell.configure(name, weatherCell, condition, image, gradi)
         
         return cell
     }
@@ -84,7 +89,7 @@ extension PreferredDataSource: UITableViewDataSource {
 
 extension PreferredTableViewCell {
     
-    func configure(_ row: String,_ weather: WeatherModelCell, _ condition: FetchWeather.WeatherCondition, _ background: UIImage) {
+    func configure(_ row: String,_ weather: WeatherModelCell, _ condition: FetchWeather.WeatherCondition, _ background: UIImage,_ gradi: String) {
         
         self.name.text = row
         
@@ -94,6 +99,8 @@ extension PreferredTableViewCell {
         } else {
             self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
         }
+        
+        self.degreesLabel.text = gradi
         
         self.backgroundImage.image = background
         setColorUIViewForBackground(condition)
