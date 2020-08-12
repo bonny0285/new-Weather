@@ -20,7 +20,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="Yty-AR-7XT">
-                                <rect key="frame" x="87" y="178" width="240.5" height="172.5"/>
+                                <rect key="frame" x="87" y="108" width="240.5" height="172.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="46" translatesAutoresizingMaskIntoConstraints="NO" id="bCY-cC-taN">
                                         <rect key="frame" x="0.0" y="0.0" width="101.5" height="101"/>
@@ -77,59 +77,8 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="rIZ-ta-ryX">
-                                <rect key="frame" x="0.0" y="88" width="414" height="40"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="urO-j6-gQ6">
-                                        <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="8V2-52-yj9"/>
-                                            <constraint firstAttribute="width" secondItem="urO-j6-gQ6" secondAttribute="height" multiplier="1:1" id="ady-ps-DxM"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="currentLocationButtonWasPressed:" destination="HXK-tn-zPe" eventType="touchUpInside" id="TZH-wm-iyH"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9aq-kc-Hhn">
-                                        <rect key="frame" x="113" y="0.0" width="54" height="40"/>
-                                        <state key="normal" title="Preferiti">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="preferredButtonWasPressed:" destination="HXK-tn-zPe" eventType="touchUpInside" id="8ds-1T-Tsq"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c8F-A7-Syj">
-                                        <rect key="frame" x="240" y="0.0" width="61" height="40"/>
-                                        <state key="normal" title="Aggiungi">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="addButtonWasPressed:" destination="HXK-tn-zPe" eventType="touchUpInside" id="PcG-Np-gNg"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OnQ-oV-cph">
-                                        <rect key="frame" x="374" y="0.0" width="40" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="OnQ-oV-cph" secondAttribute="height" multiplier="1:1" id="YKW-iG-XRg"/>
-                                            <constraint firstAttribute="height" constant="40" id="mJP-t0-PcN"/>
-                                        </constraints>
-                                        <connections>
-                                            <action selector="searchLocationButtonWasPressed:" destination="HXK-tn-zPe" eventType="touchUpInside" id="WwX-UV-XLd"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="0Ra-Ay-JY0"/>
-                                </constraints>
-                            </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2LX-l5-mFA">
-                                <rect key="frame" x="0.0" y="410.5" width="414" height="485.5"/>
+                                <rect key="frame" x="0.0" y="340.5" width="414" height="555.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="weatherCell" rowHeight="120" id="6A2-3p-wlL" customClass="WeatherTableViewCell" customModule="Meteo" customModuleProvider="target">
@@ -205,15 +154,12 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="Yty-AR-7XT" firstAttribute="centerX" secondItem="Bnr-dP-moE" secondAttribute="centerX" id="10J-2m-qQk"/>
-                            <constraint firstItem="rIZ-ta-ryX" firstAttribute="top" secondItem="gmD-JP-700" secondAttribute="top" id="22c-gG-OeV"/>
                             <constraint firstItem="2LX-l5-mFA" firstAttribute="trailing" secondItem="gmD-JP-700" secondAttribute="trailing" id="2Fq-tm-6Yd"/>
-                            <constraint firstItem="rIZ-ta-ryX" firstAttribute="leading" secondItem="gmD-JP-700" secondAttribute="leading" id="4V5-aW-mRL"/>
                             <constraint firstItem="Ve2-Jr-hkw" firstAttribute="top" secondItem="Bnr-dP-moE" secondAttribute="top" id="4uT-sB-QGz"/>
                             <constraint firstAttribute="bottom" secondItem="2LX-l5-mFA" secondAttribute="bottom" id="D1x-SN-qn1"/>
                             <constraint firstItem="2LX-l5-mFA" firstAttribute="top" secondItem="Yty-AR-7XT" secondAttribute="bottom" constant="60" id="DkZ-lF-mb3"/>
+                            <constraint firstItem="Yty-AR-7XT" firstAttribute="top" secondItem="gmD-JP-700" secondAttribute="top" constant="20" id="Nna-Gi-dik"/>
                             <constraint firstAttribute="bottom" secondItem="Ve2-Jr-hkw" secondAttribute="bottom" id="UY6-cV-NS6"/>
-                            <constraint firstItem="Yty-AR-7XT" firstAttribute="top" secondItem="rIZ-ta-ryX" secondAttribute="bottom" constant="50" id="bA8-1n-JB1"/>
-                            <constraint firstItem="gmD-JP-700" firstAttribute="trailing" secondItem="rIZ-ta-ryX" secondAttribute="trailing" id="eGc-Zn-NkM"/>
                             <constraint firstItem="Ve2-Jr-hkw" firstAttribute="trailing" secondItem="gmD-JP-700" secondAttribute="trailing" id="ffa-zi-5bf"/>
                             <constraint firstItem="2LX-l5-mFA" firstAttribute="leading" secondItem="gmD-JP-700" secondAttribute="leading" id="j45-IP-5X5"/>
                             <constraint firstItem="Ve2-Jr-hkw" firstAttribute="leading" secondItem="gmD-JP-700" secondAttribute="leading" id="wKp-Hb-zeC"/>
@@ -222,16 +168,12 @@
                     </view>
                     <navigationItem key="navigationItem" id="k8G-yJ-pEa"/>
                     <connections>
-                        <outlet property="addButton" destination="c8F-A7-Syj" id="Att-n0-x0v"/>
                         <outlet property="backgroundImage" destination="Ve2-Jr-hkw" id="5td-sM-65v"/>
                         <outlet property="cityNameLabel" destination="E9t-MO-t19" id="Tkq-vH-NRe"/>
-                        <outlet property="currentLocationButton" destination="urO-j6-gQ6" id="nI8-96-L2j"/>
                         <outlet property="gradiClabel" destination="6kO-Kp-6Jf" id="bma-1c-jsF"/>
                         <outlet property="gradiLabel" destination="SHy-ly-gaL" id="Dpp-Op-FbE"/>
                         <outlet property="myStackView" destination="Yty-AR-7XT" id="dFE-vj-sAC"/>
                         <outlet property="populationLabel" destination="oYK-Os-l3k" id="bzL-yu-Pi0"/>
-                        <outlet property="preferredButton" destination="9aq-kc-Hhn" id="wf7-s7-Jq7"/>
-                        <outlet property="searchLocationButton" destination="OnQ-oV-cph" id="LeZ-4t-G6i"/>
                         <outlet property="tableView" destination="2LX-l5-mFA" id="2pC-di-NBN"/>
                         <outlet property="weatherImage" destination="EGK-Zi-c9n" id="uEy-Xh-Qe1"/>
                         <outlet property="weatherTemperatureLabel" destination="RTr-hd-i4W" id="fLU-Oc-0eW"/>

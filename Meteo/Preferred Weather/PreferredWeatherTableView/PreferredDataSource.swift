@@ -11,24 +11,15 @@ import UIKit
 
 class PreferredDataSource: NSObject {
     
-    
-    var arrayName: [String]
-    var arrayForCell: [WeatherModelCell]
-    var arrayConditon: [FetchWeather.WeatherCondition]
-    var arrayImages: [UIImage]
+
     
     let organizer: DataOrganizer
+    let weatherManager: WeatherManager
     
-    init(arrayName: [String], arrayForCell: [WeatherModelCell], arrayConditon: [FetchWeather.WeatherCondition], arrayImages: [UIImage]) {
-        self.arrayName = arrayName
-        self.arrayForCell = arrayForCell
-        self.arrayConditon = arrayConditon
-        self.arrayImages = arrayImages
-        
-        self.organizer = DataOrganizer(arrayName: arrayName, arrayForCell: arrayForCell, arrayConditon: arrayConditon, arrayImages: arrayImages)
+    init(weatherManager: WeatherManager) {
+        self.weatherManager = weatherManager
+        self.organizer = DataOrganizer(weatherManager: weatherManager)
     }
-    
-    
     
 }
 
@@ -37,37 +28,31 @@ extension PreferredDataSource {
     
     struct DataOrganizer {
         
-        var arrayName: [String]
-        var arrayForCell: [WeatherModelCell]
-        var arrayConditon: [FetchWeather.WeatherCondition]
-        var arrayImages: [UIImage]
-        
         var counter: Int {
-            arrayName.count
+            weatherManager.arrayName.count
         }
         
-        init(arrayName: [String], arrayForCell: [WeatherModelCell], arrayConditon: [FetchWeather.WeatherCondition], arrayImages: [UIImage]) {
-            self.arrayName = arrayName
-            self.arrayForCell = arrayForCell
-            self.arrayConditon = arrayConditon
-            self.arrayImages = arrayImages
+        let weatherManager: WeatherManager
+        
+        init(weatherManager: WeatherManager) {
+            self.weatherManager = weatherManager
+
         }
-       
 
         func locationName(_ index: IndexPath) -> String {
-            arrayName[index.row]
+            weatherManager.arrayName[index.row]
         }
         
         func weatherCell(_ index: IndexPath) -> WeatherModelCell {
-            arrayForCell[index.row]
+            weatherManager.arrayForCell[index.row]
         }
         
         func condition(_ index: IndexPath) -> FetchWeather.WeatherCondition {
-            arrayConditon[index.row]
+            weatherManager.arrayConditon[index.row]
         }
         
         func image(_ index: IndexPath) -> UIImage {
-            arrayImages[index.row]
+            weatherManager.arrayImages[index.row]
         }
          
     }
@@ -92,6 +77,8 @@ extension PreferredDataSource: UITableViewDataSource {
         
         return cell
     }
+    
+
 }
 
 

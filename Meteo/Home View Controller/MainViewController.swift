@@ -82,7 +82,7 @@ class MainViewController: UIViewController {
             }
         }
     }
-
+    
     @IBOutlet weak var weatherTemperatureLabel: UILabel! {
         didSet {
             switch condition {
@@ -105,47 +105,7 @@ class MainViewController: UIViewController {
     }
     
     @IBOutlet weak var myStackView: UIStackView!
-    @IBOutlet weak var currentLocationButton: UIButton! {
-        didSet {
-            switch condition {
-            case .tempesta:
-                currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .pioggiaLeggera:
-                currentLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .neve:
-                currentLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                currentLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
     
-    @IBOutlet weak var searchLocationButton: UIButton! {
-        didSet {
-            switch condition {
-            case .tempesta:
-                searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .pioggiaLeggera:
-                searchLocationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .neve:
-                searchLocationButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                searchLocationButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var backgroundImage: UIImageView! {
@@ -198,52 +158,6 @@ class MainViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var preferredButton: UIButton! {
-        didSet {
-            preferredButton.setTitle(NSLocalizedString("preferred_button_label", comment: ""), for: .normal)
-            
-            switch condition {
-            case .tempesta:
-                preferredButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .pioggiaLeggera:
-                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .neve:
-                preferredButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                preferredButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
-    
-    @IBOutlet weak var addButton: UIButton! {
-        didSet {
-            addButton.setTitle(NSLocalizedString("add_button_label", comment: ""), for: .normal)
-            
-            switch condition {
-            case .tempesta:
-                addButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .pioggiaLeggera:
-                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .neve:
-                addButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                addButton.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
-    
     
     //MARK: - Properties
     
@@ -263,9 +177,23 @@ class MainViewController: UIViewController {
     var realmManager = RealmManager()
     var currentLocation: LocationForUser = (0.0, 0.0)
     
-    var state: State = .notSave
-    var condition: FetchWeather.WeatherCondition = .nebbia
+    /// Properties for Prefered Weather
         
+        var arrayName: [String] = []
+        var arrayCell: [WeatherModelCell] = []
+        var arrayConditon: [FetchWeather.WeatherCondition] = []
+        var arrayImages: [UIImage] = []
+        var weatherManager: WeatherManager?
+        var cell: [[WeatherModelCell]] = []
+    ///
+    
+    var state: State = .notSave
+    var condition: FetchWeather.WeatherCondition = .nebbia {
+        didSet {
+            navigationController?.navigationBar.tintColor = .black
+        }
+    }
+    
     
     
     
@@ -275,29 +203,44 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Smart Forecast"
+        navigationController?.navigationBar.barTintColor = .gray
         
-//        if #available(iOS 13.0, *) {
-//            // Always adopt a light interface style.
-//            overrideUserInterfaceStyle = .light
-//        }
-
+        
+        if #available(iOS 13.0, *) {
+            // Always adopt a light interface style.
+            overrideUserInterfaceStyle = .light
+        }
+        
+        realmManager.delegate = self
+        realmManager.retriveWeather()
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         
-        searchLocationButton.isHidden = true
         tableView.isHidden = true
+        
+        var locationImage = UIImage()
+        var searchImage = UIImage()
         
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
-            currentLocationButton.setImage(UIImage(systemName: "location.circle.fill"), for: .normal)
-            searchLocationButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+            locationImage = UIImage(systemName: "location.circle.fill")!
+            searchImage = UIImage(systemName: "magnifyingglass")!
         } else {
-            currentLocationButton.setImage(UIImage(named: "address"), for: .normal)
-            searchLocationButton.setImage(UIImage(named: "search"), for: .normal)
+            locationImage = UIImage(named: "address")!
+            searchImage = UIImage(named: "search")!
+            
         }
+        
+        
+        let leftButton = UIBarButtonItem(image: locationImage, style: .plain, target: self, action: #selector(leftButtonWasPressed(_:)))
+        let rightButton = UIBarButtonItem(image: searchImage, style: .plain, target: self, action: #selector(rightButtonWasPressed(_:)))
+        let preferredButtonItem = UIBarButtonItem(title: "Preferiti", style: .plain, target: self, action: #selector(preferedButtonItemPressed(_:)))
+        let addButtonItem = UIBarButtonItem(title: "Aggiungi", style: .plain, target: self, action: #selector(addButtonItemWasPressed(_:)))
+        
+        navigationItem.leftBarButtonItems = [leftButton, preferredButtonItem]
+        navigationItem.rightBarButtonItems = [rightButton, addButtonItem]
         
         
         tableView.delegate = self
@@ -316,7 +259,7 @@ class MainViewController: UIViewController {
         state = .notSave
         delegate = self
     }
-
+    
     
     //MARK: - Navigation
     
@@ -326,6 +269,10 @@ class MainViewController: UIViewController {
                 controller.citiesResult = sender as? [CitiesList]
                 controller.citiesArray = citiesArray
             }
+        } else if segue.identifier == "ShowPreferredWeather" {
+            if let controller = segue.destination as? PreferredWeatherViewController {
+                controller.weatherManager = sender as? WeatherManager
+            }
         }
     }
     
@@ -334,24 +281,21 @@ class MainViewController: UIViewController {
     
     //MARK: - Actions & Functions
     
-    @IBAction func currentLocationButtonWasPressed(_ sender: UIButton) {
+    
+    @objc func rightButtonWasPressed(_ sender: UIBarButtonItem) {
+        self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)
+    }
+    @objc func leftButtonWasPressed(_ sender: UIBarButtonItem) {
         prepareUIForWeather(userLocation.latitude, userLocation.longitude)
     }
     
-    @IBAction func addButtonWasPressed(_ sender: Any) {
+    @objc func addButtonItemWasPressed(_ sender: UIBarButtonItem) {
         realmManager.saveWeather(cityNameLabel.text ?? "", currentLocation.latitude, currentLocation.longitude)
     }
     
-    
-    @IBAction func preferredButtonWasPressed(_ sender: Any) {
-        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: nil)
+    @objc func preferedButtonItemPressed(_ sender: UIBarButtonItem) {
+        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: weatherManager)
     }
-    
-    @IBAction func searchLocationButtonWasPressed(_ sender: UIButton) {
-        
-        self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)   
-    }
-    
     
     
     func prepareUIForWeather(_ latitude: Double, _ longitude: Double){
@@ -375,26 +319,25 @@ class MainViewController: UIViewController {
     
     func fetchJSONAndSetupUI(weather: WeatherModel) {
         
-            self.myStackView.isHidden = false
-            self.tableView.isHidden = false
-            self.searchLocationButton.isHidden = false
+        self.myStackView.isHidden = false
+        self.tableView.isHidden = false
         self.cityNameLabel.text = weather.name
-            let populationText = NSLocalizedString("population_label", comment: "")
-            self.populationLabel.text = "\(populationText)\(weather.population)"
-            self.weatherTemperatureLabel.text = weather.temperatureString
-            self.backgroundImage.image = UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
-            self.condition = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID)
-            
-            if #available(iOS 13.0, *) {
-                self.weatherImage.image = UIImage(systemName: weather.conditionName)
-            } else {
-                self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
-            }
-            
+        let populationText = NSLocalizedString("population_label", comment: "")
+        self.populationLabel.text = "\(populationText)\(weather.population)"
+        self.weatherTemperatureLabel.text = weather.temperatureString
+        self.backgroundImage.image = UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
+        self.condition = self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID)
+        
+        if #available(iOS 13.0, *) {
+            self.weatherImage.image = UIImage(systemName: weather.conditionName)
+        } else {
+            self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
+        }
+        
         self.arrayForCell = weather.weatherForCell
         
-            self.tableView.reloadData()
-      
+        self.tableView.reloadData()
+        
     }
     
     
@@ -486,3 +429,23 @@ extension MainViewController {
     }
 }
 
+
+extension MainViewController: RealmManagerDelegate {
+    
+    func retriveResultsDidFinished(_ weather: WeatherModel) {
+        
+        self.cell.append(weather.weatherForCell)
+        
+        self.arrayName.append(weather.name)
+        self.arrayConditon.append(self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID))
+        self.arrayImages.append(UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
+        DispatchQueue.main.async {
+            
+            self.weatherManager = WeatherManager()
+            self.weatherManager?.arrayName = self.arrayName
+            self.weatherManager?.arrayForCell = self.cell.first!
+            self.weatherManager?.arrayImages = self.arrayImages
+            self.weatherManager?.arrayConditon = self.arrayConditon
+        }
+    }
+}

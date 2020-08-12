@@ -27,6 +27,13 @@ class CitiesListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if #available(iOS 13.0, *) {
+            // Always adopt a light interface style.
+            overrideUserInterfaceStyle = .light
+        }
+        
+        title = NSLocalizedString("search_title", comment: "")
 
         let nib = UINib(nibName: "CitiesListTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cityCell")

@@ -15,3 +15,6 @@
 
 "preferred_button_label" = "Favorite";
 "add_button_label" = "Add";
+
+"preferred_title" = "Favorite";
+"search_title" = "Search";
