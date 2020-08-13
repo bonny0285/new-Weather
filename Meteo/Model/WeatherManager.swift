@@ -15,6 +15,14 @@ class WeatherManagerModel {
     var arrayConditon: [FetchWeatherManager.WeatherCondition] = []
     var arrayImages: [UIImage] = []
     var arrayGradi: [String] = []
+    
+    func deleteAll() {
+        arrayName.removeAll()
+        arrayForCell.removeAll()
+        arrayConditon.removeAll()
+        arrayImages.removeAll()
+        arrayGradi.removeAll()
+    }
 }
 
 
@@ -28,6 +36,13 @@ class WeatherManager {
         realmManager.isElementsAreEmpty
     }
     fileprivate var realmManager: RealmManager
+    
+    init(completion: () -> ()) {
+        self.realmManager = RealmManager()
+        self.realmManager.delegate = self
+        self.realmManager.retriveWeather()
+        completion()
+    }
     
     init() {
         self.realmManager = RealmManager()

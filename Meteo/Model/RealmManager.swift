@@ -32,6 +32,7 @@ class RealmManager {
             
             try realm.write {
                 realm.add(weather)
+                debugPrint("ITEM ADDED: \(cityName)")
             }
         } catch let error {
             debugPrint(error.localizedDescription)
