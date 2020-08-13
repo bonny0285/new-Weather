@@ -31,11 +31,7 @@ class PreferredWeatherViewController: UIViewController {
     }
 
     
-    var loadingController = UIViewController() {
-        didSet {
-            loadingController = UIStoryboard(name: "loading", bundle: nil).instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
-        }
-    }
+    var loadingController = UIViewController()
     
     
     override func viewDidLoad() {
@@ -45,6 +41,9 @@ class PreferredWeatherViewController: UIViewController {
             // Always adopt a light interface style.
             overrideUserInterfaceStyle = .light
         }
+        
+        let storyboard = UIStoryboard(name: "loading", bundle: nil)
+        loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
         
         title = NSLocalizedString("preferred_title", comment: "")
         
@@ -73,24 +72,23 @@ class PreferredWeatherViewController: UIViewController {
         tableView.reloadData()
     }
 
+    func runLoadingController(completion: @escaping () -> ()) {
+        navigationController?.pushViewController(loadingController, animated: true)
+        completion()
+    }
     
     func refreschDataBaseAfterDelete() {
-        let storyboard = UIStoryboard(name: "loading", bundle: nil)
-        let loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
+        
         weatherManager?.deleteAll()
         
-        present(loadingController, animated: true) {
+        runLoadingController {
             let relamManager = RealmManager()
-            relamManager.delegate = self
-            relamManager.retriveWeather()
-            self.tableView.reloadData()
-           
-            loadingController.dismiss(animated: true, completion: nil)
+            
+            relamManager.retriveWeather {
+                relamManager.delegate = self
+                
+            }
         }
-      
-                       
-                   
-
     }
 }
 
@@ -131,7 +129,7 @@ extension PreferredWeatherViewController: UITableViewDelegate{
             self.tableView.reloadData()
         }
 
-        action.backgroundColor = #colorLiteral(red: 1, green: 0.6682497973, blue: 0.339296782, alpha: 1)
+        action.backgroundColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
 
         return action
     }
@@ -152,6 +150,13 @@ extension PreferredWeatherViewController: RealmManagerDelegate {
         self.weatherManager?.arrayConditon.append(weather.condition)
         self.weatherManager?.arrayImages.append(UIImage(named:self.fetchWeatherManager.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
         self.weatherManager?.arrayForCell = cell.first!
+        
+        DispatchQueue.main.async {
+            self.navigationController?.popViewController(animated: true)
+                self.tableView.reloadData()
+            
+        }
+
     }
 }
 

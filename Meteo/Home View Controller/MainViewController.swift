@@ -180,7 +180,7 @@ class MainViewController: UIViewController {
     var realmManager = RealmManager()
     
     var currentLocation: LocationForUser = (0.0, 0.0)
-
+    
     var weatherManager: WeatherManager?
     
     
@@ -247,35 +247,11 @@ class MainViewController: UIViewController {
                 } else {
                     navigationBarStatus = .allPresent
                 }
-                
-//                navigationController?.navigationBar.barTintColor = .gray
-//                var locationImage = UIImage()
-//                var searchImage = UIImage()
-//
-//                if #available(iOS 13.0, *) {
-//                    locationImage = UIImage(systemName: "location.circle.fill")!
-//                    searchImage = UIImage(systemName: "magnifyingglass")!
-//                } else {
-//                    locationImage = UIImage(named: "address")!
-//                    searchImage = UIImage(named: "search")!
-//                }
-//
-//                let leftButton = UIBarButtonItem(image: locationImage, style: .plain, target: self, action: #selector(leftButtonWasPressed(_:)))
-//                let rightButton = UIBarButtonItem(image: searchImage, style: .plain, target: self, action: #selector(rightButtonWasPressed(_:)))
-//                let preferredButtonItem = UIBarButtonItem(title: "Preferiti", style: .plain, target: self, action: #selector(preferedButtonItemPressed(_:)))
-//                let addButtonItem = UIBarButtonItem(title: "Aggiungi", style: .plain, target: self, action: #selector(addButtonItemWasPressed(_:)))
-//
-//
-//                if weatherManager?.isEmptyDataBase == true {
-//                    navigationItem.leftBarButtonItem = leftButton
-//                } else {
-//                    navigationItem.leftBarButtonItems = [leftButton, preferredButtonItem]
-//                }
-//
-//                navigationItem.rightBarButtonItems = [rightButton, addButtonItem]
             }
         }
     }
+    
+    var loadingController = UIViewController()
     
     var weatherCondition: FetchWeatherManager.WeatherCondition = .nebbia {
         didSet {
@@ -291,17 +267,21 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         state = .loading
-
         
+        /// Instanzio il LoadingViewController
+        let storyboard = UIStoryboard(name: "loading", bundle: nil)
+        loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
+        navigationController?.pushViewController(loadingController, animated: true)
         
+        /// Chiamate al LocationManager
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         
+        /// Chimate alla TableView
         tableView.isHidden = true
-    
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -316,6 +296,7 @@ class MainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        /// Chiamata al RealmManager per caricare i dati salvati
         weatherManager = WeatherManager(completion: {
             if weatherManager?.isEmptyDataBase == true {
                 
@@ -351,46 +332,57 @@ class MainViewController: UIViewController {
         self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)
     }
     @objc func leftButtonWasPressed(_ sender: UIBarButtonItem) {
-        prepareUIForWeather(coordinateUserLocation.latitude, coordinateUserLocation.longitude)
+        navigationController?.pushViewController(loadingController, animated: true)
+        navigationController?.navigationBar.isHidden = true
+        prepareUIForWeather(coordinateUserLocation.latitude, coordinateUserLocation.longitude) {
+            self.navigationController?.popViewController(animated: true)
+            self.navigationController?.navigationBar.isHidden = false
+        }
     }
     
     @objc func addButtonItemWasPressed(_ sender: UIBarButtonItem) {
-        realmManager.saveWeather(mainCityNameLabel.text ?? "", currentLocation.latitude, currentLocation.longitude)
-        realmManager.retriveWeather()
-        state = .endLoading
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.pushViewController(loadingController, animated: true)
+        navigationController?.modalPresentationStyle = .fullScreen
+        
+        DispatchQueue.main.async {
+            self.realmManager.saveWeather(self.mainCityNameLabel.text ?? "", self.currentLocation.latitude, self.currentLocation.longitude)
+            self.realmManager.retriveWeather {
+                
+                self.navigationController?.popViewController(animated: true)
+                self.navigationController?.navigationBar.isHidden = false
+                self.state = .endLoading
+            }
+        }
+        
+        
     }
     
     @objc func preferedButtonItemPressed(_ sender: UIBarButtonItem) {
         weatherManager = WeatherManager(completion: {
-                self.performSegue(withIdentifier: "ShowPreferredWeather", sender: self.weatherManager?.weather)
+            self.performSegue(withIdentifier: "ShowPreferredWeather", sender: self.weatherManager?.weather)
         })
-            
-        
+    }
+    
+    
+    func runLoadingController() {
+        navigationController?.pushViewController(loadingController, animated: true)
+    }
+    
+    
+    func prepareUIForWeather(_ latitude: Double, _ longitude: Double, completion: @escaping () -> ()) {
+        self.currentLocation.latitude = latitude
+        self.currentLocation.longitude = longitude
+        self.fetchWeatherManager = FetchWeatherManager(latitude: latitude, longitude: longitude, completion: { weather in
+            self.currentWeather = weather
+            self.fetchJSONAndSetupUI(weather: weather)
+            completion()
+            self.state = .endLoading
+        })
         
     }
     
     
-    func prepareUIForWeather(_ latitude: Double, _ longitude: Double) {
-        
-        let storyboard = UIStoryboard(name: "loading", bundle: nil)
-        let loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
-        
-        currentLocation.latitude = latitude
-        currentLocation.longitude = longitude
-        
-        present(loadingController, animated: true) {
-            
-            self.fetchWeatherManager = FetchWeatherManager(latitude: latitude, longitude: longitude) { weather in
-                self.currentWeather = weather
-                self.fetchJSONAndSetupUI(weather: weather)
-                self.state = .endLoading
-                loadingController.dismiss(animated: true, completion: nil)
-            }
-            
-        }
-    }
-            
-
     func fetchJSONAndSetupUI(weather: WeatherModel) {
         
         self.mainValuesContainer.isHidden = false
@@ -399,7 +391,7 @@ class MainViewController: UIViewController {
         let populationText = NSLocalizedString("population_label", comment: "")
         self.populationLabel.text = "\(populationText)\(weather.population)"
         self.mainWeatherTemperatureLabel.text = weather.temperatureString
-        self.mainBackgroundImage.image = UIImage(named: (self.fetchWeatherManager?.weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
+        self.mainBackgroundImage.image = UIImage(named: (fetchWeatherManager?.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)!
         self.weatherCondition = weather.condition
         if #available(iOS 13.0, *) {
             self.mainWeatherImage.image = UIImage(systemName: weather.conditionName)
@@ -437,12 +429,19 @@ class MainViewController: UIViewController {
 extension MainViewController: CLLocationManagerDelegate{
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last{
+        if let location = locations.last {
             //locationManager.stopUpdatingLocation()
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
             coordinateUserLocation = (lat, lon)
-            prepareUIForWeather(lat, lon)
+            fetchWeatherManager = FetchWeatherManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { weather in
+                self.currentWeather = weather
+                self.fetchJSONAndSetupUI(weather: weather)
+                self.state = .endLoading
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            })
         }
     }
     
@@ -487,9 +486,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension MainViewController: MainViewControllerLocationDelegate {
     func locationDidChange(_ response: CitiesList) {
-        
-        DispatchQueue.main.async {
-            self.prepareUIForWeather(response.coord.lat, response.coord.lon)
+        self.prepareUIForWeather(response.coord.lat, response.coord.lon) {
+            self.navigationController?.popViewController(animated: true)
         }
     }
     

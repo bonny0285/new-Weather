@@ -55,11 +55,39 @@ class RealmManager {
             }
             
             for i in results {
-                DispatchQueue.main.async {
+                //DispatchQueue.main.async {
                     self.fetchWeatherManager = FetchWeatherManager(latitude: i.latitude, longitude: i.longitude, completion: { (weather) in
                         self.delegate?.retriveResultsDidFinished(weather)
                     })
-                }
+               // }
+            }
+            
+        } catch let error {
+            debugPrint(error.localizedDescription)
+        }
+    }
+    
+    func retriveWeather(completion: @escaping () -> ()) {
+        //var weatherResult: [WeatherModel] = []
+        
+        do {
+            let realm = try Realm.init()
+            
+            let results = realm.objects(RealmWeatherManager.self)
+            
+            if results.count == 0 {
+                isElementsAreEmpty = true
+            } else {
+                isElementsAreEmpty = false
+            }
+            
+            for i in results {
+                //DispatchQueue.main.async {
+                    self.fetchWeatherManager = FetchWeatherManager(latitude: i.latitude, longitude: i.longitude, completion: { (weather) in
+                        self.delegate?.retriveResultsDidFinished(weather)
+                    })
+               // }
+                completion()
             }
             
         } catch let error {
