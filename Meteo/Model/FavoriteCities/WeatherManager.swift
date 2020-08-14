@@ -11,8 +11,8 @@ import UIKit
 
 class WeatherManagerModel {
     var arrayName: [String] = []
-    var arrayForCell: [WeatherModelCell] = []
-    var arrayConditon: [FetchWeatherManager.WeatherCondition] = []
+    var arrayForCell: [WeatherGeneralManagerCell] = []
+    var arrayConditon: [WeatherGeneralManager.WeatherCondition] = []
     var arrayImages: [UIImage] = []
     var arrayGradi: [String] = []
     
@@ -29,9 +29,8 @@ class WeatherManagerModel {
 class WeatherManager {
     
     var weather = WeatherManagerModel()
-    fileprivate var cell: [[WeatherModelCell]] = []
-    //fileprivate var fetchWeather = FetchWeather()
-    fileprivate var fetchWeatherManager = FetchWeatherManager()
+    fileprivate var cell: [[WeatherGeneralManagerCell]] = []
+    fileprivate var weatherFetchManager = WeatherFetchManager()
     var isEmptyDataBase: Bool {
         realmManager.isElementsAreEmpty
     }
@@ -39,31 +38,27 @@ class WeatherManager {
     
     init(completion: () -> ()) {
         self.realmManager = RealmManager()
-        self.realmManager.delegate = self
-        self.realmManager.retriveWeather()
+        self.realmManager.delegation = self
+        self.realmManager.retriveWeatherForFetchManager{}
         completion()
     }
     
     init() {
         self.realmManager = RealmManager()
-        self.realmManager.delegate = self
-        self.realmManager.retriveWeather()
+        self.realmManager.delegation = self
+        self.realmManager.retriveWeatherForFetchManager{}
     }
 }
 
 
-extension WeatherManager: RealmManagerDelegate {
-    func retriveResultsDidFinished(_ weather: WeatherModel) {
-        self.cell.append(weather.weatherForCell)
-        
+extension WeatherManager: RealmWeatherManagerDelegate {
+    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
+        self.cell.append(weather.weathersCell)
         self.weather.arrayGradi.append(weather.temperatureString)
         self.weather.arrayName.append(weather.name)
         self.weather.arrayConditon.append(weather.condition)
-        self.weather.arrayImages.append(UIImage(named:self.fetchWeatherManager.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
-            
-        //self.weather.arrayImages.append(UIImage(named: self.fetchWeather.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
-            
+        self.weather.arrayImages.append(UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
         self.weather.arrayForCell = cell.first!
-        
     }
+    
 }

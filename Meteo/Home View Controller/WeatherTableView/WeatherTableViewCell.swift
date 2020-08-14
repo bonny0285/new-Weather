@@ -19,23 +19,21 @@ class WeatherTableViewCell: UITableViewCell {
     
     
     //MARK: - SetupCell
-    func setupCell(_ weather: WeatherModelCell,atCondition condition: FetchWeatherManager.WeatherCondition){
-        
-        temperatureMax.text = "Temp Max: \(weather.temperatureMax)"
-        temperatureMin.text = "Temp Min: \(weather.temperatureMin)"
-        weatherDescription.text = "\(weather.description.capitalized)"
-        weatherTime.text = "\(stringDateString(forString: weather.time))"
+    
+    func configureCell(_ weather: WeatherGeneralManager,atIndexPath indexPath: IndexPath ,_ condition: WeatherGeneralManager.WeatherCondition) {
+        temperatureMax.text = "Temp Max: \(weather.weathersCell[indexPath.row].temperatureMax)"
+        temperatureMin.text = "Temp Min: \(weather.weathersCell[indexPath.row].temperatureMin)"
+        weatherDescription.text = "\(weather.weathersCell[indexPath.row].description.capitalized)"
+        weatherTime.text = "\(stringDateString(forString: weather.weathersCell[indexPath.row].time))"
         
         if #available(iOS 13.0, *) {
-            self.weatherImage.image = UIImage(systemName: weather.conditionName)
+            self.weatherImage.image = UIImage(systemName: weather.weathersCell[indexPath.row].conditionName)
         } else {
-            self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
+            self.weatherImage.image = UIImage(named: weather.weathersCell[indexPath.row].conditionNameOldVersion)
         }
-        
         
         setColorUIViewForBackground(condition)
     }
-    
     
     
     //MARK: - StringDateString
@@ -53,7 +51,8 @@ class WeatherTableViewCell: UITableViewCell {
     
     
     //MARK: - SetColorUIViewForBackground
-    func setColorUIViewForBackground(_ condition: FetchWeatherManager.WeatherCondition){
+    
+    func setColorUIViewForBackground(_ condition: WeatherGeneralManager.WeatherCondition){
         
         switch condition {
         case .tempesta:
@@ -101,5 +100,6 @@ class WeatherTableViewCell: UITableViewCell {
         }
         
     }
+    
     
 }

@@ -19,8 +19,7 @@ class PreferredWeatherViewController: UIViewController {
 
     
     
-    var cell: [[WeatherModelCell]] = []
-    var fetchWeatherManager = FetchWeatherManager()
+    var cell: [[WeatherGeneralManagerCell]] = []
     var cellAtIndexPath: Int = 0
     var dataSource: PreferredDataSource?
     var realmManager = RealmManager()
@@ -42,8 +41,6 @@ class PreferredWeatherViewController: UIViewController {
             overrideUserInterfaceStyle = .light
         }
         
-        let storyboard = UIStoryboard(name: "loading", bundle: nil)
-        loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
         
         title = NSLocalizedString("preferred_title", comment: "")
         
@@ -83,11 +80,10 @@ class PreferredWeatherViewController: UIViewController {
         
         runLoadingController {
             let relamManager = RealmManager()
-            
-            relamManager.retriveWeather {
-                relamManager.delegate = self
-                
+            relamManager.retriveWeatherForFetchManager {
+                relamManager.delegation = self
             }
+
         }
     }
 }
@@ -141,14 +137,13 @@ extension PreferredWeatherViewController: UITableViewDelegate{
 }
 
 
-extension PreferredWeatherViewController: RealmManagerDelegate {
-    func retriveResultsDidFinished(_ weather: WeatherModel) {
-        
-        self.cell.append(weather.weatherForCell)
+extension PreferredWeatherViewController: RealmWeatherManagerDelegate {
+    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
+        self.cell.append(weather.weathersCell)
         self.weatherManager?.arrayGradi.append(weather.temperatureString)
         self.weatherManager?.arrayName.append(weather.name)
         self.weatherManager?.arrayConditon.append(weather.condition)
-        self.weatherManager?.arrayImages.append(UIImage(named:self.fetchWeatherManager.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
+        self.weatherManager?.arrayImages.append(UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
         self.weatherManager?.arrayForCell = cell.first!
         
         DispatchQueue.main.async {
@@ -156,8 +151,8 @@ extension PreferredWeatherViewController: RealmManagerDelegate {
                 self.tableView.reloadData()
             
         }
-
     }
+
 }
 
 

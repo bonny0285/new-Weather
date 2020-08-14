@@ -9,15 +9,16 @@
 import UIKit
 import RealmSwift
 
-protocol RealmManagerDelegate: class {
-    func retriveResultsDidFinished(_ weather: WeatherModel)
+
+protocol RealmWeatherManagerDelegate: class {
+    func retriveResultsDidFinished(_ weather: WeatherGeneralManager)
 }
 
 
 class RealmManager {
     
-    var delegate: RealmManagerDelegate?
-    var fetchWeatherManager: FetchWeatherManager?
+    var delegation: RealmWeatherManagerDelegate?
+    var weatherFetchManager: WeatherFetchManager?
     var isElementsAreEmpty: Bool = false
     
     func saveWeather(_ cityName: String, _ latitude: Double, _ longitude: Double) {
@@ -39,9 +40,9 @@ class RealmManager {
         }
     }
     
-    
-    func retriveWeather() {
-        //var weatherResult: [WeatherModel] = []
+   
+
+    func retriveWeatherForFetchManager(completion: @escaping() -> ()) {
         
         do {
             let realm = try Realm.init()
@@ -55,38 +56,10 @@ class RealmManager {
             }
             
             for i in results {
-                //DispatchQueue.main.async {
-                    self.fetchWeatherManager = FetchWeatherManager(latitude: i.latitude, longitude: i.longitude, completion: { (weather) in
-                        self.delegate?.retriveResultsDidFinished(weather)
-                    })
-               // }
-            }
-            
-        } catch let error {
-            debugPrint(error.localizedDescription)
-        }
-    }
-    
-    func retriveWeather(completion: @escaping () -> ()) {
-        //var weatherResult: [WeatherModel] = []
-        
-        do {
-            let realm = try Realm.init()
-            
-            let results = realm.objects(RealmWeatherManager.self)
-            
-            if results.count == 0 {
-                isElementsAreEmpty = true
-            } else {
-                isElementsAreEmpty = false
-            }
-            
-            for i in results {
-                //DispatchQueue.main.async {
-                    self.fetchWeatherManager = FetchWeatherManager(latitude: i.latitude, longitude: i.longitude, completion: { (weather) in
-                        self.delegate?.retriveResultsDidFinished(weather)
-                    })
-               // }
+                weatherFetchManager = WeatherFetchManager(latitude: i.latitude, longitude: i.longitude){ weatherManager in
+                    self.delegation?.retriveResultsDidFinished(weatherManager)
+                }
+                
                 completion()
             }
             
@@ -94,6 +67,7 @@ class RealmManager {
             debugPrint(error.localizedDescription)
         }
     }
+
     
     func deleteWeather(_ index: IndexPath, completion: () -> ()) {
         

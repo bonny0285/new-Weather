@@ -163,9 +163,9 @@ class MainViewController: UIViewController {
     
     typealias LocationForUser = (latitude: Double,longitude: Double)
     
-    var currentWeather: WeatherModel?
-    
-    var weathersForCell: [WeatherModelCell] = []
+    //    var currentWeather: WeatherModel?
+    //
+    //    var weathersForCell: [WeatherModelCell] = []
     
     let locationManager = CLLocationManager()
     
@@ -184,7 +184,7 @@ class MainViewController: UIViewController {
     var weatherManager: WeatherManager?
     
     
-    var fetchWeatherManager: FetchWeatherManager?
+    //var fetchWeatherManager: FetchWeatherManager?
     
     var navigationBarStatus: NavigationBarStatus = .allPresent {
         didSet {
@@ -253,14 +253,15 @@ class MainViewController: UIViewController {
     
     var loadingController = UIViewController()
     
-    var weatherCondition: FetchWeatherManager.WeatherCondition = .nebbia {
+    var weatherCondition: WeatherGeneralManager.WeatherCondition = .nebbia {
         didSet {
             navigationController?.navigationBar.tintColor = .black
         }
     }
     
-    
-    
+    var weatherGeneralManager: WeatherGeneralManager?
+    var weatherFetchManager: WeatherFetchManager?
+    var weatherGeneralManagerCell: [WeatherGeneralManagerCell] = []
     
     
     //MARK: - Lifecycle
@@ -289,7 +290,7 @@ class MainViewController: UIViewController {
         
         mainValuesContainer.isHidden = true
         
-        fetchCitiesFromJONS()
+        //fetchCitiesFromJONS()
     }
     
     
@@ -297,11 +298,11 @@ class MainViewController: UIViewController {
         super.viewWillAppear(animated)
         
         /// Chiamata al RealmManager per caricare i dati salvati
-        weatherManager = WeatherManager(completion: {
-            if weatherManager?.isEmptyDataBase == true {
-                
-            }
-        })
+        //        weatherManager = WeatherManager(completion: {
+        //            if weatherManager?.isEmptyDataBase == true {
+        //
+        //            }
+        //        })
         state = .notSave
         delegate = self
     }
@@ -347,21 +348,24 @@ class MainViewController: UIViewController {
         
         DispatchQueue.main.async {
             self.realmManager.saveWeather(self.mainCityNameLabel.text ?? "", self.currentLocation.latitude, self.currentLocation.longitude)
-            self.realmManager.retriveWeather {
-                
+            self.realmManager.retriveWeatherForFetchManager {
                 self.navigationController?.popViewController(animated: true)
                 self.navigationController?.navigationBar.isHidden = false
                 self.state = .endLoading
             }
+            
         }
         
         
     }
     
     @objc func preferedButtonItemPressed(_ sender: UIBarButtonItem) {
-        weatherManager = WeatherManager(completion: {
-            self.performSegue(withIdentifier: "ShowPreferredWeather", sender: self.weatherManager?.weather)
-        })
+        //  weatherManager = WeatherManager(completion: {
+        //     DispatchQueue.main.async {
+        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: self.weatherManager?.weather)
+        //     }
+        
+        // })
     }
     
     
@@ -373,38 +377,36 @@ class MainViewController: UIViewController {
     func prepareUIForWeather(_ latitude: Double, _ longitude: Double, completion: @escaping () -> ()) {
         self.currentLocation.latitude = latitude
         self.currentLocation.longitude = longitude
-        self.fetchWeatherManager = FetchWeatherManager(latitude: latitude, longitude: longitude, completion: { weather in
-            self.currentWeather = weather
-            self.fetchJSONAndSetupUI(weather: weather)
-            completion()
-            self.state = .endLoading
-        })
-        
-    }
-    
-    
-    func fetchJSONAndSetupUI(weather: WeatherModel) {
-        
-        self.mainValuesContainer.isHidden = false
-        self.tableView.isHidden = false
-        self.mainCityNameLabel.text = weather.name
-        let populationText = NSLocalizedString("population_label", comment: "")
-        self.populationLabel.text = "\(populationText)\(weather.population)"
-        self.mainWeatherTemperatureLabel.text = weather.temperatureString
-        self.mainBackgroundImage.image = UIImage(named: (fetchWeatherManager?.weatherCondition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)!
-        self.weatherCondition = weather.condition
-        if #available(iOS 13.0, *) {
-            self.mainWeatherImage.image = UIImage(systemName: weather.conditionName)
-        } else {
-            self.mainWeatherImage.image = UIImage(named: weather.conditionNameOldVersion)
+        self.weatherFetchManager = WeatherFetchManager(latitude: latitude, longitude: longitude) { weather in
+            self.setupUIForWeatherGeneralManager(weather: weather) {
+                self.state = .endLoading
+                completion()
+            }
         }
-        
-        self.weathersForCell = weather.weatherForCell
-        
-        self.tableView.reloadData()
-        
     }
     
+    func setupUIForWeatherGeneralManager(weather: WeatherGeneralManager, completion:@escaping () -> ()) {
+        DispatchQueue.main.async {
+            self.mainValuesContainer.isHidden = false
+            self.tableView.isHidden = false
+            self.mainCityNameLabel.text = weather.name
+            let populationText = NSLocalizedString("population_label", comment: "")
+            self.populationLabel.text = "\(populationText)\(weather.population)"
+            self.mainWeatherTemperatureLabel.text = weather.temperatureString
+            self.mainBackgroundImage.image = UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
+            self.weatherCondition = weather.condition
+            
+            if #available(iOS 13.0, *) {
+                self.mainWeatherImage.image = UIImage(systemName: weather.conditionName)
+            } else {
+                self.mainWeatherImage.image = UIImage(named: weather.conditionNameOldVersion)
+            }
+            
+            self.weatherGeneralManagerCell = weather.weathersCell
+            completion()
+            
+        }
+    }
     
     func fetchCitiesFromJONS () {
         citiesList.removeAll()
@@ -434,15 +436,25 @@ extension MainViewController: CLLocationManagerDelegate{
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
             coordinateUserLocation = (lat, lon)
-            fetchWeatherManager = FetchWeatherManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { weather in
-                self.currentWeather = weather
-                self.fetchJSONAndSetupUI(weather: weather)
-                self.state = .endLoading
+            
+            weatherFetchManager = WeatherFetchManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { weather in
+                self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID, weathersCell: weather.weathersCell, citiesList: weather.citiesList)
                 DispatchQueue.main.async {
-                    self.navigationController?.popViewController(animated: true)
+                    self.weatherManager = WeatherManager(completion: {
+                        self.setupUIForWeatherGeneralManager(weather: self.weatherGeneralManager!) {
+                            self.citiesList = self.weatherGeneralManager!.citiesList
+                            self.state = .endLoading
+                            self.tableView.reloadData()
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                    })
+                    
                 }
+                
             })
+            
         }
+        
     }
     
     
@@ -459,15 +471,14 @@ extension MainViewController: CLLocationManagerDelegate{
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return weathersForCell.count
+        return weatherGeneralManager?.weathersCell.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath) as? WeatherTableViewCell else {return UITableViewCell()}
         
-        cell.setupCell(weathersForCell[indexPath.row], atCondition: weatherCondition)
-        
+        cell.configureCell(weatherGeneralManager!, atIndexPath: indexPath, weatherGeneralManager!.condition)
         return cell
     }
     

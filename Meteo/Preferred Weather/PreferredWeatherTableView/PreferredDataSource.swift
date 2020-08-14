@@ -43,11 +43,11 @@ extension PreferredDataSource {
             weatherManager.arrayName[index.row]
         }
         
-        func weatherCell(_ index: IndexPath) -> WeatherModelCell {
+        func weatherCell(_ index: IndexPath) -> WeatherGeneralManagerCell {
             weatherManager.arrayForCell[index.row]
         }
         
-        func condition(_ index: IndexPath) -> FetchWeatherManager.WeatherCondition {
+        func condition(_ index: IndexPath) -> WeatherGeneralManager.WeatherCondition {
             weatherManager.arrayConditon[index.row]
         }
         
@@ -88,7 +88,7 @@ extension PreferredDataSource: UITableViewDataSource {
 
 extension PreferredTableViewCell {
     
-    func configure(_ row: String,_ weather: WeatherModelCell, _ condition: FetchWeatherManager.WeatherCondition, _ background: UIImage,_ gradi: String) {
+    func configure(_ row: String,_ weather: WeatherGeneralManagerCell, _ condition: WeatherGeneralManager.WeatherCondition, _ background: UIImage,_ gradi: String) {
         
         self.name.text = row
         
@@ -107,7 +107,7 @@ extension PreferredTableViewCell {
     
     
     //MARK: - SetColorUIViewForBackground
-    func setColorUIViewForBackground(_ condition: FetchWeatherManager.WeatherCondition) {
+    func setColorUIViewForBackground(_ condition: WeatherGeneralManager.WeatherCondition) {
         
         switch condition {
         case .tempesta:
