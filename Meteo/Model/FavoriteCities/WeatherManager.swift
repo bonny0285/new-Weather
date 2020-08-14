@@ -36,11 +36,13 @@ class WeatherManager {
     }
     fileprivate var realmManager: RealmManager
     
-    init(completion: () -> ()) {
+    init(completion:@escaping () -> ()) {
         self.realmManager = RealmManager()
         self.realmManager.delegation = self
-        self.realmManager.retriveWeatherForFetchManager{}
-        completion()
+        self.realmManager.retriveWeatherForFetchManager{
+            completion()
+        }
+        
     }
     
     init() {

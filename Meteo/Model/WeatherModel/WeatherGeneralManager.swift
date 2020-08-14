@@ -18,16 +18,14 @@ class WeatherGeneralManager {
     let temperature: Double
     var conditionID: Int
     var weathersCell: [WeatherGeneralManagerCell]
-    var citiesList: [CitiesList]
     
-    init(name: String, population: Int, country: String, temperature: Double, conditionID: Int, weathersCell: [WeatherGeneralManagerCell],citiesList: [CitiesList]) {
+    init(name: String, population: Int, country: String, temperature: Double, conditionID: Int, weathersCell: [WeatherGeneralManagerCell]) {
         self.name = name
         self.population = population
         self.country = country
         self.temperature = temperature
         self.conditionID = conditionID
         self.weathersCell = weathersCell
-        self.citiesList = citiesList
     }
     
     var temperatureString: String {

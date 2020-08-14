@@ -17,7 +17,6 @@ class WeatherFetchManager {
     
     fileprivate var realmManager: RealmManager?
     fileprivate var weatherCities: WeatherGeneralManager?
-    fileprivate var citiesList: [CitiesList] = []
     
     init() {}
     
@@ -56,7 +55,7 @@ class WeatherFetchManager {
     
 
     fileprivate func JSONTransform(_ json: JSON) -> WeatherGeneralManager {
-        fetchCitiesFromJONS()
+        //fetchCitiesFromJONS()
         let name = "\(json[0]["city"]["name"])"
         let population = Int("\(json[0]["city"]["population"])") ?? 0
         let country = "\(json[0]["city"]["country"])"
@@ -80,7 +79,7 @@ class WeatherFetchManager {
         }
             
         var weatherGeneralManager: WeatherGeneralManager?
-        weatherGeneralManager = WeatherGeneralManager(name: name, population: population, country: country, temperature: temperature, conditionID: id, weathersCell: weatherCell, citiesList: citiesList)
+        weatherGeneralManager = WeatherGeneralManager(name: name, population: population, country: country, temperature: temperature, conditionID: id, weathersCell: weatherCell)
 //        self.realmManager = RealmManager()
 //        self.realmManager?.delegation = self
 //        self.realmManager?.retriveWeatherForFetchManager {
@@ -91,21 +90,7 @@ class WeatherFetchManager {
         
     }
     
-    func fetchCitiesFromJONS ()  {
-        citiesList.removeAll()
-        let file = Bundle.main.path(forResource: "cityList", ofType: "json")
-        
-        do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: file!))
-            let decoder = JSONDecoder()
-            let result = try decoder.decode([CitiesList].self, from: data)
-            
-            citiesList = result.sorted { $0.name < $1.name}.compactMap { $0 }
-            print("DONE")
-        } catch let error {
-            debugPrint(error.localizedDescription)
-        }
-    }
+
     
 }
 

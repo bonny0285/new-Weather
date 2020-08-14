@@ -330,7 +330,7 @@ class MainViewController: UIViewController {
     
     
     @objc func rightButtonWasPressed(_ sender: UIBarButtonItem) {
-        self.performSegue(withIdentifier: "ShowCitiesList", sender: nil)
+        self.performSegue(withIdentifier: "ShowCitiesList", sender: citiesList)
     }
     @objc func leftButtonWasPressed(_ sender: UIBarButtonItem) {
         navigationController?.pushViewController(loadingController, animated: true)
@@ -438,11 +438,12 @@ extension MainViewController: CLLocationManagerDelegate{
             coordinateUserLocation = (lat, lon)
             
             weatherFetchManager = WeatherFetchManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { weather in
-                self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID, weathersCell: weather.weathersCell, citiesList: weather.citiesList)
+                self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID, weathersCell: weather.weathersCell)
                 DispatchQueue.main.async {
+                    self.fetchCitiesFromJONS()
                     self.weatherManager = WeatherManager(completion: {
                         self.setupUIForWeatherGeneralManager(weather: self.weatherGeneralManager!) {
-                            self.citiesList = self.weatherGeneralManager!.citiesList
+                            //self.citiesList = self.weatherGeneralManager!.citiesList
                             self.state = .endLoading
                             self.tableView.reloadData()
                             self.navigationController?.popViewController(animated: true)
