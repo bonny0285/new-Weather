@@ -69,7 +69,7 @@ class RealmManager {
     }
 
     
-    func deleteWeather(_ index: IndexPath, completion: () -> ()) {
+    func deleteWeather(_ index: IndexPath) {
         
         do {
             let realm = try Realm.init()
@@ -79,7 +79,6 @@ class RealmManager {
             try realm.write {
                 realm.delete(results[index.row])
             }
-            completion()
         } catch let error {
             debugPrint(error.localizedDescription)
         }

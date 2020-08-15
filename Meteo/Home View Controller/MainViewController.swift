@@ -177,11 +177,11 @@ class MainViewController: UIViewController {
     
     var coordinateUserLocation: LocationForUser = (0.0, 0.0)
     
-    var realmManager = RealmManager()
+    
     
     var currentLocation: LocationForUser = (0.0, 0.0)
     
-    var weatherManager: WeatherManager?
+    
     
     
     //var fetchWeatherManager: FetchWeatherManager?
@@ -242,7 +242,7 @@ class MainViewController: UIViewController {
             case .endLoading:
                 navigationController?.navigationBar.isHidden = false
                 
-                if weatherManager?.isEmptyDataBase == true {
+                if favoriteWeatherManager?.isEmptyDataBase == true {
                     navigationBarStatus = .noFavorite
                 } else {
                     navigationBarStatus = .allPresent
@@ -262,7 +262,8 @@ class MainViewController: UIViewController {
     var weatherGeneralManager: WeatherGeneralManager?
     var weatherFetchManager: WeatherFetchManager?
     var weatherGeneralManagerCell: [WeatherGeneralManagerCell] = []
-    
+    var favoriteWeatherManager: FavoriteWeatherManager?
+    var realmManager = RealmManager()
     
     //MARK: - Lifecycle
     
@@ -345,27 +346,16 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
         navigationController?.pushViewController(loadingController, animated: true)
         navigationController?.modalPresentationStyle = .fullScreen
-        
-        DispatchQueue.main.async {
-            self.realmManager.saveWeather(self.mainCityNameLabel.text ?? "", self.currentLocation.latitude, self.currentLocation.longitude)
-            self.realmManager.retriveWeatherForFetchManager {
-                self.navigationController?.popViewController(animated: true)
-                self.navigationController?.navigationBar.isHidden = false
-                self.state = .endLoading
-            }
-            
-        }
-        
-        
+        self.realmManager.saveWeather(self.mainCityNameLabel.text ?? "", self.currentLocation.latitude, self.currentLocation.longitude)
+        self.favoriteWeatherManager = FavoriteWeatherManager()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+            self.navigationController?.popViewController(animated: true)
+            self.state = .endLoading
+        })
     }
     
     @objc func preferedButtonItemPressed(_ sender: UIBarButtonItem) {
-        //  weatherManager = WeatherManager(completion: {
-        //     DispatchQueue.main.async {
-        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: self.weatherManager?.weather)
-        //     }
-        
-        // })
+        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: self.favoriteWeatherManager?.weather)
     }
     
     
@@ -437,22 +427,25 @@ extension MainViewController: CLLocationManagerDelegate{
             let lon = location.coordinate.longitude
             coordinateUserLocation = (lat, lon)
             
-            weatherFetchManager = WeatherFetchManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { weather in
-                self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID, weathersCell: weather.weathersCell)
-                DispatchQueue.main.async {
-                    self.fetchCitiesFromJONS()
-                    self.weatherManager = WeatherManager(completion: {
-                        self.setupUIForWeatherGeneralManager(weather: self.weatherGeneralManager!) {
-                            //self.citiesList = self.weatherGeneralManager!.citiesList
-                            self.state = .endLoading
-                            self.tableView.reloadData()
-                            self.navigationController?.popViewController(animated: true)
-                        }
-                    })
+            favoriteWeatherManager = FavoriteWeatherManager()
+                self.weatherFetchManager = WeatherFetchManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { weather in
+                    self.currentLocation.latitude = location.coordinate.latitude
+                    self.currentLocation.longitude = location.coordinate.longitude
+                    self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID, weathersCell: weather.weathersCell)
+                    DispatchQueue.main.async {
+                        self.fetchCitiesFromJONS()
+                            self.setupUIForWeatherGeneralManager(weather: self.weatherGeneralManager!) {
+                                //self.citiesList = self.weatherGeneralManager!.citiesList
+                                self.state = .endLoading
+                                self.tableView.reloadData()
+                                self.navigationController?.popViewController(animated: true)
+                            }
+                        
+                        
+                    }
                     
-                }
-                
-            })
+                })
+
             
         }
         
@@ -499,6 +492,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 extension MainViewController: MainViewControllerLocationDelegate {
     func locationDidChange(_ response: CitiesList) {
         self.prepareUIForWeather(response.coord.lat, response.coord.lon) {
+            self.currentLocation.latitude = response.coord.lat
+            self.currentLocation.longitude = response.coord.lon
             self.navigationController?.popViewController(animated: true)
         }
     }

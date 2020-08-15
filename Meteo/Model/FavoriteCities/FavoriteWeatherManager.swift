@@ -26,7 +26,7 @@ class WeatherManagerModel {
 }
 
 
-class WeatherManager {
+class FavoriteWeatherManager {
     
     var weather = WeatherManagerModel()
     fileprivate var cell: [[WeatherGeneralManagerCell]] = []
@@ -39,7 +39,7 @@ class WeatherManager {
     init(completion:@escaping () -> ()) {
         self.realmManager = RealmManager()
         self.realmManager.delegation = self
-        self.realmManager.retriveWeatherForFetchManager{
+        self.realmManager.retriveWeatherForFetchManager {
             completion()
         }
         
@@ -48,12 +48,12 @@ class WeatherManager {
     init() {
         self.realmManager = RealmManager()
         self.realmManager.delegation = self
-        self.realmManager.retriveWeatherForFetchManager{}
+        self.realmManager.retriveWeatherForFetchManager {}
     }
 }
 
 
-extension WeatherManager: RealmWeatherManagerDelegate {
+extension FavoriteWeatherManager: RealmWeatherManagerDelegate {
     func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
         self.cell.append(weather.weathersCell)
         self.weather.arrayGradi.append(weather.temperatureString)

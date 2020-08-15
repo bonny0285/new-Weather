@@ -25,10 +25,10 @@ class PreferredWeatherViewController: UIViewController {
     var realmManager = RealmManager()
     var weatherManager: WeatherManagerModel? {
         didSet {
-           dataSource = PreferredDataSource(weatherManager: weatherManager!)
+            dataSource = PreferredDataSource(weatherManager: weatherManager!)
         }
     }
-
+    var favoriteWeatherManager: FavoriteWeatherManager?
     
     var loadingController = UIViewController()
     
@@ -41,12 +41,14 @@ class PreferredWeatherViewController: UIViewController {
             overrideUserInterfaceStyle = .light
         }
         
+        let storyboard = UIStoryboard(name: "loading", bundle: nil)
+        loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
         
         title = NSLocalizedString("preferred_title", comment: "")
         
         let nib = UINib(nibName: "PreferredTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "PreferredTableViewCell")
-        
+        //dataSource = PreferredDataSource(weatherManager: weatherManager!)
         tableView.dataSource = dataSource
         tableView.delegate = self
         tableView.tableFooterView = UIView()
@@ -74,19 +76,24 @@ class PreferredWeatherViewController: UIViewController {
         completion()
     }
     
-    func refreschDataBaseAfterDelete() {
-        
+    func refreschDataBaseAfterDelete(completion: @escaping () -> ()) {
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.pushViewController(loadingController, animated: true)
+        navigationController?.modalPresentationStyle = .fullScreen
         weatherManager?.deleteAll()
         
-        runLoadingController {
-            let relamManager = RealmManager()
-            relamManager.retriveWeatherForFetchManager {
-                relamManager.delegation = self
+        self.favoriteWeatherManager = FavoriteWeatherManager {
+            
+            DispatchQueue.main.async {
+                self.weatherManager = self.favoriteWeatherManager?.weather
+                
+                self.navigationController?.popViewController(animated: true)
+                completion()
             }
-
         }
     }
 }
+
 
 
 extension PreferredWeatherViewController: UITableViewDelegate{
@@ -111,20 +118,28 @@ extension PreferredWeatherViewController: UITableViewDelegate{
 
         let configuration = UISwipeActionsConfiguration(actions: [self.removePreferredWeather(forRowAt: indexPath)])
             configuration.performsFirstActionWithFullSwipe = false
-
+        
         return configuration
     }
     
     func removePreferredWeather(forRowAt indexPath: IndexPath)-> UIContextualAction {
-        let action = UIContextualAction(style: .destructive, title: "Delete") { (contextualAction: UIContextualAction, view : UIView,completion: (Bool) -> Void) in
-            contextualAction.image = UIImage(named: "i_Elimina")
-            self.realmManager.deleteWeather(indexPath) {
-                self.refreschDataBaseAfterDelete()
+        let action = UIContextualAction(style: .destructive, title: "") { (contextualAction: UIContextualAction, view : UIView,completion: (Bool) -> Void) in
+            
+            self.realmManager.deleteWeather(indexPath)
+            
+                self.favoriteWeatherManager = FavoriteWeatherManager {}
+                self.weatherManager = self.favoriteWeatherManager?.weather
+
+                DispatchQueue.main.asyncAfter(deadline: .now()) {
+                    self.tableView.reloadData()
+                }
+                    
+                
                 print("DELETED")
-            }
+            
             self.tableView.reloadData()
         }
-
+        action.image = UIImage(named: "i_Elimina")
         action.backgroundColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
 
         return action
@@ -136,24 +151,24 @@ extension PreferredWeatherViewController: UITableViewDelegate{
 
 }
 
-
-extension PreferredWeatherViewController: RealmWeatherManagerDelegate {
-    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
-        self.cell.append(weather.weathersCell)
-        self.weatherManager?.arrayGradi.append(weather.temperatureString)
-        self.weatherManager?.arrayName.append(weather.name)
-        self.weatherManager?.arrayConditon.append(weather.condition)
-        self.weatherManager?.arrayImages.append(UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
-        self.weatherManager?.arrayForCell = cell.first!
-        
-        DispatchQueue.main.async {
-            self.navigationController?.popViewController(animated: true)
-                self.tableView.reloadData()
-            
-        }
-    }
-
-}
+//
+//extension PreferredWeatherViewController: RealmWeatherManagerDelegate {
+//    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
+//        self.cell.append(weather.weathersCell)
+//        self.weatherManager?.arrayGradi.append(weather.temperatureString)
+//        self.weatherManager?.arrayName.append(weather.name)
+//        self.weatherManager?.arrayConditon.append(weather.condition)
+//        self.weatherManager?.arrayImages.append(UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
+//        self.weatherManager?.arrayForCell = cell.first!
+//
+//        DispatchQueue.main.async {
+//            self.navigationController?.popViewController(animated: true)
+//                self.tableView.reloadData()
+//
+//        }
+//    }
+//
+//}
 
 
 
