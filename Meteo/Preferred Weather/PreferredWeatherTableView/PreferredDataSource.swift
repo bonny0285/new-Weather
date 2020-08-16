@@ -21,6 +21,17 @@ class PreferredDataSource: NSObject {
         self.organizer = DataOrganizer(weatherManager: weatherManager)
     }
     
+    func itemsCount() -> Int {
+        weatherManager.arrayName.count
+    }
+    
+    func imageNavigationBar() -> UIImage? {
+        weatherManager.arrayImages.first ?? nil
+    }
+    
+    func conditionForNavigationBar() -> WeatherGeneralManager.WeatherCondition? {
+        weatherManager.arrayConditon.first ?? nil
+    }
 }
 
 

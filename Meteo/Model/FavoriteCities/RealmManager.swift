@@ -12,6 +12,7 @@ import RealmSwift
 
 protocol RealmWeatherManagerDelegate: class {
     func retriveResultsDidFinished(_ weather: WeatherGeneralManager)
+    func retriveEmptyResult()
 }
 
 
@@ -19,6 +20,7 @@ class RealmManager {
     
     var delegation: RealmWeatherManagerDelegate?
     var weatherFetchManager: WeatherFetchManager?
+    var weatherGeneralManager: WeatherGeneralManager?
     var isElementsAreEmpty: Bool = false
     
     func saveWeather(_ cityName: String, _ latitude: Double, _ longitude: Double) {
@@ -57,6 +59,7 @@ class RealmManager {
             
             for i in results {
                 weatherFetchManager = WeatherFetchManager(latitude: i.latitude, longitude: i.longitude){ weatherManager in
+                    self.weatherGeneralManager = weatherManager
                     self.delegation?.retriveResultsDidFinished(weatherManager)
                 }
                 
@@ -68,6 +71,31 @@ class RealmManager {
         }
     }
 
+    func retriveWeatherForFetchManager() {
+        
+        do {
+            let realm = try Realm.init()
+            
+            let results = realm.objects(RealmWeatherManager.self)
+            
+            if results.count == 0 {
+                isElementsAreEmpty = true
+                delegation?.retriveEmptyResult()
+            } else {
+                isElementsAreEmpty = false
+            }
+            
+            for i in results {
+                weatherFetchManager = WeatherFetchManager(latitude: i.latitude, longitude: i.longitude){ weatherManager in
+                    self.delegation?.retriveResultsDidFinished(weatherManager)
+                }
+                
+            }
+            
+        } catch let error {
+            debugPrint(error.localizedDescription)
+        }
+    }
     
     func deleteWeather(_ index: IndexPath) {
         

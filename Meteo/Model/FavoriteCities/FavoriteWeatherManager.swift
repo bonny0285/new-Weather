@@ -39,21 +39,28 @@ class FavoriteWeatherManager {
     init(completion:@escaping () -> ()) {
         self.realmManager = RealmManager()
         self.realmManager.delegation = self
-        self.realmManager.retriveWeatherForFetchManager {
+        self.realmManager.retriveWeatherForFetchManager()
+        DispatchQueue.main.async {
             completion()
         }
-        
     }
     
     init() {
         self.realmManager = RealmManager()
         self.realmManager.delegation = self
-        self.realmManager.retriveWeatherForFetchManager {}
+        DispatchQueue.main.async {
+            self.realmManager.retriveWeatherForFetchManager()
+        }
+        
     }
 }
 
 
 extension FavoriteWeatherManager: RealmWeatherManagerDelegate {
+    func retriveEmptyResult() {
+        debugPrint("No Item Saved Into Database !!!")
+    }
+    
     func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
         self.cell.append(weather.weathersCell)
         self.weather.arrayGradi.append(weather.temperatureString)

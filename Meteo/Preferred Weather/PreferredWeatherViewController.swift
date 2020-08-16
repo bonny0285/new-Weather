@@ -9,30 +9,56 @@
 import UIKit
 
 class PreferredWeatherViewController: UIViewController {
-
+    
     //MARK: - Outlets
-
+    
     @IBOutlet weak var tableView: UITableView!
     
     
     //MARK: - Properties
-
+    
     
     
     var cell: [[WeatherGeneralManagerCell]] = []
-    var cellAtIndexPath: Int = 0
     var dataSource: PreferredDataSource?
     var realmManager = RealmManager()
-    var weatherManager: WeatherManagerModel? {
+    
+    var weatherManager = WeatherManagerModel() {
         didSet {
-            dataSource = PreferredDataSource(weatherManager: weatherManager!)
+            dataSource = PreferredDataSource(weatherManager: weatherManager)
         }
     }
-    var favoriteWeatherManager: FavoriteWeatherManager?
     
     var loadingController = UIViewController()
+    var imageForNavigationBar: UIImage! {
+        didSet {
+            navigationController?.navigationBar.setBackgroundImage(dataSource?.imageNavigationBar(), for: .default)
+            let condition = dataSource?.conditionForNavigationBar()
+            switch condition {
+            case .tempesta:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .pioggiaLeggera:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .neve:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            default:
+                break
+           
+            }
+        }
+    }
     
     
+    //MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,24 +70,20 @@ class PreferredWeatherViewController: UIViewController {
         let storyboard = UIStoryboard(name: "loading", bundle: nil)
         loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
         
-        title = NSLocalizedString("preferred_title", comment: "")
+        
+        
         
         let nib = UINib(nibName: "PreferredTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "PreferredTableViewCell")
-        //dataSource = PreferredDataSource(weatherManager: weatherManager!)
+        dataSource = PreferredDataSource(weatherManager: weatherManager)
         tableView.dataSource = dataSource
         tableView.delegate = self
         tableView.tableFooterView = UIView()
+        imageForNavigationBar = dataSource?.imageNavigationBar()
         tableView.reloadData()
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//
-//
-//        tableView.reloadData()
-//    }
-//
+ 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
@@ -70,31 +92,24 @@ class PreferredWeatherViewController: UIViewController {
         super.viewDidAppear(animated)
         tableView.reloadData()
     }
-
-    func runLoadingController(completion: @escaping () -> ()) {
-        navigationController?.pushViewController(loadingController, animated: true)
-        completion()
-    }
     
-    func refreschDataBaseAfterDelete(completion: @escaping () -> ()) {
-        navigationController?.navigationBar.isHidden = true
-        navigationController?.pushViewController(loadingController, animated: true)
-        navigationController?.modalPresentationStyle = .fullScreen
-        weatherManager?.deleteAll()
-        
-        self.favoriteWeatherManager = FavoriteWeatherManager {
-            
-            DispatchQueue.main.async {
-                self.weatherManager = self.favoriteWeatherManager?.weather
-                
-                self.navigationController?.popViewController(animated: true)
-                completion()
+    
+    //MARK: - Navighation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowToMain" {
+            if let controller = segue.destination as? MainViewController {
+                controller.state = .endLoading
+                controller.navigationBarStatus = .noFavorite
             }
         }
     }
+
+
 }
 
 
+//MARK: - UITableViewDelegate
 
 extension PreferredWeatherViewController: UITableViewDelegate{
     
@@ -108,67 +123,69 @@ extension PreferredWeatherViewController: UITableViewDelegate{
         
     }
     
-
+    
     
     private func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-
+        
         let configuration = UISwipeActionsConfiguration(actions: [self.removePreferredWeather(forRowAt: indexPath)])
-            configuration.performsFirstActionWithFullSwipe = false
+        configuration.performsFirstActionWithFullSwipe = false
         
         return configuration
     }
     
     func removePreferredWeather(forRowAt indexPath: IndexPath)-> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "") { (contextualAction: UIContextualAction, view : UIView,completion: (Bool) -> Void) in
-            
+            self.navigationController?.navigationBar.isHidden = true
+            self.navigationController?.pushViewController(self.loadingController, animated: true)
+            self.navigationController?.modalPresentationStyle = .fullScreen
+            self.weatherManager.deleteAll()
             self.realmManager.deleteWeather(indexPath)
-            
-                self.favoriteWeatherManager = FavoriteWeatherManager {}
-                self.weatherManager = self.favoriteWeatherManager?.weather
-
-                DispatchQueue.main.asyncAfter(deadline: .now()) {
-                    self.tableView.reloadData()
-                }
-                    
-                
-                print("DELETED")
-            
-            self.tableView.reloadData()
+            self.realmManager.delegation = self
+            self.realmManager.retriveWeatherForFetchManager()
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//
+//            }
+            print("DELETED")
         }
         action.image = UIImage(named: "i_Elimina")
         action.backgroundColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
-
+        
         return action
     }
-
-
-
-
-
+    
 }
 
-//
-//extension PreferredWeatherViewController: RealmWeatherManagerDelegate {
-//    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
-//        self.cell.append(weather.weathersCell)
-//        self.weatherManager?.arrayGradi.append(weather.temperatureString)
-//        self.weatherManager?.arrayName.append(weather.name)
-//        self.weatherManager?.arrayConditon.append(weather.condition)
-//        self.weatherManager?.arrayImages.append(UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
-//        self.weatherManager?.arrayForCell = cell.first!
-//
-//        DispatchQueue.main.async {
-//            self.navigationController?.popViewController(animated: true)
-//                self.tableView.reloadData()
-//
-//        }
-//    }
-//
-//}
+
+//MARK: - RealmWeatherManagerDelegate
+
+extension PreferredWeatherViewController: RealmWeatherManagerDelegate {
+    func retriveEmptyResult() {
+        debugPrint("No Item Saved Into Database !!!")
+        self.performSegue(withIdentifier: "ShowToMain", sender: nil)
+    }
+    
+    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
+        
+        self.cell.append(weather.weathersCell)
+        self.weatherManager.arrayGradi.append(weather.temperatureString)
+        self.weatherManager.arrayName.append(weather.name)
+        self.weatherManager.arrayConditon.append(weather.condition)
+        self.weatherManager.arrayImages.append(UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
+        self.weatherManager.arrayForCell = cell.first!
+        
+        DispatchQueue.main.async {
+            self.navigationController?.popViewController(animated: true)
+            self.tableView.reloadData()
+            self.navigationController?.navigationBar.isHidden = false
+        }
+    }
+    
+}
 
 
 

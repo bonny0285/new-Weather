@@ -181,14 +181,35 @@ class MainViewController: UIViewController {
     
     var currentLocation: LocationForUser = (0.0, 0.0)
     
-    
+    var imageForNavigationBar: UIImage! {
+        didSet {
+            navigationController?.navigationBar.setBackgroundImage(mainBackgroundImage.image, for: .default)
+            let condition = weatherCondition
+            switch condition {
+            case .tempesta:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .pioggiaLeggera:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .neve:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+        }
+    }
     
     
     //var fetchWeatherManager: FetchWeatherManager?
     
     var navigationBarStatus: NavigationBarStatus = .allPresent {
         didSet {
-            navigationController?.navigationBar.barTintColor = .gray
+            //navigationController?.navigationBar.barTintColor = .gray
             var locationImage = UIImage()
             var searchImage = UIImage()
             
@@ -319,7 +340,7 @@ class MainViewController: UIViewController {
             }
         } else if segue.identifier == "ShowPreferredWeather" {
             if let controller = segue.destination as? PreferredWeatherViewController {
-                controller.weatherManager = sender as? WeatherManagerModel
+                controller.weatherManager = sender as! WeatherManagerModel
             }
         }
     }
@@ -385,7 +406,7 @@ class MainViewController: UIViewController {
             self.mainWeatherTemperatureLabel.text = weather.temperatureString
             self.mainBackgroundImage.image = UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
             self.weatherCondition = weather.condition
-            
+            self.imageForNavigationBar = self.mainBackgroundImage.image
             if #available(iOS 13.0, *) {
                 self.mainWeatherImage.image = UIImage(systemName: weather.conditionName)
             } else {
