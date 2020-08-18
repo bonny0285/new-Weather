@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		577FBD54948ACD98F9560E0D /* Pods_Meteo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E41C07D4A7AF13386E51144 /* Pods_Meteo.framework */; };
 		700660673B06E50B67AC9E61 /* Pods_MeteoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FB1ED688154A1390F44D06B /* Pods_MeteoTests.framework */; };
+		701DA02124EB3342007F14DF /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701DA01F24EB3342007F14DF /* MainTableViewCell.swift */; };
+		701DA02224EB3342007F14DF /* MainTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701DA02024EB3342007F14DF /* MainTableViewCell.xib */; };
 		703F6F8A24E0A2180085A265 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703F6F8924E0A2180085A265 /* RealmManager.swift */; };
 		704F7A9124D7E275008359D7 /* CitiesListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F7A9024D7E275008359D7 /* CitiesListModel.swift */; };
 		704F7A9324D7E538008359D7 /* WeatherDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F7A9224D7E538008359D7 /* WeatherDataSource.swift */; };
@@ -40,7 +42,6 @@
 		B451590E243CF25E00EFD00A /* NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B451590D243CF25E00EFD00A /* NSDate.swift */; };
 		B4A288C3243800C9002E857F /* MyAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A288C2243800C9002E857F /* MyAlert.swift */; };
 		B4A288C524380269002E857F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A288C424380269002E857F /* MainViewController.swift */; };
-		B4A288CA2438D38E002E857F /* WeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A288C92438D38E002E857F /* WeatherTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 /* Begin PBXFileReference section */
 		2FB1ED688154A1390F44D06B /* Pods_MeteoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MeteoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		471411F4233205904731631B /* Pods-MeteoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeteoTests.release.xcconfig"; path = "Target Support Files/Pods-MeteoTests/Pods-MeteoTests.release.xcconfig"; sourceTree = "<group>"; };
+		701DA01F24EB3342007F14DF /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
+		701DA02024EB3342007F14DF /* MainTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainTableViewCell.xib; sourceTree = "<group>"; };
 		703F6F8924E0A2180085A265 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
 		704F7A9024D7E275008359D7 /* CitiesListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesListModel.swift; sourceTree = "<group>"; };
 		704F7A9224D7E538008359D7 /* WeatherDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataSource.swift; sourceTree = "<group>"; };
@@ -100,7 +103,6 @@
 		B451590D243CF25E00EFD00A /* NSDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSDate.swift; sourceTree = "<group>"; };
 		B4A288C2243800C9002E857F /* MyAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAlert.swift; sourceTree = "<group>"; };
 		B4A288C424380269002E857F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		B4A288C92438D38E002E857F /* WeatherTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -290,8 +292,9 @@
 		B4A288C82438D36E002E857F /* WeatherTableView */ = {
 			isa = PBXGroup;
 			children = (
-				B4A288C92438D38E002E857F /* WeatherTableViewCell.swift */,
 				704F7A9224D7E538008359D7 /* WeatherDataSource.swift */,
+				701DA01F24EB3342007F14DF /* MainTableViewCell.swift */,
+				701DA02024EB3342007F14DF /* MainTableViewCell.xib */,
 			);
 			path = WeatherTableView;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				701DA02224EB3342007F14DF /* MainTableViewCell.xib in Resources */,
 				B408AC97229AB56E0000AE68 /* LaunchScreen.storyboard in Resources */,
 				704F7AAA24D9590A008359D7 /* Localizable.strings in Resources */,
 				704F7AA324D86A99008359D7 /* CitiesListTableViewCell.xib in Resources */,
@@ -489,8 +493,8 @@
 				70B1E4BC24E051AB00D067DB /* PreferredDataSource.swift in Sources */,
 				70D348BF24E3EDE500B17965 /* FavoriteWeatherManager.swift in Sources */,
 				B408ACB3229AD4750000AE68 /* BackGround.swift in Sources */,
-				B4A288CA2438D38E002E857F /* WeatherTableViewCell.swift in Sources */,
 				B4A288C524380269002E857F /* MainViewController.swift in Sources */,
+				701DA02124EB3342007F14DF /* MainTableViewCell.swift in Sources */,
 				704F7A9324D7E538008359D7 /* WeatherDataSource.swift in Sources */,
 				704F7AA224D86A99008359D7 /* CitiesListTableViewCell.swift in Sources */,
 				706EA85324E69B04001354C7 /* WeatherGeneralManager.swift in Sources */,

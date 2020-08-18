@@ -80,11 +80,6 @@ class WeatherFetchManager {
             
         var weatherGeneralManager: WeatherGeneralManager?
         weatherGeneralManager = WeatherGeneralManager(name: name, population: population, country: country, temperature: temperature, conditionID: id, weathersCell: weatherCell)
-//        self.realmManager = RealmManager()
-//        self.realmManager?.delegation = self
-//        self.realmManager?.retriveWeatherForFetchManager {
-//                weatherGeneralManager = WeatherGeneralManager(name: name, population: population, country: country, temperature: temperature, conditionID: id, weathersCell: weatherCell, citiesList: self.weatherCities!.citiesList)
-//        }
         
         return weatherGeneralManager!
         
@@ -93,9 +88,3 @@ class WeatherFetchManager {
 
     
 }
-
-//extension WeatherFetchManager: RealmWeatherManagerDelegate {
-//    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
-//        weatherCities = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID, weathersCell: weather.weathersCell, citiesList: weather.citiesList)
-//    }
-//}

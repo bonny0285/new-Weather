@@ -18,3 +18,8 @@
 
 "preferred_title" = "Favorite";
 "search_title" = "Search";
+
+"attention_alert_tile" = "Attention !!!";
+"alert_message_city_already_saved" = "City already saved.\nYou can't save the same city twice.";
+
+"alert_message_limit_been_over" = "You have already saved 10 cities.\nYou cannot save more than 10 cities.";

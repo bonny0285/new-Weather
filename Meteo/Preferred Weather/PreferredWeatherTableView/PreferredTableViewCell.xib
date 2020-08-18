@@ -59,7 +59,7 @@
                                 </constraints>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="4If-9G-KFY" secondAttribute="bottom" constant="10" id="2zb-jc-y6K"/>
                             <constraint firstItem="4If-9G-KFY" firstAttribute="leading" secondItem="U4r-ai-k6U" secondAttribute="trailing" constant="5" id="5LN-oN-OGO"/>
@@ -83,6 +83,7 @@
                     <constraint firstAttribute="trailing" secondItem="knR-ue-ZuH" secondAttribute="trailing" id="t5m-bg-bYa"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="backgroundImage" destination="3bB-8I-Fyo" id="adh-VF-ixs"/>

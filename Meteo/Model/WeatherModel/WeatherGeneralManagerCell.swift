@@ -26,70 +26,30 @@ class WeatherGeneralManagerCell {
         self.time = time
     }
     
-    /// condition ID per immagini iOS 13
-    var conditionName : String {
+
+    
+    var setCellImageAtCondition : String {
         switch conditionID {
-        case 200 ... 232:
-            return "cloud.bolt"
-        case 300 ... 321:
-            return "cloud.drizzle"
-        case 500 ... 531:
-            return "cloud.rain"
-        case 600 ... 622:
-            return "cloud.snow"
-        case 701 ... 781:
-            return "cloud.fog"
+        case 200...202, 210...212, 221 ,230...232:
+            return "new_tempesta"
+        case 300...302, 310...314, 321:
+            return "new_pioggia_leggera"
+        case 500...504, 511, 520...522, 531:
+            return "new_pioggia"
+        case 600...602, 611...613, 615, 616, 620...622:
+            return "new_neve"
+        case 701, 711, 721, 731, 741, 751, 761, 762, 771, 781:
+            return "new_nebbia"
         case 800:
-            return "sun.max"
+            return "new_sun"
         case 801 ... 804:
-            return "cloud.bolt"
+            return "new_cloud"
         default:
             return "cloud"
         }
         
     }
     
-    
-    /// condition ID per immagini infieriore iOS 13
-    var conditionNameOldVersion: String{
-        switch conditionID {
-            
-        case 0...300 :
-            return "tstorm1"
-            
-        case 301...500 :
-            return "light_rain"
-            
-        case 501...600 :
-            return "shower3"
-            
-        case 601...700 :
-            return "snow4"
-            
-        case 701...771 :
-            return "fog"
-            
-        case 772...799 :
-            return "tstorm3"
-            
-        case 800 :
-            return "sunny"
-            
-        case 801...804 :
-            return "cloudy2"
-            
-        case 900...903, 905...1000  :
-            return "tstorm3"
-            
-        case 903 :
-            return "snow5"
-            
-        case 904 :
-            return "sunny"
-            
-        default :
-            return "unknown"
-        }
-    }
+
 }
 

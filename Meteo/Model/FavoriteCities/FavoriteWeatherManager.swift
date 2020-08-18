@@ -29,6 +29,7 @@ class WeatherManagerModel {
 class FavoriteWeatherManager {
     
     var weather = WeatherManagerModel()
+    var isLimitBeenOver: Bool = false
     fileprivate var cell: [[WeatherGeneralManagerCell]] = []
     fileprivate var weatherFetchManager = WeatherFetchManager()
     var isEmptyDataBase: Bool {
@@ -49,7 +50,15 @@ class FavoriteWeatherManager {
         self.realmManager = RealmManager()
         self.realmManager.delegation = self
         DispatchQueue.main.async {
-            self.realmManager.retriveWeatherForFetchManager()
+            
+            self.realmManager.checkForLimitsCitySaved { (result) in
+                if result == true {
+                    self.isLimitBeenOver = true
+                } else {
+                    self.isLimitBeenOver = false
+                }
+                self.realmManager.retriveWeatherForFetchManager()
+            }
         }
         
     }

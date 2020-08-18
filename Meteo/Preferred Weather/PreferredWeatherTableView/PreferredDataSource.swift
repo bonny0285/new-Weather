@@ -103,12 +103,12 @@ extension PreferredTableViewCell {
         
         self.name.text = row
         
-        
-        if #available(iOS 13.0, *) {
-            self.weatherImage.image = UIImage(systemName: weather.conditionName)
-        } else {
-            self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
-        }
+        self.weatherImage.image = UIImage(named: weather.setCellImageAtCondition)
+//        if #available(iOS 13.0, *) {
+//            self.weatherImage.image = UIImage(systemName: weather.conditionName)
+//        } else {
+//            self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
+//        }
         
         self.degreesLabel.text = gradi
         

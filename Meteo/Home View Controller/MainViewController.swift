@@ -163,10 +163,6 @@ class MainViewController: UIViewController {
     
     typealias LocationForUser = (latitude: Double,longitude: Double)
     
-    //    var currentWeather: WeatherModel?
-    //
-    //    var weathersForCell: [WeatherModelCell] = []
-    
     let locationManager = CLLocationManager()
     
     var language: String = ""
@@ -176,8 +172,6 @@ class MainViewController: UIViewController {
     var citiesList: [CitiesList] = []
     
     var coordinateUserLocation: LocationForUser = (0.0, 0.0)
-    
-    
     
     var currentLocation: LocationForUser = (0.0, 0.0)
     
@@ -204,27 +198,13 @@ class MainViewController: UIViewController {
         }
     }
     
-    
-    //var fetchWeatherManager: FetchWeatherManager?
-    
     var navigationBarStatus: NavigationBarStatus = .allPresent {
         didSet {
-            //navigationController?.navigationBar.barTintColor = .gray
-            var locationImage = UIImage()
-            var searchImage = UIImage()
-            
-            if #available(iOS 13.0, *) {
-                locationImage = UIImage(systemName: "location.circle.fill")!
-                searchImage = UIImage(systemName: "magnifyingglass")!
-            } else {
-                locationImage = UIImage(named: "address")!
-                searchImage = UIImage(named: "search")!
-            }
-            
-            let leftButton = UIBarButtonItem(image: locationImage, style: .plain, target: self, action: #selector(leftButtonWasPressed(_:)))
-            let rightButton = UIBarButtonItem(image: searchImage, style: .plain, target: self, action: #selector(rightButtonWasPressed(_:)))
-            let preferredButtonItem = UIBarButtonItem(title: "Preferiti", style: .plain, target: self, action: #selector(preferedButtonItemPressed(_:)))
-            let addButtonItem = UIBarButtonItem(title: "Aggiungi", style: .plain, target: self, action: #selector(addButtonItemWasPressed(_:)))
+
+            let leftButton = UIBarButtonItem(image: UIImage(named: "new_location"), style: .plain, target: self, action: #selector(leftButtonWasPressed(_:)))
+            let rightButton = UIBarButtonItem(image: UIImage(named: "new_search"), style: .plain, target: self, action: #selector(rightButtonWasPressed(_:)))
+            let preferredButtonItem = UIBarButtonItem(image: UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(preferedButtonItemPressed(_:)))
+            let addButtonItem = UIBarButtonItem(image: UIImage(named: "new_add"), style: .plain, target: self, action: #selector(addButtonItemWasPressed(_:)))
             
             switch navigationBarStatus {
                 
@@ -304,6 +284,8 @@ class MainViewController: UIViewController {
         locationManager.requestLocation()
         
         /// Chimate alla TableView
+        let nib = UINib(nibName: "MainTableViewCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: "MainTableViewCell")
         tableView.isHidden = true
         tableView.delegate = self
         tableView.dataSource = self
@@ -364,15 +346,39 @@ class MainViewController: UIViewController {
     }
     
     @objc func addButtonItemWasPressed(_ sender: UIBarButtonItem) {
-        navigationController?.navigationBar.isHidden = true
-        navigationController?.pushViewController(loadingController, animated: true)
-        navigationController?.modalPresentationStyle = .fullScreen
-        self.realmManager.saveWeather(self.mainCityNameLabel.text ?? "", self.currentLocation.latitude, self.currentLocation.longitude)
-        self.favoriteWeatherManager = FavoriteWeatherManager()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-            self.navigationController?.popViewController(animated: true)
-            self.state = .endLoading
-        })
+
+        self.realmManager.checkForLimitsCitySaved { [weak self] limit in
+            guard let self = self else { return }
+            
+            if limit == true {
+                debugPrint("Limit Been Over")
+                MyAlert.limitBeenOver(self)
+                self.navigationBarStatus = .noAdd
+            } else {
+                self.realmManager.checkForAPresentLocation(city: self.mainCityNameLabel.text ?? "") { [weak self] result in
+                    guard let self = self else { return }
+                    
+                    self.navigationBarStatus = .allPresent
+                    if result == true {
+                        debugPrint("City already saved")
+                        MyAlert.cityAlreadySaved(self)
+                    } else {
+                        self.navigationController?.navigationBar.isHidden = true
+                        self.navigationController?.pushViewController(self.loadingController, animated: true)
+                        self.navigationController?.modalPresentationStyle = .fullScreen
+                        self.realmManager.saveWeather(self.mainCityNameLabel.text ?? "", self.currentLocation.latitude, self.currentLocation.longitude)
+                        self.favoriteWeatherManager = FavoriteWeatherManager()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                            self.navigationController?.popViewController(animated: true)
+                            self.state = .endLoading
+                        })
+                    }
+                }
+            }
+        }
+
+        
+
     }
     
     @objc func preferedButtonItemPressed(_ sender: UIBarButtonItem) {
@@ -389,7 +395,8 @@ class MainViewController: UIViewController {
         self.currentLocation.latitude = latitude
         self.currentLocation.longitude = longitude
         self.weatherFetchManager = WeatherFetchManager(latitude: latitude, longitude: longitude) { weather in
-            self.setupUIForWeatherGeneralManager(weather: weather) {
+            self.setupUIForWeatherGeneralManager(weather: weather) { [weak self] in
+                guard let self = self else { return }
                 self.state = .endLoading
                 completion()
             }
@@ -407,12 +414,9 @@ class MainViewController: UIViewController {
             self.mainBackgroundImage.image = UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
             self.weatherCondition = weather.condition
             self.imageForNavigationBar = self.mainBackgroundImage.image
-            if #available(iOS 13.0, *) {
-                self.mainWeatherImage.image = UIImage(systemName: weather.conditionName)
-            } else {
-                self.mainWeatherImage.image = UIImage(named: weather.conditionNameOldVersion)
-            }
             
+            self.mainWeatherImage.image = UIImage(named: weather.setImageAtCondition)
+
             self.weatherGeneralManagerCell = weather.weathersCell
             completion()
             
@@ -449,7 +453,11 @@ extension MainViewController: CLLocationManagerDelegate{
             coordinateUserLocation = (lat, lon)
             
             favoriteWeatherManager = FavoriteWeatherManager()
-                self.weatherFetchManager = WeatherFetchManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { weather in
+            
+                self.weatherFetchManager = WeatherFetchManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { [weak self] weather in
+                    
+                    guard let self = self else { return }
+                    
                     self.currentLocation.latitude = location.coordinate.latitude
                     self.currentLocation.longitude = location.coordinate.longitude
                     self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID, weathersCell: weather.weathersCell)
@@ -457,7 +465,13 @@ extension MainViewController: CLLocationManagerDelegate{
                         self.fetchCitiesFromJONS()
                             self.setupUIForWeatherGeneralManager(weather: self.weatherGeneralManager!) {
                                 //self.citiesList = self.weatherGeneralManager!.citiesList
-                                self.state = .endLoading
+                                self.navigationController?.navigationBar.isHidden = false
+                                if self.favoriteWeatherManager!.isLimitBeenOver == true {
+                                    self.navigationBarStatus = .noAdd
+                                } else {
+                                    self.navigationBarStatus = .allPresent
+                                }
+                                //self.state = .endLoading
                                 self.tableView.reloadData()
                                 self.navigationController?.popViewController(animated: true)
                             }
@@ -491,7 +505,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath) as? WeatherTableViewCell else {return UITableViewCell()}
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MainTableViewCell", for: indexPath) as? MainTableViewCell else {return UITableViewCell()}
         
         cell.configureCell(weatherGeneralManager!, atIndexPath: indexPath, weatherGeneralManager!.condition)
         return cell
@@ -512,7 +526,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension MainViewController: MainViewControllerLocationDelegate {
     func locationDidChange(_ response: CitiesList) {
-        self.prepareUIForWeather(response.coord.lat, response.coord.lon) {
+        self.prepareUIForWeather(response.coord.lat, response.coord.lon) { [weak self] in
+            
+            guard let self = self else { return }
+            
             self.currentLocation.latitude = response.coord.lat
             self.currentLocation.longitude = response.coord.lon
             self.navigationController?.popViewController(animated: true)

@@ -13,6 +13,11 @@ class PreferredWeatherViewController: UIViewController {
     //MARK: - Outlets
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var backgroundImage: UIImageView! {
+        didSet {
+            backgroundImage.image = dataSource?.imageNavigationBar()
+        }
+    }
     
     
     //MARK: - Properties
@@ -30,6 +35,7 @@ class PreferredWeatherViewController: UIViewController {
     }
     
     var loadingController = UIViewController()
+    
     var imageForNavigationBar: UIImage! {
         didSet {
             navigationController?.navigationBar.setBackgroundImage(dataSource?.imageNavigationBar(), for: .default)
@@ -70,8 +76,8 @@ class PreferredWeatherViewController: UIViewController {
         let storyboard = UIStoryboard(name: "loading", bundle: nil)
         loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
         
-        
-        
+        let leftButton = UIBarButtonItem(image: UIImage(named: "new_back"), style: .plain, target: self, action: #selector(cancelTapped(_:)))
+        navigationItem.leftBarButtonItem = leftButton
         
         let nib = UINib(nibName: "PreferredTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "PreferredTableViewCell")
@@ -102,10 +108,29 @@ class PreferredWeatherViewController: UIViewController {
                 controller.state = .endLoading
                 controller.navigationBarStatus = .noFavorite
             }
+        } else if segue.identifier == "BackToMain" {
+            if let controller = segue.destination as? MainViewController {
+                let item = sender as! Int
+                if item < 10 {
+                    controller.navigationBarStatus = .allPresent
+                } else {
+                    controller.navigationBarStatus = .noAdd
+                }
+
+                controller.imageForNavigationBar = controller.mainBackgroundImage.image
+            }
         }
     }
 
+    
+    //MARK: - Actions
 
+
+    @objc func cancelTapped(_ sender: UIBarButtonItem) {
+        let items = dataSource?.itemsCount()
+        performSegue(withIdentifier: "BackToMain", sender: items)
+    }
+    
 }
 
 
@@ -146,10 +171,7 @@ extension PreferredWeatherViewController: UITableViewDelegate{
             self.realmManager.deleteWeather(indexPath)
             self.realmManager.delegation = self
             self.realmManager.retriveWeatherForFetchManager()
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//
-//            }
+            
             print("DELETED")
         }
         action.image = UIImage(named: "i_Elimina")
@@ -182,6 +204,7 @@ extension PreferredWeatherViewController: RealmWeatherManagerDelegate {
             self.navigationController?.popViewController(animated: true)
             self.tableView.reloadData()
             self.navigationController?.navigationBar.isHidden = false
+            self.imageForNavigationBar = self.dataSource?.imageNavigationBar()
         }
     }
     
