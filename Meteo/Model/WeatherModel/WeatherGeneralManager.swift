@@ -17,19 +17,41 @@ class WeatherGeneralManager {
     let country: String
     let temperature: Double
     var conditionID: Int
+    var sunset: Double
+    var sunrise: Double
     var weathersCell: [WeatherGeneralManagerCell]
     
-    init(name: String, population: Int, country: String, temperature: Double, conditionID: Int, weathersCell: [WeatherGeneralManagerCell]) {
+    init(name: String, population: Int, country: String, temperature: Double, conditionID: Int, sunset: Double, sunrise: Double, weathersCell: [WeatherGeneralManagerCell]) {
         self.name = name
         self.population = population
         self.country = country
         self.temperature = temperature
         self.conditionID = conditionID
         self.weathersCell = weathersCell
+        self.sunset = sunset
+        self.sunrise = sunrise
     }
     
     var temperatureString: String {
         String(format: "%.1f", temperature)
+    }
+    
+    var getSunrise: String {
+        let date = NSDate(timeIntervalSince1970: sunrise)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        //formatter.timeStyle = .short
+        let string = formatter.string(from: date as Date)
+        return string
+    }
+    
+    var getSunset: String {
+        let date = NSDate(timeIntervalSince1970: sunset)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        //formatter.timeStyle = .short
+        let string = formatter.string(from: date as Date)
+        return string
     }
     
     var condition: WeatherCondition {

@@ -61,7 +61,8 @@ class WeatherFetchManager {
         let country = "\(json[0]["city"]["country"])"
         let temperature = Double("\(json[0]["list"][0]["main"]["temp"])") ?? 0.0
         let id = Int("\(json[0]["list"][0]["weather"][0]["id"])") ?? 0
-        
+        let sunrise = Double("\(json[0]["city"]["sunrise"])") ?? 0.0
+        let sunset = Double("\(json[0]["city"]["sunset"])") ?? 0.0
         
         let list = json[0]["list"]
         
@@ -79,7 +80,7 @@ class WeatherFetchManager {
         }
             
         var weatherGeneralManager: WeatherGeneralManager?
-        weatherGeneralManager = WeatherGeneralManager(name: name, population: population, country: country, temperature: temperature, conditionID: id, weathersCell: weatherCell)
+        weatherGeneralManager = WeatherGeneralManager(name: name, population: population, country: country, temperature: temperature, conditionID: id, sunset: sunset,sunrise: sunrise, weathersCell: weatherCell)
         
         return weatherGeneralManager!
         

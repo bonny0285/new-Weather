@@ -12,7 +12,11 @@ class PreferredWeatherViewController: UIViewController {
     
     //MARK: - Outlets
     
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView! {
+        didSet {
+            tableView.backgroundColor = .clear
+        }
+    }
     @IBOutlet weak var backgroundImage: UIImageView! {
         didSet {
             backgroundImage.image = dataSource?.imageNavigationBar()
@@ -84,7 +88,9 @@ class PreferredWeatherViewController: UIViewController {
         dataSource = PreferredDataSource(weatherManager: weatherManager)
         tableView.dataSource = dataSource
         tableView.delegate = self
-        tableView.tableFooterView = UIView()
+        let footerView = UIView()
+        footerView.backgroundColor = .red
+        tableView.tableFooterView = footerView
         imageForNavigationBar = dataSource?.imageNavigationBar()
         tableView.reloadData()
     }
@@ -105,7 +111,6 @@ class PreferredWeatherViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowToMain" {
             if let controller = segue.destination as? MainViewController {
-                controller.state = .endLoading
                 controller.navigationBarStatus = .noFavorite
             }
         } else if segue.identifier == "BackToMain" {

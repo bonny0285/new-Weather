@@ -72,7 +72,8 @@ class MainTableViewCell: UITableViewCell {
         dateFormatter1.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let dateFromString = dateFormatter1.date(from: string)
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd'/'MM'/'yyyy' 'HH':'mm':'ss"
+        dateFormatter.dateFormat = "HH:mm E, d MMM y"
+        //dateFormatter.dateFormat = "dd'/'MM'/'yyyy' 'HH':'mm':'ss"
         let date = dateFormatter.string(from: dateFromString!)
         return date
     }

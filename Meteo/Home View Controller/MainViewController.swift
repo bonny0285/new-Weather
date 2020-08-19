@@ -21,92 +21,13 @@ class MainViewController: UIViewController {
     
     //MARK: - Outlets
     
-    @IBOutlet weak var mainCityNameLabel: UILabel! {
+    @IBOutlet weak var currentWeatherView: CurrentWeatherView!
+    
+    @IBOutlet weak var tableView: UITableView! {
         didSet {
-            switch weatherCondition {
-            case .tempesta:
-                mainCityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                mainCityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .pioggiaLeggera:
-                mainCityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .neve:
-                mainCityNameLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                mainCityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                mainCityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                mainCityNameLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
+            tableView.backgroundView?.backgroundColor = .clear
         }
     }
-    
-    @IBOutlet weak var populationLabel: UILabel! {
-        didSet {
-            switch weatherCondition {
-            case .tempesta:
-                populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .pioggiaLeggera:
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .neve:
-                populationLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                populationLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
-    @IBOutlet weak var mainWeatherImage: UIImageView! {
-        didSet {
-            switch weatherCondition {
-            case .tempesta:
-                mainWeatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                mainWeatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .pioggiaLeggera:
-                mainWeatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .neve:
-                mainWeatherImage.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                mainWeatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                mainWeatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                mainWeatherImage.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
-    
-    @IBOutlet weak var mainWeatherTemperatureLabel: UILabel! {
-        didSet {
-            switch weatherCondition {
-            case .tempesta:
-                mainWeatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                mainWeatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .pioggiaLeggera:
-                mainWeatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .neve:
-                mainWeatherTemperatureLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                mainWeatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                mainWeatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                mainWeatherTemperatureLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
-    
-    @IBOutlet weak var mainValuesContainer: UIStackView!
-    
-    @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var mainBackgroundImage: UIImageView! {
         didSet {
@@ -115,49 +36,6 @@ class MainViewController: UIViewController {
             }
         }
     }
-    
-    @IBOutlet weak var mainDegreesLabel: UILabel! {
-        didSet {
-            switch weatherCondition {
-            case .tempesta:
-                mainDegreesLabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .pioggia:
-                mainDegreesLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .pioggiaLeggera:
-                mainDegreesLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .neve:
-                mainDegreesLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                mainDegreesLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                mainDegreesLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                mainDegreesLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
-    
-    @IBOutlet weak var mainCelsiusDegreesSymbol: UILabel! {
-        didSet {
-            switch weatherCondition {
-            case .tempesta:
-                mainCelsiusDegreesSymbol.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .pioggia:
-                mainCelsiusDegreesSymbol.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .pioggiaLeggera:
-                mainCelsiusDegreesSymbol.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .neve:
-                mainCelsiusDegreesSymbol.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                mainCelsiusDegreesSymbol.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                mainCelsiusDegreesSymbol.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                mainCelsiusDegreesSymbol.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
-    
     
     //MARK: - Properties
     
@@ -229,31 +107,6 @@ class MainViewController: UIViewController {
         }
     }
     
-    var state: State = .notSave {
-        didSet {
-            switch state {
-            case .save:
-                print("SAVE")
-            case .notSave:
-                print("NOT SAVE")
-            case .loading:
-                if #available(iOS 13.0, *) {
-                    overrideUserInterfaceStyle = .light
-                }
-                
-                navigationController?.navigationBar.isHidden = true
-            case .endLoading:
-                navigationController?.navigationBar.isHidden = false
-                
-                if favoriteWeatherManager?.isEmptyDataBase == true {
-                    navigationBarStatus = .noFavorite
-                } else {
-                    navigationBarStatus = .allPresent
-                }
-            }
-        }
-    }
-    
     var loadingController = UIViewController()
     
     var weatherCondition: WeatherGeneralManager.WeatherCondition = .nebbia {
@@ -295,19 +148,10 @@ class MainViewController: UIViewController {
         
         language = Locale.current.languageCode!
         
-        mainValuesContainer.isHidden = true
+        currentWeatherView.isHidden = true
         
-        //fetchCitiesFromJONS()
     }
     
-    
-    
-//    let date = NSDate(timeIntervalSince1970: 1597256171)
-//    let formatter = DateFormatter()
-//    formatter.timeStyle = .medium
-//    let string = formatter.string(from: date as Date)
-//    print(string)
-
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -318,7 +162,7 @@ class MainViewController: UIViewController {
         //
         //            }
         //        })
-        state = .notSave
+        //state = .notSave
         delegate = self
     }
     
@@ -371,7 +215,7 @@ class MainViewController: UIViewController {
                 self.navigationBarStatus = .noAdd
                 
             } else {
-                self.realmManager.checkForAPresentLocation(city: self.mainCityNameLabel.text ?? "") { [weak self] present in
+                self.realmManager.checkForAPresentLocation(city: self.currentWeatherView.locationName.text ?? "") { [weak self] present in
                     guard let self = self else { return }
                     
                     if present == true {
@@ -382,7 +226,7 @@ class MainViewController: UIViewController {
                         }
                     } else {
                         
-                        self.realmManager.saveWeather(self.mainCityNameLabel.text ?? "", self.currentLocation.latitude, self.currentLocation.longitude)
+                        self.realmManager.saveWeather(self.currentWeatherView.locationName.text ?? "", self.currentLocation.latitude, self.currentLocation.longitude)
                         self.favoriteWeatherManager = FavoriteWeatherManager()
                         self.realmManager.checkForLimitsCitySaved { [weak self] limit  in
                             guard let self = self else { return }
@@ -396,8 +240,8 @@ class MainViewController: UIViewController {
                     }
                 }
             }
-        self.navigationController?.popViewController(animated: true)
-                        
+            self.navigationController?.popViewController(animated: true)
+            
         }
         
         
@@ -428,18 +272,11 @@ class MainViewController: UIViewController {
     
     func setupUIForWeatherGeneralManager(weather: WeatherGeneralManager, completion:@escaping () -> ()) {
         DispatchQueue.main.async {
-            self.mainValuesContainer.isHidden = false
+            self.currentWeatherView.isHidden = false
             self.tableView.isHidden = false
-            self.mainCityNameLabel.text = weather.name
-            let populationText = NSLocalizedString("population_label", comment: "")
-            self.populationLabel.text = "\(populationText)\(weather.population)"
-            self.mainWeatherTemperatureLabel.text = weather.temperatureString
             self.mainBackgroundImage.image = UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
             self.weatherCondition = weather.condition
             self.imageForNavigationBar = self.mainBackgroundImage.image
-            
-            self.mainWeatherImage.image = UIImage(named: weather.setImageAtCondition)
-
             self.weatherGeneralManagerCell = weather.weathersCell
             completion()
             
@@ -477,34 +314,31 @@ extension MainViewController: CLLocationManagerDelegate{
             
             favoriteWeatherManager = FavoriteWeatherManager()
             
-                self.weatherFetchManager = WeatherFetchManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { [weak self] weather in
-                    
-                    guard let self = self else { return }
-                    
-                    self.currentLocation.latitude = location.coordinate.latitude
-                    self.currentLocation.longitude = location.coordinate.longitude
-                    self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID, weathersCell: weather.weathersCell)
-                    DispatchQueue.main.async {
-                        self.fetchCitiesFromJONS()
-                            self.setupUIForWeatherGeneralManager(weather: self.weatherGeneralManager!) {
-                                //self.citiesList = self.weatherGeneralManager!.citiesList
-                                self.navigationController?.navigationBar.isHidden = false
-                                if self.favoriteWeatherManager!.isLimitBeenOver == true {
-                                    self.navigationBarStatus = .noAdd
-                                } else {
-                                    self.navigationBarStatus = .allPresent
-                                }
-                                //self.state = .endLoading
-                                self.tableView.reloadData()
-                                self.navigationController?.popViewController(animated: true)
-                            }
-                        
-                        
+            self.weatherFetchManager = WeatherFetchManager(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: { [weak self] weather in
+                
+                guard let self = self else { return }
+                
+                self.currentLocation.latitude = location.coordinate.latitude
+                self.currentLocation.longitude = location.coordinate.longitude
+                self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID,sunset: weather.sunset, sunrise: weather.sunset, weathersCell: weather.weathersCell)
+                DispatchQueue.main.async {
+                    self.fetchCitiesFromJONS()
+                    self.setupUIForWeatherGeneralManager(weather: self.weatherGeneralManager!) {
+                        self.currentWeatherView.setupCurrentWeatherView(weather)
+                        self.currentWeatherView.setupColorViewAtCondition(weather.condition)
+                        self.navigationController?.navigationBar.isHidden = false
+                        if self.favoriteWeatherManager!.isLimitBeenOver == true {
+                            self.navigationBarStatus = .noAdd
+                        } else {
+                            self.navigationBarStatus = .allPresent
+                        }
+                        //self.state = .endLoading
+                        self.tableView.reloadData()
+                        self.navigationController?.popViewController(animated: true)
                     }
-                    
-                })
-
-            
+                }
+                
+            })
         }
         
     }
@@ -565,13 +399,6 @@ extension MainViewController: MainViewControllerLocationDelegate {
 //MARK: - State
 
 extension MainViewController {
-    
-    enum State {
-        case save
-        case notSave
-        case loading
-        case endLoading
-    }
     
     enum NavigationBarStatus{
         case allPresent
