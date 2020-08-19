@@ -20,9 +20,11 @@ public struct MyAlert{
         controller.present(controller, animated: true, completion: nil)
     }
     
-    public static func cityAlreadySaved(_ viewController: UIViewController){
+    public static func cityAlreadySaved(_ viewController: UIViewController, completion: @escaping () -> ()){
         let controller = UIAlertController(title: NSLocalizedString("attention_alert_tile", comment: ""), message: NSLocalizedString("alert_message_city_already_saved", comment: ""), preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        let action = UIAlertAction(title: "OK", style: .cancel) { (action) in
+            completion()
+        }
         controller.addAction(action)
         viewController.present(controller, animated: true, completion: nil)
     }

@@ -34,6 +34,16 @@ class LoadingViewController: UIViewController {
         loading.startAnimating()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if #available(iOS 13.0, *) {
+        overrideUserInterfaceStyle = .light
+        }
+        loading.startAnimating()
+    }
+    
+    
+
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)

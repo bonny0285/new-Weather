@@ -200,7 +200,7 @@ class MainViewController: UIViewController {
     
     var navigationBarStatus: NavigationBarStatus = .allPresent {
         didSet {
-
+            navigationController?.navigationBar.isHidden = false
             let leftButton = UIBarButtonItem(image: UIImage(named: "new_location"), style: .plain, target: self, action: #selector(leftButtonWasPressed(_:)))
             let rightButton = UIBarButtonItem(image: UIImage(named: "new_search"), style: .plain, target: self, action: #selector(rightButtonWasPressed(_:)))
             let preferredButtonItem = UIBarButtonItem(image: UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(preferedButtonItemPressed(_:)))
@@ -223,6 +223,8 @@ class MainViewController: UIViewController {
             case .noSearch:
                 navigationItem.leftBarButtonItems = [leftButton, preferredButtonItem]
                 navigationItem.rightBarButtonItems = [addButtonItem]
+            case .noOne:
+                navigationController?.navigationBar.isHidden = true
             }
         }
     }
@@ -271,7 +273,8 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        state = .loading
+        //state = .loading
+        navigationBarStatus = .noOne
         
         /// Instanzio il LoadingViewController
         let storyboard = UIStoryboard(name: "loading", bundle: nil)
@@ -297,6 +300,14 @@ class MainViewController: UIViewController {
         //fetchCitiesFromJONS()
     }
     
+    
+    
+//    let date = NSDate(timeIntervalSince1970: 1597256171)
+//    let formatter = DateFormatter()
+//    formatter.timeStyle = .medium
+//    let string = formatter.string(from: date as Date)
+//    print(string)
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -346,39 +357,50 @@ class MainViewController: UIViewController {
     }
     
     @objc func addButtonItemWasPressed(_ sender: UIBarButtonItem) {
-
+        
+        
         self.realmManager.checkForLimitsCitySaved { [weak self] limit in
             guard let self = self else { return }
-            
+            self.navigationBarStatus = .noOne
+            self.navigationController?.pushViewController(self.loadingController, animated: true)
+            self.navigationController?.modalPresentationStyle = .fullScreen
             if limit == true {
                 debugPrint("Limit Been Over")
                 MyAlert.limitBeenOver(self)
+                self.navigationController?.popViewController(animated: true)
                 self.navigationBarStatus = .noAdd
+                
             } else {
-                self.realmManager.checkForAPresentLocation(city: self.mainCityNameLabel.text ?? "") { [weak self] result in
+                self.realmManager.checkForAPresentLocation(city: self.mainCityNameLabel.text ?? "") { [weak self] present in
                     guard let self = self else { return }
                     
-                    self.navigationBarStatus = .allPresent
-                    if result == true {
+                    if present == true {
                         debugPrint("City already saved")
-                        MyAlert.cityAlreadySaved(self)
+                        MyAlert.cityAlreadySaved(self) {
+                            self.navigationBarStatus = .allPresent
+                            self.navigationController?.popViewController(animated: true)
+                        }
                     } else {
-                        self.navigationController?.navigationBar.isHidden = true
-                        self.navigationController?.pushViewController(self.loadingController, animated: true)
-                        self.navigationController?.modalPresentationStyle = .fullScreen
+                        
                         self.realmManager.saveWeather(self.mainCityNameLabel.text ?? "", self.currentLocation.latitude, self.currentLocation.longitude)
                         self.favoriteWeatherManager = FavoriteWeatherManager()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                            self.navigationController?.popViewController(animated: true)
-                            self.state = .endLoading
-                        })
+                        self.realmManager.checkForLimitsCitySaved { [weak self] limit  in
+                            guard let self = self else { return }
+                            
+                            if limit == true {
+                                self.navigationBarStatus = .noAdd
+                            } else {
+                                self.navigationBarStatus = .allPresent
+                            }
+                        }
                     }
                 }
             }
+        self.navigationController?.popViewController(animated: true)
+                        
         }
-
         
-
+        
     }
     
     @objc func preferedButtonItemPressed(_ sender: UIBarButtonItem) {
@@ -397,7 +419,8 @@ class MainViewController: UIViewController {
         self.weatherFetchManager = WeatherFetchManager(latitude: latitude, longitude: longitude) { weather in
             self.setupUIForWeatherGeneralManager(weather: weather) { [weak self] in
                 guard let self = self else { return }
-                self.state = .endLoading
+                //self.state = .endLoading
+                self.navigationBarStatus = .allPresent
                 completion()
             }
         }
@@ -556,7 +579,7 @@ extension MainViewController {
         case noFavorite
         case noAdd
         case noSearch
-        
+        case noOne
     }
 }
 
