@@ -253,6 +253,7 @@ class MainViewController: UIViewController {
         self.currentLocation.latitude = latitude
         self.currentLocation.longitude = longitude
         self.weatherGeneralManagerCell.removeAll()
+        self.favoriteWeatherManager = FavoriteWeatherManager()
         
         if loadingControllerIsNeeded == true {
             self.navigationBarStatus = .noOne
@@ -263,7 +264,7 @@ class MainViewController: UIViewController {
         self.weatherFetchManager = WeatherFetchManager(latitude: latitude, longitude: longitude, completion: { [weak self] weather in
             guard let self = self else { return }
             
-            self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID,sunset: weather.sunset, sunrise: weather.sunset, weathersCell: weather.weathersCell)
+            self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID,sunset: weather.sunset, sunrise: weather.sunrise, weathersCell: weather.weathersCell)
             
             DispatchQueue.main.async {
                 self.fetchCitiesFromJONS()
@@ -284,6 +285,10 @@ class MainViewController: UIViewController {
                     self.navigationBarStatus = .allPresent
                 }
                 
+                if self.favoriteWeatherManager?.isEmptyDataBase == true {
+                    self.navigationBarStatus = .noFavorite
+                }
+                
                 self.tableView.reloadData()
                 self.navigationController?.popViewController(animated: true)
             }
@@ -302,7 +307,8 @@ class MainViewController: UIViewController {
             let result = try decoder.decode([CitiesList].self, from: data)
             
             citiesList = result.sorted { $0.name < $1.name}.compactMap { $0 }
-            print("DONE")
+            debugPrint("Fetched JSON Cities Bulk")
+            
         } catch let error {
             debugPrint(error.localizedDescription)
         }

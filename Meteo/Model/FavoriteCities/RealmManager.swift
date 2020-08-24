@@ -79,14 +79,17 @@ class RealmManager {
             
             let results = realm.objects(RealmWeatherManager.self)
             
-            if results.count == 10 {
-                isLimitBeenOver = true
-                completion(isLimitBeenOver)
-            } else {
-                isLimitBeenOver = false
-                completion(isLimitBeenOver)
+            DispatchQueue.main.async {
+                if results.count == 10 {
+                    isLimitBeenOver = true
+                    completion(isLimitBeenOver)
+                } else {
+                    isLimitBeenOver = false
+                    completion(isLimitBeenOver)
+                }
             }
-   
+            
+            
         } catch let error {
             debugPrint(error.localizedDescription)
         }
