@@ -112,6 +112,9 @@ class PreferredWeatherViewController: UIViewController {
         if segue.identifier == "ShowToMain" {
             if let controller = segue.destination as? MainViewController {
                 controller.navigationBarStatus = .noFavorite
+                let indexPathToReload = IndexPath(row: 0, section: 0)
+                controller.tableView.selectRow(at: indexPathToReload, animated: true, scrollPosition: .top)
+                controller.imageForNavigationBar = controller.mainBackgroundImage.image
             }
         } else if segue.identifier == "BackToMain" {
             if let controller = segue.destination as? MainViewController {
@@ -121,7 +124,8 @@ class PreferredWeatherViewController: UIViewController {
                 } else {
                     controller.navigationBarStatus = .noAdd
                 }
-
+                let indexPathToReload = IndexPath(row: 0, section: 0)
+                controller.tableView.selectRow(at: indexPathToReload, animated: true, scrollPosition: .top)
                 controller.imageForNavigationBar = controller.mainBackgroundImage.image
             }
         }

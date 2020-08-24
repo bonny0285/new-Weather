@@ -151,6 +151,7 @@
                         <outlet property="searchBar" destination="HcI-9p-UV1" id="STq-uO-xAf"/>
                         <outlet property="tableView" destination="eQJ-KU-3wd" id="Oy2-sI-qZw"/>
                         <segue destination="8zI-Pa-lb2" kind="unwind" identifier="ShowToMain" unwindAction="unwindToMain:" id="8kn-ih-JYj"/>
+                        <segue destination="8zI-Pa-lb2" kind="unwind" identifier="BackToMain" unwindAction="unwindToMain:" id="z19-Hd-Zvm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yaq-pb-2Lo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

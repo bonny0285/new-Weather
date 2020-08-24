@@ -35,6 +35,9 @@ class CitiesListViewController: UIViewController {
             overrideUserInterfaceStyle = .light
         }
         
+        let leftButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(cancelTapped(_:)))
+        navigationItem.leftBarButtonItem = leftButton
+        
         let nib = UINib(nibName: "CitiesListTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cityCell")
                 
@@ -51,15 +54,25 @@ class CitiesListViewController: UIViewController {
     }
 
 
+    //MARK: - Navigation
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowToMain" {
             if let controller = segue.destination as? MainViewController {
                 controller.delegate?.locationDidChange(sender as! CitiesList)
             }
+        } else if segue.identifier == "BackToMain" {
+            if let controller = segue.destination as? MainViewController {
+                let indexPathToReload = IndexPath(row: 0, section: 0)
+                controller.tableView.selectRow(at: indexPathToReload, animated: true, scrollPosition: .top)
+            }
         }
     }
 
 
+    @objc func cancelTapped(_ sender: UIBarButtonItem) {
+        performSegue(withIdentifier: "BackToMain", sender: nil)
+    }
     
 }
 

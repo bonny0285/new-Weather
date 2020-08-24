@@ -149,7 +149,7 @@ class MainViewController: UIViewController {
         language = Locale.current.languageCode!
         
         currentWeatherView.isHidden = true
-        
+    
     }
     
     
@@ -190,7 +190,11 @@ class MainViewController: UIViewController {
     //MARK: - Current Location Button Bar Action
 
     @objc func currentLocationButtonBarWasPressed(_ sender: UIBarButtonItem) {
-        fetchResultAndSetupUI(coordinateUserLocation.latitude, coordinateUserLocation.longitude, true)
+        self.fetchResultAndSetupUI(self.coordinateUserLocation.latitude, self.coordinateUserLocation.longitude, true, completion: {
+            let index = IndexPath(row: 0, section: 0)
+            self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
+        })
+
     }
     
     //MARK: - Add Button Bar Action
@@ -247,9 +251,10 @@ class MainViewController: UIViewController {
         self.performSegue(withIdentifier: "ShowPreferredWeather", sender: self.favoriteWeatherManager?.weather)
     }
     
+    
     //MARK: - Fetch Weather JSON And Setup UI
-
-    func fetchResultAndSetupUI(_ latitude: Double, _ longitude: Double,_ loadingControllerIsNeeded: Bool) {
+    
+    func fetchResultAndSetupUI(_ latitude: Double, _ longitude: Double,_ loadingControllerIsNeeded: Bool, completion: (() -> ())?) {
         self.currentLocation.latitude = latitude
         self.currentLocation.longitude = longitude
         self.weatherGeneralManagerCell.removeAll()
@@ -290,8 +295,15 @@ class MainViewController: UIViewController {
                 }
                 
                 self.tableView.reloadData()
+                
+                if let completion = completion {
+                    completion()
+                }
+                
                 self.navigationController?.popViewController(animated: true)
+            
             }
+            
         })
     }
     
@@ -329,7 +341,7 @@ extension MainViewController: CLLocationManagerDelegate{
             
             favoriteWeatherManager = FavoriteWeatherManager()
             
-            fetchResultAndSetupUI(location.coordinate.latitude, location.coordinate.longitude, false)
+            fetchResultAndSetupUI(location.coordinate.latitude, location.coordinate.longitude, false, completion: nil)
 
         }
         
@@ -377,7 +389,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 extension MainViewController: MainViewControllerLocationDelegate {
     func locationDidChange(_ response: CitiesList) {
         
-        fetchResultAndSetupUI(response.coord.lat, response.coord.lon, true)
+        fetchResultAndSetupUI(response.coord.lat, response.coord.lon, true, completion: {
+            
+            let index = IndexPath(row: 0, section: 0)
+            self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
+        })
 
     }
     
