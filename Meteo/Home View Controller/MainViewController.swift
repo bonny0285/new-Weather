@@ -190,10 +190,14 @@ class MainViewController: UIViewController {
     //MARK: - Current Location Button Bar Action
 
     @objc func currentLocationButtonBarWasPressed(_ sender: UIBarButtonItem) {
-        self.fetchResultAndSetupUI(self.coordinateUserLocation.latitude, self.coordinateUserLocation.longitude, true, completion: {
+        setupUIAtCurrentLocation(coordinateUserLocation.latitude, coordinateUserLocation.longitude) {
             let index = IndexPath(row: 0, section: 0)
             self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
-        })
+        }
+//        self.fetchResultAndSetupUI(self.coordinateUserLocation.latitude, self.coordinateUserLocation.longitude, true, completion: {
+//            let index = IndexPath(row: 0, section: 0)
+//            self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
+//        })
 
     }
     
@@ -253,6 +257,52 @@ class MainViewController: UIViewController {
     
     
     //MARK: - Fetch Weather JSON And Setup UI
+    
+    func setupUIAtCurrentLocation(_ latitude: Double, _ longitude: Double, completion: (() -> ())?) {
+        self.weatherGeneralManagerCell.removeAll()
+        self.navigationBarStatus = .noOne
+        self.navigationController?.pushViewController(self.loadingController, animated: true)
+        self.navigationController?.modalPresentationStyle = .fullScreen
+        
+        self.weatherFetchManager = WeatherFetchManager(latitude: latitude, longitude: longitude, completion: { [weak self] weather in
+        guard let self = self else { return }
+            
+            self.weatherGeneralManager = WeatherGeneralManager(name: weather.name, population: weather.population, country: weather.country, temperature: weather.temperature, conditionID: weather.conditionID,sunset: weather.sunset, sunrise: weather.sunrise, weathersCell: weather.weathersCell)
+            DispatchQueue.main.async {
+                //self.fetchCitiesFromJONS()
+                //self.currentWeatherView.isHidden = false
+                self.currentWeatherView.setupCurrentWeatherView(weather)
+                self.currentWeatherView.setupColorViewAtCondition(weather.condition)
+                self.currentWeatherView.setupCurrentWeatherView(weather)
+                self.currentWeatherView.setupColorViewAtCondition(weather.condition)
+                //self.tableView.isHidden = false
+                self.mainBackgroundImage.image = UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
+                self.weatherCondition = weather.condition
+                self.imageForNavigationBar = self.mainBackgroundImage.image
+                self.weatherGeneralManagerCell = weather.weathersCell
+                
+                if self.favoriteWeatherManager!.isLimitBeenOver == true {
+                    self.navigationBarStatus = .noAdd
+                } else {
+                    self.navigationBarStatus = .allPresent
+                }
+                
+                if self.favoriteWeatherManager?.isEmptyDataBase == true {
+                    self.navigationBarStatus = .noFavorite
+                }
+                
+                self.tableView.reloadData()
+                
+                if let completion = completion {
+                    completion()
+                }
+                
+                self.navigationController?.popViewController(animated: true)
+            
+            }
+
+        })
+    }
     
     func fetchResultAndSetupUI(_ latitude: Double, _ longitude: Double,_ loadingControllerIsNeeded: Bool, completion: (() -> ())?) {
         self.currentLocation.latitude = latitude
@@ -389,11 +439,15 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 extension MainViewController: MainViewControllerLocationDelegate {
     func locationDidChange(_ response: CitiesList) {
         
-        fetchResultAndSetupUI(response.coord.lat, response.coord.lon, true, completion: {
-            
+        setupUIAtCurrentLocation(response.coord.lat, response.coord.lat) {
             let index = IndexPath(row: 0, section: 0)
             self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
-        })
+        }
+//        fetchResultAndSetupUI(response.coord.lat, response.coord.lon, true, completion: {
+//            
+//            let index = IndexPath(row: 0, section: 0)
+//            self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
+//        })
 
     }
     
