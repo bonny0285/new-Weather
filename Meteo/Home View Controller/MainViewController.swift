@@ -194,11 +194,6 @@ class MainViewController: UIViewController {
             let index = IndexPath(row: 0, section: 0)
             self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
         }
-//        self.fetchResultAndSetupUI(self.coordinateUserLocation.latitude, self.coordinateUserLocation.longitude, true, completion: {
-//            let index = IndexPath(row: 0, section: 0)
-//            self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
-//        })
-
     }
     
     //MARK: - Add Button Bar Action
@@ -443,12 +438,6 @@ extension MainViewController: MainViewControllerLocationDelegate {
             let index = IndexPath(row: 0, section: 0)
             self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
         }
-//        fetchResultAndSetupUI(response.coord.lat, response.coord.lon, true, completion: {
-//            
-//            let index = IndexPath(row: 0, section: 0)
-//            self.tableView.selectRow(at: index, animated: true, scrollPosition: .top)
-//        })
-
     }
     
 }

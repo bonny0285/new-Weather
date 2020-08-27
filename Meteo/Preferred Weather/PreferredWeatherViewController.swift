@@ -12,6 +12,15 @@ class PreferredWeatherViewController: UIViewController {
     
     //MARK: - Outlets
     
+    #warning("cambiare il testo e metterlo in inglese")
+    @IBOutlet weak var progressLabel: UILabel!
+    @IBOutlet weak var progressSave: UIProgressView! {
+        didSet {
+            setCurrentProgress(weatherManager.arrayName.count)
+        }
+    }
+    
+    
     @IBOutlet weak var tableView: UITableView! {
         didSet {
             tableView.backgroundColor = .clear
@@ -20,6 +29,7 @@ class PreferredWeatherViewController: UIViewController {
     @IBOutlet weak var backgroundImage: UIImageView! {
         didSet {
             backgroundImage.image = dataSource?.imageNavigationBar()
+
         }
     }
     
@@ -27,7 +37,7 @@ class PreferredWeatherViewController: UIViewController {
     //MARK: - Properties
     
     
-    
+    var progress = Progress(totalUnitCount: 10)
     var cell: [[WeatherGeneralManagerCell]] = []
     var dataSource: PreferredDataSource?
     var realmManager = RealmManager()
@@ -76,7 +86,7 @@ class PreferredWeatherViewController: UIViewController {
             // Always adopt a light interface style.
             overrideUserInterfaceStyle = .light
         }
-        
+
         let storyboard = UIStoryboard(name: "loading", bundle: nil)
         loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
         
@@ -138,6 +148,13 @@ class PreferredWeatherViewController: UIViewController {
     @objc func cancelTapped(_ sender: UIBarButtonItem) {
         let items = dataSource?.itemsCount()
         performSegue(withIdentifier: "BackToMain", sender: items)
+    }
+    
+    
+    func setCurrentProgress(_ progressDone: Int) {
+        progress.completedUnitCount = Int64(progressDone)
+        let progressFloat = Float(progress.fractionCompleted)
+        progressSave.setProgress(progressFloat, animated: true)
     }
     
 }
@@ -205,11 +222,13 @@ extension PreferredWeatherViewController: RealmWeatherManagerDelegate {
         self.cell.append(weather.weathersCell)
         self.weatherManager.arrayGradi.append(weather.temperatureString)
         self.weatherManager.arrayName.append(weather.name)
+        
         self.weatherManager.arrayConditon.append(weather.condition)
         self.weatherManager.arrayImages.append(UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
         self.weatherManager.arrayForCell = cell.first!
         
         DispatchQueue.main.async {
+            self.setCurrentProgress(self.weatherManager.arrayName.count)
             self.navigationController?.popViewController(animated: true)
             self.tableView.reloadData()
             self.navigationController?.navigationBar.isHidden = false
