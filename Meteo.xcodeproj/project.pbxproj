@@ -27,6 +27,7 @@
 		706EA85324E69B04001354C7 /* WeatherGeneralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706EA85224E69B04001354C7 /* WeatherGeneralManager.swift */; };
 		706EA85524E6A642001354C7 /* WeatherGeneralManagerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706EA85424E6A642001354C7 /* WeatherGeneralManagerCell.swift */; };
 		706EA85824E6B8EC001354C7 /* WeatherFetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706EA85724E6B8EC001354C7 /* WeatherFetchManager.swift */; };
+		709C3BA724FE26AD00F1BF2A /* MainWeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709C3BA624FE26AD00F1BF2A /* MainWeatherManager.swift */; };
 		70B1E4B624E0488D00D067DB /* RealmWeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B1E4B524E0488D00D067DB /* RealmWeatherManager.swift */; };
 		70B1E4B924E050FF00D067DB /* PreferredWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B1E4B824E050FF00D067DB /* PreferredWeatherViewController.swift */; };
 		70B1E4BC24E051AB00D067DB /* PreferredDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B1E4BB24E051AB00D067DB /* PreferredDataSource.swift */; };
@@ -82,6 +83,7 @@
 		706EA85224E69B04001354C7 /* WeatherGeneralManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherGeneralManager.swift; sourceTree = "<group>"; };
 		706EA85424E6A642001354C7 /* WeatherGeneralManagerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherGeneralManagerCell.swift; sourceTree = "<group>"; };
 		706EA85724E6B8EC001354C7 /* WeatherFetchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherFetchManager.swift; sourceTree = "<group>"; };
+		709C3BA624FE26AD00F1BF2A /* MainWeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWeatherManager.swift; sourceTree = "<group>"; };
 		70B1E4B524E0488D00D067DB /* RealmWeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmWeatherManager.swift; sourceTree = "<group>"; };
 		70B1E4B824E050FF00D067DB /* PreferredWeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferredWeatherViewController.swift; sourceTree = "<group>"; };
 		70B1E4BB24E051AB00D067DB /* PreferredDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferredDataSource.swift; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 				706EA85924E6DA08001354C7 /* FavoriteCities */,
 				706EA85624E6A670001354C7 /* WeatherModel */,
 				B4A288C2243800C9002E857F /* MyAlert.swift */,
+				709C3BA624FE26AD00F1BF2A /* MainWeatherManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -511,6 +514,7 @@
 				B4A288C524380269002E857F /* MainViewController.swift in Sources */,
 				701DA02524ED9CEE007F14DF /* CurrentWeatherView.swift in Sources */,
 				701DA02124EB3342007F14DF /* MainTableViewCell.swift in Sources */,
+				709C3BA724FE26AD00F1BF2A /* MainWeatherManager.swift in Sources */,
 				704F7A9324D7E538008359D7 /* WeatherDataSource.swift in Sources */,
 				704F7AA224D86A99008359D7 /* CitiesListTableViewCell.swift in Sources */,
 				706EA85324E69B04001354C7 /* WeatherGeneralManager.swift in Sources */,
