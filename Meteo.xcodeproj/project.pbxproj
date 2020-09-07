@@ -14,6 +14,9 @@
 		701DA02524ED9CEE007F14DF /* CurrentWeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701DA02424ED9CED007F14DF /* CurrentWeatherView.swift */; };
 		701DA02724ED9D0F007F14DF /* CurrentWeatherView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701DA02624ED9D0F007F14DF /* CurrentWeatherView.xib */; };
 		703F6F8A24E0A2180085A265 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703F6F8924E0A2180085A265 /* RealmManager.swift */; };
+		7041CE7B250611A0002B7D92 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7041CE7A250611A0002B7D92 /* Coordinator.swift */; };
+		7041CE7D250611B6002B7D92 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7041CE7C250611B6002B7D92 /* Storyboarded.swift */; };
+		7041CE7F250611D2002B7D92 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7041CE7E250611D2002B7D92 /* MainCoordinator.swift */; };
 		704F7A9124D7E275008359D7 /* CitiesListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F7A9024D7E275008359D7 /* CitiesListModel.swift */; };
 		704F7A9324D7E538008359D7 /* WeatherDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F7A9224D7E538008359D7 /* WeatherDataSource.swift */; };
 		704F7A9B24D862F4008359D7 /* cityList.json in Resources */ = {isa = PBXBuildFile; fileRef = 704F7A9A24D862F4008359D7 /* cityList.json */; };
@@ -65,6 +68,9 @@
 		701DA02424ED9CED007F14DF /* CurrentWeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherView.swift; sourceTree = "<group>"; };
 		701DA02624ED9D0F007F14DF /* CurrentWeatherView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CurrentWeatherView.xib; sourceTree = "<group>"; };
 		703F6F8924E0A2180085A265 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
+		7041CE7A250611A0002B7D92 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		7041CE7C250611B6002B7D92 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
+		7041CE7E250611D2002B7D92 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		704F7A9024D7E275008359D7 /* CitiesListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesListModel.swift; sourceTree = "<group>"; };
 		704F7A9224D7E538008359D7 /* WeatherDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataSource.swift; sourceTree = "<group>"; };
 		704F7A9A24D862F4008359D7 /* cityList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = cityList.json; path = Meteo/Model/Cities/cityList.json; sourceTree = SOURCE_ROOT; };
@@ -147,6 +153,16 @@
 				701DA02624ED9D0F007F14DF /* CurrentWeatherView.xib */,
 			);
 			path = CurrentWeatherView;
+			sourceTree = "<group>";
+		};
+		7041CE792506117D002B7D92 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				7041CE7A250611A0002B7D92 /* Coordinator.swift */,
+				7041CE7C250611B6002B7D92 /* Storyboarded.swift */,
+				7041CE7E250611D2002B7D92 /* MainCoordinator.swift */,
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 		704F7A9E24D86A54008359D7 /* CitiesListViewController */ = {
@@ -249,6 +265,7 @@
 		B408AC8B229AB56B0000AE68 /* Meteo */ = {
 			isa = PBXGroup;
 			children = (
+				7041CE792506117D002B7D92 /* Coordinator */,
 				B408ACAC229AB57A0000AE68 /* Structure */,
 				B4A288BF2437D344002E857F /* Model */,
 				704F7AB424DA94F1008359D7 /* LoadingVIewController */,
@@ -504,7 +521,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4A288C3243800C9002E857F /* MyAlert.swift in Sources */,
+				7041CE7F250611D2002B7D92 /* MainCoordinator.swift in Sources */,
 				70B1E4B924E050FF00D067DB /* PreferredWeatherViewController.swift in Sources */,
+				7041CE7B250611A0002B7D92 /* Coordinator.swift in Sources */,
 				704F7AB824DA9545008359D7 /* LoadingViewController.swift in Sources */,
 				706EA85524E6A642001354C7 /* WeatherGeneralManagerCell.swift in Sources */,
 				704F7A9124D7E275008359D7 /* CitiesListModel.swift in Sources */,
@@ -525,6 +544,7 @@
 				704F7AA524D86ABB008359D7 /* CitiesListDataSource.swift in Sources */,
 				B408AC8D229AB56B0000AE68 /* AppDelegate.swift in Sources */,
 				B451590E243CF25E00EFD00A /* NSDate.swift in Sources */,
+				7041CE7D250611B6002B7D92 /* Storyboarded.swift in Sources */,
 				B451590C243CF23A00EFD00A /* Double Extention.swift in Sources */,
 				70B1E4B624E0488D00D067DB /* RealmWeatherManager.swift in Sources */,
 				704F7A9D24D86962008359D7 /* CitiesListViewController.swift in Sources */,

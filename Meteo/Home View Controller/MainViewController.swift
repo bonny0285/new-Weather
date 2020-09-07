@@ -16,7 +16,9 @@ protocol MainViewControllerLocationDelegate: class {
 }
 
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, Storyboarded {
+    
+    
     
     
     //MARK: - Outlets
@@ -38,7 +40,7 @@ class MainViewController: UIViewController {
     }
     
     //MARK: - Properties
-    
+    var coordinator: MainCoordinator?
     typealias LocationForUser = (latitude: Double,longitude: Double)
     
     let locationManager = CLLocationManager()
@@ -184,7 +186,8 @@ class MainViewController: UIViewController {
     //MARK: - Search Button Bar Action
 
     @objc func searchButtonBarWasPressed(_ sender: UIBarButtonItem) {
-        self.performSegue(withIdentifier: "ShowCitiesList", sender: citiesList)
+        coordinator?.cityListViewController()
+        //self.performSegue(withIdentifier: "ShowCitiesList", sender: citiesList)
     }
     
     //MARK: - Current Location Button Bar Action
@@ -247,7 +250,7 @@ class MainViewController: UIViewController {
     //MARK: - Favorite Button Bar Action
 
     @objc func favoriteButtonBarWasPressed(_ sender: UIBarButtonItem) {
-        self.performSegue(withIdentifier: "ShowPreferredWeather", sender: self.favoriteWeatherManager?.weather)
+        coordinator?.preferedWeatherViewController()
     }
     
     

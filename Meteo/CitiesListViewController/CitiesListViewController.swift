@@ -8,7 +8,9 @@
 
 import UIKit
 
-class CitiesListViewController: UIViewController {
+class CitiesListViewController: UIViewController, Storyboarded {
+    
+    
     
     
     //MARK: - Outlets
@@ -18,7 +20,7 @@ class CitiesListViewController: UIViewController {
     
     
     //MARK: - Properies
-
+    var coordinator: MainCoordinator?
     var citiesResult: [CitiesList]?
     var dataSource: CitiesListDataSource?
     var citiesArray: [CitiesList] = []

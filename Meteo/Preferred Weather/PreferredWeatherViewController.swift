@@ -8,7 +8,9 @@
 
 import UIKit
 
-class PreferredWeatherViewController: UIViewController {
+class PreferredWeatherViewController: UIViewController, Storyboarded {
+    
+    
     
     //MARK: - Outlets
     
@@ -36,7 +38,7 @@ class PreferredWeatherViewController: UIViewController {
     
     //MARK: - Properties
     
-    
+    var coordinator: MainCoordinator?
     var progress = Progress(totalUnitCount: 10)
     var cell: [[WeatherGeneralManagerCell]] = []
     var dataSource: PreferredDataSource?
