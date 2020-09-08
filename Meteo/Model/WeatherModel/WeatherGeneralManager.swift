@@ -13,6 +13,8 @@ import UIKit
 
 class WeatherGeneralManager {
     let name: String
+    let latitude: Double
+    let longitude: Double
     let population: Int
     let country: String
     let temperature: Double
@@ -21,8 +23,10 @@ class WeatherGeneralManager {
     var sunrise: Double
     var weathersCell: [WeatherGeneralManagerCell]
     
-    init(name: String, population: Int, country: String, temperature: Double, conditionID: Int, sunset: Double, sunrise: Double, weathersCell: [WeatherGeneralManagerCell]) {
+    init(name: String,latitude: Double, longitude: Double, population: Int, country: String, temperature: Double, conditionID: Int, sunset: Double, sunrise: Double, weathersCell: [WeatherGeneralManagerCell]) {
         self.name = name
+        self.latitude = latitude
+        self.longitude = longitude
         self.population = population
         self.country = country
         self.temperature = temperature

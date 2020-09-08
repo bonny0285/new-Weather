@@ -15,12 +15,22 @@ protocol RealmWeatherManagerDelegate: class {
     func retriveEmptyResult()
 }
 
+protocol RealmManagerDelegate: class {
+    func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>)
+    
+    func retriveIsEmpty()
+    
+    func locationDidSaved(_ isPresent: Bool)
+    
+    func isLimitDidOver(_ isLimitOver: Bool)
+}
 
 class RealmManager {
     
+    var delegate: RealmManagerDelegate?
     var delegation: RealmWeatherManagerDelegate?
     var weatherFetchManager: WeatherFetchManager?
-    var weatherGeneralManager: WeatherGeneralManager?
+    var weatherGeneralManager: [WeatherGeneralManager] = []
     var isElementsAreEmpty: Bool = false
     
     func saveWeather(_ cityName: String, _ latitude: Double, _ longitude: Double) {
@@ -33,45 +43,22 @@ class RealmManager {
             weather.latitude = latitude
             weather.longitude = longitude
             
-            try realm.write {
-                realm.add(weather)
-                debugPrint("ITEM ADDED: \(cityName)")
+            let results = realm.objects(RealmWeatherManager.self)
+            
+            if results.count == 10 {
+                delegate?.isLimitDidOver(true)
+            } else {
+                try realm.write {
+                    realm.add(weather)
+                    debugPrint("ITEM ADDED: \(cityName)")
+                }
             }
         } catch let error {
             debugPrint(error.localizedDescription)
         }
     }
-    
-   
-//
-//    func retriveWeatherForFetchManager(completion: @escaping() -> ()) {
-//
-//        do {
-//            let realm = try Realm.init()
-//
-//            let results = realm.objects(RealmWeatherManager.self)
-//
-//            if results.count == 0 {
-//                isElementsAreEmpty = true
-//            } else {
-//                isElementsAreEmpty = false
-//            }
-//
-//            for i in results {
-//                weatherFetchManager = WeatherFetchManager(latitude: i.latitude, longitude: i.longitude){ weatherManager in
-//                    self.weatherGeneralManager = weatherManager
-//                    self.delegation?.retriveResultsDidFinished(weatherManager)
-//                }
-//
-//                completion()
-//            }
-//
-//        } catch let error {
-//            debugPrint(error.localizedDescription)
-//        }
-//    }
-
-    func checkForLimitsCitySaved(completion: @escaping (Bool) -> ()) {
+ 
+    func checkForLimitsCitySaved() {
         var isLimitBeenOver: Bool = false
         
         do {
@@ -79,23 +66,21 @@ class RealmManager {
             
             let results = realm.objects(RealmWeatherManager.self)
             
-            DispatchQueue.main.async {
                 if results.count == 10 {
                     isLimitBeenOver = true
-                    completion(isLimitBeenOver)
+                    
                 } else {
                     isLimitBeenOver = false
-                    completion(isLimitBeenOver)
+                    
                 }
-            }
-            
+            delegate?.isLimitDidOver(isLimitBeenOver)
             
         } catch let error {
             debugPrint(error.localizedDescription)
         }
     }
     
-    func checkForAPresentLocation(city: String, completion: @escaping (Bool) -> ()) {
+    func checkForAPresentLocation(city: String) {
         var isPresent: Bool = false
         
         do {
@@ -111,8 +96,7 @@ class RealmManager {
                     isPresent = false
                 }
             }
-   
-            completion(isPresent)
+            delegate?.locationDidSaved(isPresent)
             
         } catch let error {
             debugPrint(error.localizedDescription)
@@ -130,18 +114,12 @@ class RealmManager {
             
             if results.count == 0 {
                 isElementsAreEmpty = true
-                delegation?.retriveEmptyResult()
+                delegate?.retriveIsEmpty()
             } else {
                 isElementsAreEmpty = false
-            }
+                delegate?.retriveWeatherDidFinisched(results)
 
-            for i in results {
-                weatherFetchManager = WeatherFetchManager(latitude: i.latitude, longitude: i.longitude){ weatherManager in
-                    self.delegation?.retriveResultsDidFinished(weatherManager)
-                }
-                
             }
-            
         } catch let error {
             debugPrint(error.localizedDescription)
         }

@@ -67,7 +67,7 @@ class MainTableViewCell: UITableViewCell {
     
     //MARK: - StringDateString
     
-    fileprivate func stringDateString(forString string: String) -> String{
+     func stringDateString(forString string: String) -> String{
         let dateFormatter1 = DateFormatter()
         dateFormatter1.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let dateFromString = dateFormatter1.date(from: string)
@@ -81,7 +81,7 @@ class MainTableViewCell: UITableViewCell {
     
     //MARK: - SetColorUIViewForBackground
     
-    fileprivate func setColorUIViewForBackground(_ condition: WeatherGeneralManager.WeatherCondition){
+     func setColorUIViewForBackground(_ condition: WeatherGeneralManager.WeatherCondition){
         
         switch condition {
         case .tempesta:

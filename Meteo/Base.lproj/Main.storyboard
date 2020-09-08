@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mph-66-CML">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="flk-u8-a6C">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -11,7 +11,7 @@
         <!--Main View Controller-->
         <scene sceneID="czg-XO-lYU">
             <objects>
-                <viewController storyboardIdentifier="MainViewController" id="HXK-tn-zPe" customClass="MainViewController" customModule="Meteo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainViewController" modalPresentationStyle="fullScreen" id="HXK-tn-zPe" customClass="MainViewController" customModule="Meteo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Bnr-dP-moE">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -20,12 +20,20 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2LX-l5-mFA">
-                                <rect key="frame" x="0.0" y="264" width="414" height="632"/>
+                                <rect key="frame" x="0.0" y="308" width="414" height="588"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qQD-1I-x8V" customClass="CurrentWeatherView" customModule="Meteo" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="414" height="220"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d8U-ii-4yd">
+                                <rect key="frame" x="10" y="251" width="394" height="394"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="d8U-ii-4yd" secondAttribute="height" multiplier="1:1" id="pUu-9q-jiw"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" id="qQD-1I-x8V" customClass="CurrentWeatherView" customModule="Meteo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="88" width="414" height="220"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="220" id="cu5-s9-xWT"/>
@@ -35,15 +43,18 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="2LX-l5-mFA" firstAttribute="top" secondItem="qQD-1I-x8V" secondAttribute="bottom" id="0h4-Y1-lTW"/>
+                            <constraint firstItem="qQD-1I-x8V" firstAttribute="top" secondItem="gmD-JP-700" secondAttribute="top" id="1oV-JR-XJo"/>
                             <constraint firstItem="2LX-l5-mFA" firstAttribute="trailing" secondItem="gmD-JP-700" secondAttribute="trailing" id="2Fq-tm-6Yd"/>
                             <constraint firstItem="gmD-JP-700" firstAttribute="trailing" secondItem="qQD-1I-x8V" secondAttribute="trailing" id="4Za-cF-UdO"/>
                             <constraint firstItem="Ve2-Jr-hkw" firstAttribute="top" secondItem="Bnr-dP-moE" secondAttribute="top" id="4uT-sB-QGz"/>
                             <constraint firstItem="qQD-1I-x8V" firstAttribute="leading" secondItem="gmD-JP-700" secondAttribute="leading" id="8Fe-5u-M17"/>
                             <constraint firstAttribute="bottom" secondItem="2LX-l5-mFA" secondAttribute="bottom" id="D1x-SN-qn1"/>
-                            <constraint firstItem="qQD-1I-x8V" firstAttribute="top" secondItem="gmD-JP-700" secondAttribute="top" id="Pgf-SZ-np2"/>
                             <constraint firstAttribute="bottom" secondItem="Ve2-Jr-hkw" secondAttribute="bottom" id="UY6-cV-NS6"/>
+                            <constraint firstItem="gmD-JP-700" firstAttribute="trailing" secondItem="d8U-ii-4yd" secondAttribute="trailing" constant="10" id="X2Z-ev-Z9f"/>
                             <constraint firstItem="Ve2-Jr-hkw" firstAttribute="trailing" secondItem="gmD-JP-700" secondAttribute="trailing" id="ffa-zi-5bf"/>
                             <constraint firstItem="2LX-l5-mFA" firstAttribute="leading" secondItem="gmD-JP-700" secondAttribute="leading" id="j45-IP-5X5"/>
+                            <constraint firstItem="d8U-ii-4yd" firstAttribute="centerY" secondItem="Bnr-dP-moE" secondAttribute="centerY" id="lps-qS-jzf"/>
+                            <constraint firstItem="d8U-ii-4yd" firstAttribute="leading" secondItem="gmD-JP-700" secondAttribute="leading" constant="10" id="ncQ-1b-SF3"/>
                             <constraint firstItem="Ve2-Jr-hkw" firstAttribute="leading" secondItem="gmD-JP-700" secondAttribute="leading" id="wKp-Hb-zeC"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gmD-JP-700"/>
@@ -51,78 +62,77 @@
                     <navigationItem key="navigationItem" id="k8G-yJ-pEa"/>
                     <connections>
                         <outlet property="currentWeatherView" destination="qQD-1I-x8V" id="0vd-Tc-erY"/>
+                        <outlet property="lottieContainer" destination="d8U-ii-4yd" id="rCL-dl-2eG"/>
                         <outlet property="mainBackgroundImage" destination="Ve2-Jr-hkw" id="5td-sM-65v"/>
                         <outlet property="tableView" destination="2LX-l5-mFA" id="2pC-di-NBN"/>
-                        <segue destination="tJK-O2-DXT" kind="show" identifier="ShowCitiesList" id="YNK-55-LtX"/>
-                        <segue destination="nqN-7M-k50" kind="show" identifier="ShowPreferredWeather" id="1vm-fa-CVa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UG8-ej-oFe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-557.97101449275362" y="273.88392857142856"/>
+            <point key="canvasLocation" x="352.17391304347831" y="273.88392857142856"/>
         </scene>
         <!--Preferred Weather View Controller-->
         <scene sceneID="pG2-0B-clm">
             <objects>
                 <viewController storyboardIdentifier="PreferredWeatherViewController" id="nqN-7M-k50" customClass="PreferredWeatherViewController" customModule="Meteo" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="u25-E3-5zk">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                    <view key="view" contentMode="scaleToFill" id="u25-E3-5zk">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="35l-3T-vwl">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pioggia" translatesAutoresizingMaskIntoConstraints="NO" id="35l-3T-vwl">
+                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                             </imageView>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vev-oA-2Uk">
-                                <rect key="frame" x="0.0" y="131" width="414" height="765"/>
-                                <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bIc-r0-Bdc">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="765"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </tableView>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="bIc-r0-Bdc" firstAttribute="leading" secondItem="Vev-oA-2Uk" secondAttribute="leading" id="5F9-hG-fKD"/>
-                                    <constraint firstAttribute="trailing" secondItem="bIc-r0-Bdc" secondAttribute="trailing" id="7Zz-eZ-vfJ"/>
-                                    <constraint firstItem="bIc-r0-Bdc" firstAttribute="top" secondItem="Vev-oA-2Uk" secondAttribute="top" id="Gl5-CO-hWl"/>
-                                    <constraint firstAttribute="bottom" secondItem="bIc-r0-Bdc" secondAttribute="bottom" id="QfG-3y-AVL"/>
-                                </constraints>
-                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Città salvate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5oU-zv-45d">
-                                <rect key="frame" x="159.5" y="0.0" width="95" height="21"/>
+                                <rect key="frame" x="159.5" y="44" width="95" height="21"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Apa-mV-NPk">
-                                <rect key="frame" x="40" y="31" width="334" height="2"/>
+                                <rect key="frame" x="40" y="75" width="334" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="progressTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </progressView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bIc-r0-Bdc">
+                                <rect key="frame" x="0.0" y="87" width="414" height="775"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rHr-wv-EWj">
+                                <rect key="frame" x="10" y="251" width="394" height="394"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="rHr-wv-EWj" secondAttribute="height" multiplier="1:1" id="pvX-Yd-UKW"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="W7z-U6-pcR"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="bIc-r0-Bdc" firstAttribute="leading" secondItem="ciJ-JB-jCR" secondAttribute="leading" id="3dg-JX-bfJ"/>
+                            <constraint firstItem="ciJ-JB-jCR" firstAttribute="trailing" secondItem="rHr-wv-EWj" secondAttribute="trailing" constant="10" id="3mB-kR-dur"/>
                             <constraint firstItem="5oU-zv-45d" firstAttribute="top" secondItem="ciJ-JB-jCR" secondAttribute="top" id="5CH-pc-LIy"/>
+                            <constraint firstItem="bIc-r0-Bdc" firstAttribute="trailing" secondItem="ciJ-JB-jCR" secondAttribute="trailing" id="6vH-UK-nIy"/>
+                            <constraint firstItem="rHr-wv-EWj" firstAttribute="centerY" secondItem="u25-E3-5zk" secondAttribute="centerY" id="BVc-jO-GCi"/>
                             <constraint firstItem="Apa-mV-NPk" firstAttribute="leading" secondItem="u25-E3-5zk" secondAttribute="leadingMargin" constant="20" id="Cr0-Gx-PmI"/>
+                            <constraint firstItem="rHr-wv-EWj" firstAttribute="leading" secondItem="ciJ-JB-jCR" secondAttribute="leading" constant="10" id="ESH-nR-lnG"/>
                             <constraint firstItem="35l-3T-vwl" firstAttribute="leading" secondItem="ciJ-JB-jCR" secondAttribute="leading" id="Ge7-Oe-aw9"/>
                             <constraint firstItem="Apa-mV-NPk" firstAttribute="top" secondItem="5oU-zv-45d" secondAttribute="bottom" constant="10" id="K0J-4H-ntX"/>
-                            <constraint firstItem="Vev-oA-2Uk" firstAttribute="top" secondItem="Apa-mV-NPk" secondAttribute="bottom" constant="10" id="Khi-w7-e14"/>
                             <constraint firstItem="35l-3T-vwl" firstAttribute="top" secondItem="ciJ-JB-jCR" secondAttribute="top" id="Qfa-lo-1VN"/>
-                            <constraint firstAttribute="bottom" secondItem="Vev-oA-2Uk" secondAttribute="bottom" id="TuE-Bd-NIi"/>
+                            <constraint firstItem="ciJ-JB-jCR" firstAttribute="bottom" secondItem="bIc-r0-Bdc" secondAttribute="bottom" id="WpX-je-tUC"/>
                             <constraint firstAttribute="bottom" secondItem="35l-3T-vwl" secondAttribute="bottom" id="bZK-0Q-yWq"/>
                             <constraint firstItem="5oU-zv-45d" firstAttribute="centerX" secondItem="u25-E3-5zk" secondAttribute="centerX" id="hBo-m4-tdJ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Apa-mV-NPk" secondAttribute="trailing" constant="20" id="jUt-11-tO7"/>
-                            <constraint firstItem="Vev-oA-2Uk" firstAttribute="trailing" secondItem="ciJ-JB-jCR" secondAttribute="trailing" id="vab-P3-nC3"/>
+                            <constraint firstItem="bIc-r0-Bdc" firstAttribute="top" secondItem="Apa-mV-NPk" secondAttribute="bottom" constant="10" id="trO-e2-t5G"/>
                             <constraint firstItem="35l-3T-vwl" firstAttribute="trailing" secondItem="ciJ-JB-jCR" secondAttribute="trailing" id="vhh-3p-DCp"/>
-                            <constraint firstItem="Vev-oA-2Uk" firstAttribute="leading" secondItem="ciJ-JB-jCR" secondAttribute="leading" id="wlB-wh-jCb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ciJ-JB-jCR"/>
                     </view>
                     <navigationItem key="navigationItem" id="beg-ku-Z0e"/>
                     <connections>
                         <outlet property="backgroundImage" destination="35l-3T-vwl" id="sIJ-0y-rZN"/>
+                        <outlet property="lottieContainer" destination="rHr-wv-EWj" id="Xt0-BK-aRk"/>
                         <outlet property="progressLabel" destination="5oU-zv-45d" id="mHU-4z-ZJG"/>
                         <outlet property="progressSave" destination="Apa-mV-NPk" id="gLC-ew-fYB"/>
                         <outlet property="tableView" destination="bIc-r0-Bdc" id="vKc-gA-qK9"/>
@@ -133,7 +143,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oMp-OJ-IBA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="4dg-Qh-Wre" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-559.4202898550725" y="1041.9642857142858"/>
+            <point key="canvasLocation" x="350.72463768115944" y="1041.9642857142858"/>
         </scene>
         <!--Cities List View Controller-->
         <scene sceneID="Fqa-Cj-2fO">
@@ -175,22 +185,28 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yaq-pb-2Lo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="8zI-Pa-lb2" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="533" y="274"/>
+            <point key="canvasLocation" x="1442.0289855072465" y="273.88392857142856"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="MnG-Lx-TYb">
+        <scene sceneID="N6H-Ga-hyB">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mph-66-CML" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="flk-u8-a6C" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="dj2-9O-vs4">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yHu-OR-EXq">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="HXK-tn-zPe" kind="relationship" relationship="rootViewController" id="Mhl-Bb-6Jw"/>
+                    </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Fyo-zX-7La" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kRw-yG-OcG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1617" y="274"/>
+            <point key="canvasLocation" x="-557.97101449275362" y="273.88392857142856"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="pioggia" width="320" height="480"/>
+    </resources>
 </document>

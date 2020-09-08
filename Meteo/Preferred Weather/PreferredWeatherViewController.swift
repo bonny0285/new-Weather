@@ -7,50 +7,66 @@
 //
 
 import UIKit
+import Lottie
+import RealmSwift
+
+protocol SetupPreferedWeatherAfterFetching: class {
+    func setupUI(_ weather: [WeatherGeneralManager])
+}
+
 
 class PreferredWeatherViewController: UIViewController, Storyboarded {
-    
-    
     
     //MARK: - Outlets
     
     #warning("cambiare il testo e metterlo in inglese")
     @IBOutlet weak var progressLabel: UILabel!
-    @IBOutlet weak var progressSave: UIProgressView! {
-        didSet {
-            setCurrentProgress(weatherManager.arrayName.count)
-        }
-    }
     
+    @IBOutlet weak var progressSave: UIProgressView!
+
+    @IBOutlet weak var lottieContainer: UIView!
     
     @IBOutlet weak var tableView: UITableView! {
         didSet {
             tableView.backgroundColor = .clear
         }
     }
-    @IBOutlet weak var backgroundImage: UIImageView! {
-        didSet {
-            backgroundImage.image = dataSource?.imageNavigationBar()
-
-        }
-    }
+    
+    @IBOutlet weak var backgroundImage: UIImageView!
     
     
     //MARK: - Properties
-    
+    var delegate: SetupPreferedWeatherAfterFetching?
+    private var loadingView = AnimationView()
     var coordinator: MainCoordinator?
     var progress = Progress(totalUnitCount: 10)
-    var cell: [[WeatherGeneralManagerCell]] = []
     var dataSource: PreferredDataSource?
-    var realmManager = RealmManager()
+   // var realmManager = RealmManager()
     
-    var weatherManager = WeatherManagerModel() {
+    //var weatherGeneralManager: [WeatherGeneralManager] = []
+    //var loadingController = UIViewController()
+    //var fetchManager: WeatherFetchManager?
+    var state: State = .loading {
         didSet {
-            dataSource = PreferredDataSource(weatherManager: weatherManager)
+            switch state {
+            case .loading:
+                tableView.isHidden = true
+                progressLabel.isHidden = true
+                progressSave.isHidden = true
+                backgroundImage.isHidden = true
+                lottieContainer.isHidden = false
+                let animation = Animation.named("loading")
+                setupAnimation(for: animation!)
+            case .preparing:
+                tableView.isHidden = false
+                progressSave.isHidden = false
+                progressLabel.isHidden = false
+                backgroundImage.isHidden = false
+                lottieContainer.isHidden = true
+                loadingView.stop()
+            }
         }
     }
-    
-    var loadingController = UIViewController()
     
     var imageForNavigationBar: UIImage! {
         didSet {
@@ -73,14 +89,14 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
                 navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             default:
                 break
-           
+                
             }
         }
     }
     
     
     //MARK: - Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -88,70 +104,50 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
             // Always adopt a light interface style.
             overrideUserInterfaceStyle = .light
         }
-
-        let storyboard = UIStoryboard(name: "loading", bundle: nil)
-        loadingController = storyboard.instantiateViewController(withIdentifier: "LoadingViewController") as! LoadingViewController
+        
+        state = .loading
+        
+        self.coordinator?.smartManager?.weatherFetchManager?.delegate = self
+        self.coordinator?.smartManager?.weatherFetchManager?.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
         
         let leftButton = UIBarButtonItem(image: UIImage(named: "new_back"), style: .plain, target: self, action: #selector(cancelTapped(_:)))
         navigationItem.leftBarButtonItem = leftButton
         
         let nib = UINib(nibName: "PreferredTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "PreferredTableViewCell")
-        dataSource = PreferredDataSource(weatherManager: weatherManager)
-        tableView.dataSource = dataSource
         tableView.delegate = self
         let footerView = UIView()
         footerView.backgroundColor = .red
         tableView.tableFooterView = footerView
-        imageForNavigationBar = dataSource?.imageNavigationBar()
-        tableView.reloadData()
-    }
-    
- 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        tableView.reloadData()
+        
+        
     }
     
     
-    //MARK: - Navighation
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowToMain" {
-            if let controller = segue.destination as? MainViewController {
-                controller.navigationBarStatus = .noFavorite
-                let indexPathToReload = IndexPath(row: 0, section: 0)
-                controller.tableView.selectRow(at: indexPathToReload, animated: true, scrollPosition: .top)
-                controller.imageForNavigationBar = controller.mainBackgroundImage.image
-            }
-        } else if segue.identifier == "BackToMain" {
-            if let controller = segue.destination as? MainViewController {
-                let item = sender as! Int
-                if item < 10 {
-                    controller.navigationBarStatus = .allPresent
-                } else {
-                    controller.navigationBarStatus = .noAdd
-                }
-                let indexPathToReload = IndexPath(row: 0, section: 0)
-                controller.tableView.selectRow(at: indexPathToReload, animated: true, scrollPosition: .top)
-                controller.imageForNavigationBar = controller.mainBackgroundImage.image
-            }
-        }
-    }
-
     
     //MARK: - Actions
-
-
+    
+    
     @objc func cancelTapped(_ sender: UIBarButtonItem) {
-        let items = dataSource?.itemsCount()
-        performSegue(withIdentifier: "BackToMain", sender: items)
+        coordinator?.cameFromPreferedWeather = true
+        coordinator?.popViewController()
     }
     
+    
+    func setupAnimation(for animation: Animation) {
+        loadingView.frame = animation.bounds
+        loadingView.animation = animation
+        loadingView.contentMode = .scaleAspectFill
+        lottieContainer.addSubview(loadingView)
+        loadingView.backgroundBehavior = .pauseAndRestore
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        loadingView.topAnchor.constraint(equalTo: lottieContainer.topAnchor).isActive = true
+        loadingView.bottomAnchor.constraint(equalTo: lottieContainer.bottomAnchor).isActive = true
+        loadingView.trailingAnchor.constraint(equalTo: lottieContainer.trailingAnchor).isActive = true
+        loadingView.leadingAnchor.constraint(equalTo: lottieContainer.leadingAnchor).isActive = true
+        self.loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
+    }
     
     func setCurrentProgress(_ progressDone: Int) {
         progress.completedUnitCount = Int64(progressDone)
@@ -192,16 +188,22 @@ extension PreferredWeatherViewController: UITableViewDelegate{
     
     func removePreferredWeather(forRowAt indexPath: IndexPath)-> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "") { (contextualAction: UIContextualAction, view : UIView,completion: (Bool) -> Void) in
-            self.navigationController?.navigationBar.isHidden = true
-            self.navigationController?.pushViewController(self.loadingController, animated: true)
-            self.navigationController?.modalPresentationStyle = .fullScreen
-            self.weatherManager.deleteAll()
-            self.realmManager.deleteWeather(indexPath)
-            self.realmManager.delegation = self
-            self.realmManager.retriveWeatherForFetchManager()
             
-            print("DELETED")
+            self.state = .loading
+            self.coordinator?.realmManager?.delegate = self
+            self.coordinator?.realmManager?.deleteWeather(indexPath)
+            //self.coordinator?.retriveWeather = nil
+            self.coordinator?.realmManager?.retriveWeatherForFetchManager()
+            
+//            if self.coordinator?.retriveWeather?.count == 0 {
+//                self.coordinator?.popViewController()
+//            } else {
+//                self.coordinator?.smartManager?.weatherFetchManager?.delegate = self
+//                self.coordinator?.smartManager?.weatherFetchManager?.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
+//            }
+            
         }
+        
         action.image = UIImage(named: "i_Elimina")
         action.backgroundColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
         
@@ -211,35 +213,56 @@ extension PreferredWeatherViewController: UITableViewDelegate{
 }
 
 
-//MARK: - RealmWeatherManagerDelegate
-
-extension PreferredWeatherViewController: RealmWeatherManagerDelegate {
-    func retriveEmptyResult() {
-        debugPrint("No Item Saved Into Database !!!")
-        self.performSegue(withIdentifier: "ShowToMain", sender: nil)
+extension PreferredWeatherViewController: WeatherFetchManagerDelegate {
+    func getArrayData(_ weather: [WeatherGeneralManager]) {
+        print(weather.count)
+        self.delegate = self
+        self.delegate?.setupUI(weather)
+        
     }
-    
-    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
-        
-        self.cell.append(weather.weathersCell)
-        self.weatherManager.arrayGradi.append(weather.temperatureString)
-        self.weatherManager.arrayName.append(weather.name)
-        
-        self.weatherManager.arrayConditon.append(weather.condition)
-        self.weatherManager.arrayImages.append(UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)!)
-        self.weatherManager.arrayForCell = cell.first!
-        
-        DispatchQueue.main.async {
-            self.setCurrentProgress(self.weatherManager.arrayName.count)
-            self.navigationController?.popViewController(animated: true)
-            self.tableView.reloadData()
-            self.navigationController?.navigationBar.isHidden = false
-            self.imageForNavigationBar = self.dataSource?.imageNavigationBar()
-        }
-    }
-    
 }
 
 
+extension PreferredWeatherViewController: SetupPreferedWeatherAfterFetching {
+    func setupUI(_ weather: [WeatherGeneralManager]) {
+        self.dataSource = PreferredDataSource(weatherManager: weather)
+        self.tableView.dataSource = self.dataSource
+        self.backgroundImage.image = dataSource?.imageNavigationBar()
+        self.imageForNavigationBar = self.dataSource?.imageNavigationBar()
+        self.tableView.reloadData()
+        self.setCurrentProgress(weather.count)
+        self.state = .preparing
+        
+    }
+}
 
+extension PreferredWeatherViewController: RealmManagerDelegate {
+    func isLimitDidOver(_ isLimitOver: Bool) {
+        /// Non viene effettuato nessun check in questo ViewController
+    }
+    
+    func locationDidSaved(_ isPresent: Bool) {
+        /// Non viene effettuato nessun check in questo ViewController
+    }
+    
+    func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
+        self.coordinator?.retriveWeather = weather
+        
+        
+            self.coordinator?.smartManager?.weatherFetchManager?.delegate = self
+            self.coordinator?.smartManager?.weatherFetchManager?.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
+        
+    }
+    
+    func retriveIsEmpty() {
+        self.coordinator?.cameFromPreferedWeather = true
+        self.coordinator?.popViewController()
+    }
+}
 
+extension PreferredWeatherViewController {
+    enum State {
+        case loading
+        case preparing
+    }
+}

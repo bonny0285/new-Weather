@@ -21,9 +21,12 @@ class CitiesListViewController: UIViewController, Storyboarded {
     
     //MARK: - Properies
     var coordinator: MainCoordinator?
+    var delegate: MainViewControllerLocationDelegate?
     var citiesResult: [CitiesList]?
     var dataSource: CitiesListDataSource?
-    var citiesArray: [CitiesList] = []
+    var citiesArray: [CitiesList]? {
+        coordinator?.smartManager?.allCities?.cities
+    }
     
     //MARK: - Lifecycle
 
@@ -43,7 +46,7 @@ class CitiesListViewController: UIViewController, Storyboarded {
         let nib = UINib(nibName: "CitiesListTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cityCell")
                 
-        dataSource = CitiesListDataSource(cities: citiesArray)
+        dataSource = CitiesListDataSource(cities: citiesArray!)
         tableView.dataSource = dataSource
         tableView.delegate = self
         tableView.reloadData()
@@ -73,7 +76,9 @@ class CitiesListViewController: UIViewController, Storyboarded {
 
 
     @objc func cancelTapped(_ sender: UIBarButtonItem) {
-        performSegue(withIdentifier: "BackToMain", sender: nil)
+        coordinator?.cameFromCitiesList = false
+        coordinator?.cameFromPreferedWeather = false
+        coordinator?.popViewController()
     }
     
 }
@@ -92,10 +97,11 @@ extension CitiesListViewController: UITableViewDelegate {
             result = citiesResult[indexPath.row]
             
         } else {
-            result = citiesArray[indexPath.row]
+            result = citiesArray?[indexPath.row]
         }
-        
-        performSegue(withIdentifier: "ShowToMain", sender: result)
+        coordinator?.cameFromCitiesList = true
+        coordinator?.smartManager?.city = result
+        coordinator?.popViewController()
     }
 }
 
@@ -103,7 +109,7 @@ extension CitiesListViewController: UITableViewDelegate {
 
 extension CitiesListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        citiesResult = citiesArray.filter { $0.name.prefix(searchText.count) == searchText}
+        citiesResult = citiesArray?.filter { $0.name.prefix(searchText.count) == searchText}
         dataSource? = CitiesListDataSource(cities: citiesResult ?? [])
         tableView.dataSource = dataSource
         tableView.reloadData()

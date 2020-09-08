@@ -14,23 +14,23 @@ class PreferredDataSource: NSObject {
 
     
     let organizer: DataOrganizer
-    let weatherManager: WeatherManagerModel
+    let weatherManager: [WeatherGeneralManager]
     
-    init(weatherManager: WeatherManagerModel) {
+    init(weatherManager: [WeatherGeneralManager]) {
         self.weatherManager = weatherManager
         self.organizer = DataOrganizer(weatherManager: weatherManager)
     }
     
     func itemsCount() -> Int {
-        weatherManager.arrayName.count
+        weatherManager.count
     }
     
     func imageNavigationBar() -> UIImage? {
-        weatherManager.arrayImages.first ?? nil
+        UIImage(named: (weatherManager.first?.condition.getWeatherConditionFromID(weatherID: weatherManager.first!.conditionID).rawValue)!)!
     }
-    
+
     func conditionForNavigationBar() -> WeatherGeneralManager.WeatherCondition? {
-        weatherManager.arrayConditon.first ?? nil
+        weatherManager.first?.condition ?? nil
     }
 }
 
@@ -40,34 +40,34 @@ extension PreferredDataSource {
     struct DataOrganizer {
         
         var counter: Int {
-            weatherManager.arrayName.count
+            weatherManager.count
         }
         
-        let weatherManager: WeatherManagerModel
+        let weatherManager: [WeatherGeneralManager]
         
-        init(weatherManager: WeatherManagerModel) {
+        init(weatherManager: [WeatherGeneralManager]) {
             self.weatherManager = weatherManager
 
         }
 
         func locationName(_ index: IndexPath) -> String {
-            weatherManager.arrayName[index.row]
+            weatherManager[index.row].name
         }
         
         func weatherCell(_ index: IndexPath) -> WeatherGeneralManagerCell {
-            weatherManager.arrayForCell[index.row]
+            weatherManager[index.row].weathersCell[index.row]
         }
         
         func condition(_ index: IndexPath) -> WeatherGeneralManager.WeatherCondition {
-            weatherManager.arrayConditon[index.row]
+            weatherManager[index.row].condition
         }
         
         func image(_ index: IndexPath) -> UIImage {
-            weatherManager.arrayImages[index.row]
+            UIImage(named: weatherManager[index.row].condition.getWeatherConditionFromID(weatherID: weatherManager[index.row].conditionID).rawValue)!
         }
         
         func gradi(_ index: IndexPath) -> String {
-            weatherManager.arrayGradi[index.row]
+            weatherManager[index.row].temperatureString
         }
          
     }

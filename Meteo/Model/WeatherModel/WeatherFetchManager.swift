@@ -9,14 +9,21 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import RealmSwift
 
 
-
+protocol WeatherFetchManagerDelegate: class {
+    func getArrayData(_ weather: [WeatherGeneralManager])
+}
 
 class WeatherFetchManager {
     
     fileprivate var realmManager: RealmManager?
     fileprivate var weatherCities: WeatherGeneralManager?
+    var preferedWeatherDelegate: SetupPreferedWeatherAfterFetching?
+    var weatherGeneralManager: WeatherGeneralManager?
+    var delegate: WeatherFetchManagerDelegate?
+    var arrayWeather: [WeatherGeneralManager] = []
     
     init() {}
     
@@ -30,7 +37,43 @@ class WeatherFetchManager {
     }
     
     
-    private func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherGeneralManager) -> ()){
+    func retriveMultipleLocation(for locations: Results<RealmWeatherManager>) {
+        arrayWeather.removeAll()
+        
+        guard let language = Locale.current.languageCode else { return }
+        let dispatch = DispatchGroup()
+        
+        for weather in locations {
+            dispatch.enter()
+            
+            guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(weather.latitude)&lon=\(weather.longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
+            
+            
+            AF.request(url).responseJSON { (response) in
+                switch response.result{
+                case .success(let value):
+                    let json: JSON = JSON(arrayLiteral: value)
+                    debugPrint(json)
+                    let weather = self.JSONTransform(json)
+                    self.arrayWeather.append(weather)
+                    dispatch.leave()
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+            
+            dispatch.notify(queue: .main) {
+                self.delegate?.getArrayData(self.arrayWeather)
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+    func retriveForAllMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherGeneralManager) -> ()) {
         
         guard let language = Locale.current.languageCode else { return }
         
@@ -42,7 +85,51 @@ class WeatherFetchManager {
                 let json: JSON = JSON(arrayLiteral: value)
                 debugPrint(json)
                 let weather = self.JSONTransform(json)
+                completion(weather)
+            case .failure(let error):
+                print(error.localizedDescription)
+                MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
+            }
+        }
+    }
+    
+    func retriveMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double) {
+        
+        guard let language = Locale.current.languageCode else { return }
+        
+        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
+        
+        AF.request(url).responseJSON { (response) in
+            switch response.result{
+            case .success(let value):
+                let json: JSON = JSON(arrayLiteral: value)
+                debugPrint(json)
+                let weather = self.JSONTransform(json)
+                self.arrayWeather.append(weather)
+                //self.delegate?.getWeatherData(weather)
+             
                 
+            case .failure(let error):
+                print(error.localizedDescription)
+                MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
+            }
+        }
+    }
+    
+     func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherGeneralManager) -> ()){
+        
+        guard let language = Locale.current.languageCode else { return }
+        
+        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
+        
+        AF.request(url).responseJSON { (response) in
+            switch response.result{
+            case .success(let value):
+                let json: JSON = JSON(arrayLiteral: value)
+                debugPrint(json)
+                let weather = self.JSONTransform(json)
+               // self.delegate?.getWeatherData(weather)
+                self.weatherGeneralManager = weather
                 completion(weather)
                 
             case .failure(let error):
@@ -64,6 +151,10 @@ class WeatherFetchManager {
         let sunrise = Double("\(json[0]["city"]["sunrise"])") ?? 0.0
         let sunset = Double("\(json[0]["city"]["sunset"])") ?? 0.0
         
+        let latitude = Double("\(json[0]["city"]["coord"]["lat"])") ?? 0.0
+        
+        let longitude = Double("\(json[0]["city"]["coord"]["lon"])") ?? 0.0
+        
         let list = json[0]["list"]
         
         var weatherCell: [WeatherGeneralManagerCell] = []
@@ -80,7 +171,7 @@ class WeatherFetchManager {
         }
             
         var weatherGeneralManager: WeatherGeneralManager?
-        weatherGeneralManager = WeatherGeneralManager(name: name, population: population, country: country, temperature: temperature, conditionID: id, sunset: sunset,sunrise: sunrise, weathersCell: weatherCell)
+        weatherGeneralManager = WeatherGeneralManager(name: name,latitude: latitude, longitude: longitude, population: population, country: country, temperature: temperature, conditionID: id, sunset: sunset,sunrise: sunrise, weathersCell: weatherCell)
         
         return weatherGeneralManager!
         

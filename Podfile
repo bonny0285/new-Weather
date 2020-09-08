@@ -8,6 +8,7 @@ target 'Meteo' do
     pod 'SwiftyJSON'
     pod 'Alamofire'
     pod 'RealmSwift'
+    pod 'lottie-ios'
 
   # Pods for Meteo
 
