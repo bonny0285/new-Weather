@@ -12,28 +12,25 @@ import SwiftyJSON
 import RealmSwift
 
 
-protocol WeatherFetchManagerDelegate: class {
+protocol WeatherFetchManagerPreferedDelegate: class {
     func getArrayData(_ weather: [MainWeather])
 }
 
+protocol WeatherFetchManagerSingleLocationDelegate: class {
+    func weatherDidFetchedAtLocation(_ weather: MainWeather)
+}
+
 class WeatherFetchManager {
-    
-    //fileprivate var realmManager: RealmManager?
-    //fileprivate var weatherCities: WeatherGeneralManager?
-    //var preferedWeatherDelegate: SetupPreferedWeatherAfterFetching?
+
     var weatherGeneralManager: MainWeather?
-    var delegate: WeatherFetchManagerDelegate?
+    var delegate: WeatherFetchManagerPreferedDelegate?
+    var singleWeatherDelegate: WeatherFetchManagerSingleLocationDelegate?
     var arrayWeather: [MainWeather] = []
     
     init() {}
     
-    init(latitude: Double, longitude: Double, completion: @escaping (MainWeather) -> ()) {
-        
-        DispatchQueue.main.async {
-            self.getMyWeatherData(forLatitude: latitude, forLongitude: longitude) {
-                completion($0)
-            }
-        }
+    init(latitude: Double, longitude: Double) {
+        getMyWeatherData(forLatitude: latitude, forLongitude: longitude)
     }
     
     
@@ -67,56 +64,8 @@ class WeatherFetchManager {
             }
         }
     }
-    
-    
-    
-    
-    
-    
-//    func retriveForAllMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherGeneralManager) -> ()) {
-//
-//        guard let language = Locale.current.languageCode else { return }
-//
-//        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
-//
-//        AF.request(url).responseJSON { (response) in
-//            switch response.result{
-//            case .success(let value):
-//                let json: JSON = JSON(arrayLiteral: value)
-//                debugPrint(json)
-//                let weather = self.JSONTransform(json)
-//                completion(weather)
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//                MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
-//            }
-//        }
-//    }
-    
-//    func retriveMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double) {
-//
-//        guard let language = Locale.current.languageCode else { return }
-//
-//        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
-//
-//        AF.request(url).responseJSON { (response) in
-//            switch response.result{
-//            case .success(let value):
-//                let json: JSON = JSON(arrayLiteral: value)
-//                debugPrint(json)
-//                let weather = self.JSONTransform(json)
-//                self.arrayWeather.append(weather)
-//                //self.delegate?.getWeatherData(weather)
-//
-//
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//                MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
-//            }
-//        }
-//    }
-    
-     func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (MainWeather) -> ()){
+
+     func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double){
         
         guard let language = Locale.current.languageCode else { return }
         
@@ -128,10 +77,7 @@ class WeatherFetchManager {
                 let json: JSON = JSON(arrayLiteral: value)
                 debugPrint(json)
                 let weather = self.JSONTransform(json)
-               // self.delegate?.getWeatherData(weather)
-                self.weatherGeneralManager = weather
-                completion(weather)
-                
+                self.singleWeatherDelegate?.weatherDidFetchedAtLocation(weather)
             case .failure(let error):
                 print(error.localizedDescription)
                 MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())

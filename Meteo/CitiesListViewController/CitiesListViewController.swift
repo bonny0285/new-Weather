@@ -25,7 +25,7 @@ class CitiesListViewController: UIViewController, Storyboarded {
     var citiesResult: [CitiesList]?
     var dataSource: CitiesListDataSource?
     var citiesArray: [CitiesList]? {
-        coordinator?.smartManager?.allCities?.cities
+        coordinator?.allCitiesList?.cities
     }
     
     //MARK: - Lifecycle
@@ -83,8 +83,9 @@ extension CitiesListViewController: UITableViewDelegate {
             result = citiesArray?[indexPath.row]
         }
         
-        coordinator?.cameFromCitiesList = true
-        coordinator?.smartManager?.city = result
+       // coordinator?.cameFromCitiesList = true
+        coordinator?.provenienceDelegate?.proveniceDidSelected(.citiesListViewController)
+        coordinator?.city = result
         coordinator?.popViewController()
     }
 }

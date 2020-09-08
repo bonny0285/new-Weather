@@ -90,6 +90,7 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         }
     }
     
+    var fetchManger = WeatherFetchManager()
     
     //MARK: - Lifecycle
     
@@ -102,9 +103,10 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         }
         
         state = .loading
-        
-        self.coordinator?.smartManager?.weatherFetchManager?.delegate = self
-        self.coordinator?.smartManager?.weatherFetchManager?.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
+        fetchManger.delegate = self
+        fetchManger.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
+//        self.coordinator?.smartManager?.weatherFetchManager.delegate = self
+//        self.coordinator?.smartManager?.weatherFetchManager.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
         
         let leftButton = UIBarButtonItem(image: UIImage(named: "new_back"), style: .plain, target: self, action: #selector(cancelTapped(_:)))
         navigationItem.leftBarButtonItem = leftButton
@@ -125,7 +127,7 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
     
     
     @objc func cancelTapped(_ sender: UIBarButtonItem) {
-        coordinator?.cameFromPreferedWeather = true
+        coordinator?.provenienceDelegate?.proveniceDidSelected(.preferedViewController)
         coordinator?.popViewController()
     }
     
@@ -195,7 +197,7 @@ extension PreferredWeatherViewController: UITableViewDelegate{
 }
 
 
-extension PreferredWeatherViewController: WeatherFetchManagerDelegate {
+extension PreferredWeatherViewController: WeatherFetchManagerPreferedDelegate {
     func getArrayData(_ weather: [MainWeather]) {
         print(weather.count)
         self.delegate = self
@@ -229,12 +231,13 @@ extension PreferredWeatherViewController: RealmManagerDelegate {
     
     func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
         self.coordinator?.retriveWeather = weather
-        self.coordinator?.smartManager?.weatherFetchManager?.delegate = self
-        self.coordinator?.smartManager?.weatherFetchManager?.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
+        self.fetchManger.retriveMultipleLocation(for: (coordinator?.retriveWeather)!)
+//        self.coordinator?.smartManager?.weatherFetchManager.delegate = self
+//        self.coordinator?.smartManager?.weatherFetchManager.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
     }
     
     func retriveIsEmpty() {
-        self.coordinator?.cameFromPreferedWeather = true
+        coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
         self.coordinator?.popViewController()
     }
 }
