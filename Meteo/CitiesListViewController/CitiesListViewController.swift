@@ -14,7 +14,7 @@ class CitiesListViewController: UIViewController, Storyboarded {
     
     
     //MARK: - Outlets
-
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -29,7 +29,7 @@ class CitiesListViewController: UIViewController, Storyboarded {
     }
     
     //MARK: - Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,7 +45,7 @@ class CitiesListViewController: UIViewController, Storyboarded {
         
         let nib = UINib(nibName: "CitiesListTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cityCell")
-                
+        
         dataSource = CitiesListDataSource(cities: citiesArray!)
         tableView.dataSource = dataSource
         tableView.delegate = self
@@ -57,24 +57,8 @@ class CitiesListViewController: UIViewController, Storyboarded {
         super.viewWillAppear(animated)
         tableView.tableFooterView = UIView()
     }
-
-
-    //MARK: - Navigation
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowToMain" {
-            if let controller = segue.destination as? MainViewController {
-                controller.delegate?.locationDidChange(sender as! CitiesList)
-            }
-        } else if segue.identifier == "BackToMain" {
-            if let controller = segue.destination as? MainViewController {
-                let indexPathToReload = IndexPath(row: 0, section: 0)
-                controller.tableView.selectRow(at: indexPathToReload, animated: true, scrollPosition: .top)
-            }
-        }
-    }
-
-
+    
+    
     @objc func cancelTapped(_ sender: UIBarButtonItem) {
         coordinator?.cameFromCitiesList = false
         coordinator?.cameFromPreferedWeather = false
@@ -95,10 +79,10 @@ extension CitiesListViewController: UITableViewDelegate {
         
         if let citiesResult = citiesResult {
             result = citiesResult[indexPath.row]
-            
         } else {
             result = citiesArray?[indexPath.row]
         }
+        
         coordinator?.cameFromCitiesList = true
         coordinator?.smartManager?.city = result
         coordinator?.popViewController()

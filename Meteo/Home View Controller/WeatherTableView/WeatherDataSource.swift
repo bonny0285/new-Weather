@@ -13,10 +13,10 @@ class WeatherDataSource: NSObject {
     
     
     let weathers: [WeatherGeneralManagerCell]
-    let condition: WeatherGeneralManager.WeatherCondition
+    let condition: MainWeather.WeatherCondition
     let organizer: DataOrganizer
     
-    init(weathers: [WeatherGeneralManagerCell], condition: WeatherGeneralManager.WeatherCondition) {
+    init(weathers: [WeatherGeneralManagerCell], condition: MainWeather.WeatherCondition) {
         self.weathers = weathers
         self.condition = condition
         self.organizer = DataOrganizer(weathers: weathers, condition: condition)
@@ -30,13 +30,13 @@ extension WeatherDataSource {
     struct DataOrganizer {
         
         let weathers: [WeatherGeneralManagerCell]
-        let condition: WeatherGeneralManager.WeatherCondition
+        let condition: MainWeather.WeatherCondition
         
         var weatherCount: Int {
             weathers.count
         }
         
-        init(weathers: [WeatherGeneralManagerCell], condition: WeatherGeneralManager.WeatherCondition) {
+        init(weathers: [WeatherGeneralManagerCell], condition: MainWeather.WeatherCondition) {
             self.weathers = weathers
             self.condition = condition
         }
@@ -68,7 +68,7 @@ extension WeatherDataSource: UITableViewDataSource {
 
 
 extension MainTableViewCell {
-    func configureWith(at weather: WeatherGeneralManagerCell, for condition: WeatherGeneralManager.WeatherCondition) {
+    func configureWith(at weather: WeatherGeneralManagerCell, for condition: MainWeather.WeatherCondition) {
         
         var temperatureMaxString: String {
             String(format: "%.1f", weather.temperatureMax)
@@ -80,12 +80,9 @@ extension MainTableViewCell {
         
         weatherTempMax.text = temperatureMaxString
         weatherTempMin.text = temperatureMinString
-        
         weatherDescription.text = "\(weather.description.capitalized)"
         weatherTime.text = "\(stringDateString(forString: weather.time))"
-        
         weatherImage.image = UIImage(named: weather.setCellImageAtCondition)
-        
         setColorUIViewForBackground(condition)
     }
 }

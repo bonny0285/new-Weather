@@ -12,7 +12,7 @@ import UIKit
 class SavedWeather {
     
     var realmManager: RealmManager?
-    var savedWeather: [WeatherGeneralManager]?
+    var savedWeather: [MainWeather]?
     
     init() {
         

@@ -14,7 +14,7 @@ class SmartManager {
    // var favoriteWeatherManager: FavoriteWeatherManager?
     var weatherFetchManager: WeatherFetchManager?
     
-    var weatherGeneralManager: WeatherGeneralManager? {
+    var weatherGeneralManager: MainWeather? {
         get {
             weatherFetchManager?.weatherGeneralManager
         }
@@ -27,10 +27,10 @@ class SmartManager {
     var city: CitiesList?
     
     var savedWeather: SavedWeather
-    var weatherSaved: [WeatherGeneralManager]?
+    var weatherSaved: [MainWeather]?
     
     
-    init (latitude: Double, longitude: Double, completion: @escaping (WeatherGeneralManager) -> ()) {
+    init (latitude: Double, longitude: Double, completion: @escaping (MainWeather) -> ()) {
         self.latitude = latitude
         self.longitude = longitude
         //self.favoriteWeatherManager = FavoriteWeatherManager()
@@ -46,12 +46,12 @@ class SmartManager {
     
 }
 
-extension SmartManager: RealmWeatherManagerDelegate {
-    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
-        
-    }
-    
-    func retriveEmptyResult() {
-        
-    }
-}
+//extension SmartManager: RealmWeatherManagerDelegate {
+//    func retriveResultsDidFinished(_ weather: WeatherGeneralManager) {
+//
+//    }
+//
+//    func retriveEmptyResult() {
+//
+//    }
+//}

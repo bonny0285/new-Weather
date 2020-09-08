@@ -13,21 +13,21 @@ import RealmSwift
 
 
 protocol WeatherFetchManagerDelegate: class {
-    func getArrayData(_ weather: [WeatherGeneralManager])
+    func getArrayData(_ weather: [MainWeather])
 }
 
 class WeatherFetchManager {
     
-    fileprivate var realmManager: RealmManager?
-    fileprivate var weatherCities: WeatherGeneralManager?
-    var preferedWeatherDelegate: SetupPreferedWeatherAfterFetching?
-    var weatherGeneralManager: WeatherGeneralManager?
+    //fileprivate var realmManager: RealmManager?
+    //fileprivate var weatherCities: WeatherGeneralManager?
+    //var preferedWeatherDelegate: SetupPreferedWeatherAfterFetching?
+    var weatherGeneralManager: MainWeather?
     var delegate: WeatherFetchManagerDelegate?
-    var arrayWeather: [WeatherGeneralManager] = []
+    var arrayWeather: [MainWeather] = []
     
     init() {}
     
-    init(latitude: Double, longitude: Double, completion: @escaping (WeatherGeneralManager) -> ()) {
+    init(latitude: Double, longitude: Double, completion: @escaping (MainWeather) -> ()) {
         
         DispatchQueue.main.async {
             self.getMyWeatherData(forLatitude: latitude, forLongitude: longitude) {
@@ -73,50 +73,50 @@ class WeatherFetchManager {
     
     
     
-    func retriveForAllMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherGeneralManager) -> ()) {
-        
-        guard let language = Locale.current.languageCode else { return }
-        
-        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
-        
-        AF.request(url).responseJSON { (response) in
-            switch response.result{
-            case .success(let value):
-                let json: JSON = JSON(arrayLiteral: value)
-                debugPrint(json)
-                let weather = self.JSONTransform(json)
-                completion(weather)
-            case .failure(let error):
-                print(error.localizedDescription)
-                MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
-            }
-        }
-    }
+//    func retriveForAllMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherGeneralManager) -> ()) {
+//
+//        guard let language = Locale.current.languageCode else { return }
+//
+//        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
+//
+//        AF.request(url).responseJSON { (response) in
+//            switch response.result{
+//            case .success(let value):
+//                let json: JSON = JSON(arrayLiteral: value)
+//                debugPrint(json)
+//                let weather = self.JSONTransform(json)
+//                completion(weather)
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//                MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
+//            }
+//        }
+//    }
     
-    func retriveMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double) {
-        
-        guard let language = Locale.current.languageCode else { return }
-        
-        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
-        
-        AF.request(url).responseJSON { (response) in
-            switch response.result{
-            case .success(let value):
-                let json: JSON = JSON(arrayLiteral: value)
-                debugPrint(json)
-                let weather = self.JSONTransform(json)
-                self.arrayWeather.append(weather)
-                //self.delegate?.getWeatherData(weather)
-             
-                
-            case .failure(let error):
-                print(error.localizedDescription)
-                MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
-            }
-        }
-    }
+//    func retriveMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double) {
+//
+//        guard let language = Locale.current.languageCode else { return }
+//
+//        guard let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric") else { return }
+//
+//        AF.request(url).responseJSON { (response) in
+//            switch response.result{
+//            case .success(let value):
+//                let json: JSON = JSON(arrayLiteral: value)
+//                debugPrint(json)
+//                let weather = self.JSONTransform(json)
+//                self.arrayWeather.append(weather)
+//                //self.delegate?.getWeatherData(weather)
+//
+//
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//                MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
+//            }
+//        }
+//    }
     
-     func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (WeatherGeneralManager) -> ()){
+     func getMyWeatherData(forLatitude latitude: Double, forLongitude longitude: Double, completion: @escaping (MainWeather) -> ()){
         
         guard let language = Locale.current.languageCode else { return }
         
@@ -141,8 +141,7 @@ class WeatherFetchManager {
     
     
 
-    fileprivate func JSONTransform(_ json: JSON) -> WeatherGeneralManager {
-        //fetchCitiesFromJONS()
+    fileprivate func JSONTransform(_ json: JSON) -> MainWeather {
         let name = "\(json[0]["city"]["name"])"
         let population = Int("\(json[0]["city"]["population"])") ?? 0
         let country = "\(json[0]["city"]["country"])"
@@ -150,14 +149,12 @@ class WeatherFetchManager {
         let id = Int("\(json[0]["list"][0]["weather"][0]["id"])") ?? 0
         let sunrise = Double("\(json[0]["city"]["sunrise"])") ?? 0.0
         let sunset = Double("\(json[0]["city"]["sunset"])") ?? 0.0
-        
         let latitude = Double("\(json[0]["city"]["coord"]["lat"])") ?? 0.0
-        
         let longitude = Double("\(json[0]["city"]["coord"]["lon"])") ?? 0.0
         
         let list = json[0]["list"]
-        
         var weatherCell: [WeatherGeneralManagerCell] = []
+        
         for i in 0 ... list.count - 1{
             let temperatureMax = Double("\(json[0]["list"][i]["main"]["temp_max"])")!
             let temperatureMin = Double("\(json[0]["list"][i]["main"]["temp_min"])")!
@@ -170,8 +167,8 @@ class WeatherFetchManager {
             weatherCell.append(cell)
         }
             
-        var weatherGeneralManager: WeatherGeneralManager?
-        weatherGeneralManager = WeatherGeneralManager(name: name,latitude: latitude, longitude: longitude, population: population, country: country, temperature: temperature, conditionID: id, sunset: sunset,sunrise: sunrise, weathersCell: weatherCell)
+        var weatherGeneralManager: MainWeather?
+        weatherGeneralManager = MainWeather(name: name,latitude: latitude, longitude: longitude, population: population, country: country, temperature: temperature, conditionID: id, sunset: sunset,sunrise: sunrise, weathersCell: weatherCell)
         
         return weatherGeneralManager!
         

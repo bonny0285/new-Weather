@@ -113,7 +113,7 @@ class MainViewController: UIViewController, Storyboarded {
         }
     }
     
-    var weatherCondition: WeatherGeneralManager.WeatherCondition = .nebbia {
+    var weatherCondition: MainWeather.WeatherCondition = .nebbia {
         didSet {
             navigationController?.navigationBar.tintColor = .black
         }
@@ -140,16 +140,10 @@ class MainViewController: UIViewController, Storyboarded {
         }
     }
     
-    var currentWeather: WeatherGeneralManager?
+    var currentWeather: MainWeather?
     var dataSource: WeatherDataSource?
     private var loadingView = AnimationView()
     var weatherGeneralManagerCell: [WeatherGeneralManagerCell] = []
-    
-    //var weatherGeneralManager: WeatherGeneralManager?
-    //var weatherFetchManager: WeatherFetchManager?
-    
-    //var favoriteWeatherManager: FavoriteWeatherManager?
-    //var realmManager = RealmManager()
     
     //MARK: - Lifecycle
     
@@ -309,7 +303,7 @@ extension MainViewController: CLLocationManagerDelegate{
     
     
     
-    func setup(weather: WeatherGeneralManager) {
+    func setup(weather: MainWeather) {
         DispatchQueue.main.async {
             self.currentWeatherView.setupCurrentWeatherView(weather)
             self.currentWeatherView.setupColorViewAtCondition(weather.condition)

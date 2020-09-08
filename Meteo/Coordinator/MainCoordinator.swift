@@ -15,14 +15,19 @@ class MainCoordinator: Coordinator {
     var children = [Coordinator]()
     var navigationController: UINavigationController
     let windows: UIWindow
-    var realmManager: RealmManager?
     
-    var cameFromCitiesList: Bool? = nil
-    var cameFromPreferedWeather: Bool? = nil
-    var smartManager: SmartManager?
+    /// REALM-MANAGER
+    var realmManager: RealmManager?
     var retriveWeather: Results<RealmWeatherManager>?
     var isPresentLocation: Bool? = nil
     var isLimitOver: Bool? = nil
+    /// NAVIGATION
+    var cameFromCitiesList: Bool? = nil
+    var cameFromPreferedWeather: Bool? = nil
+    
+    var smartManager: SmartManager?
+    
+    
     
     init(windows: UIWindow, navigationController: UINavigationController) {
         self.windows = windows

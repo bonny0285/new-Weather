@@ -11,7 +11,7 @@ import UIKit
 
 
 
-class WeatherGeneralManager {
+class MainWeather {
     let name: String
     let latitude: Double
     let longitude: Double
@@ -110,7 +110,7 @@ class WeatherGeneralManager {
 
 }
 
-extension WeatherGeneralManager {
+extension MainWeather {
         enum WeatherCondition: String {
             case tempesta = "tempesta"
             case pioggia = "pioggia"

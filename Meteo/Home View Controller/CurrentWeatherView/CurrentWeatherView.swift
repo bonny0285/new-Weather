@@ -50,7 +50,7 @@ class CurrentWeatherView: UIView {
 
 extension CurrentWeatherView {
     
-    func setupCurrentWeatherView(_ weather: WeatherGeneralManager) {
+    func setupCurrentWeatherView(_ weather: MainWeather) {
         locationName.text = weather.name
         let populationText = NSLocalizedString("population_label", comment: "")
         population.text = "\(populationText)\(weather.population)"
@@ -62,7 +62,7 @@ extension CurrentWeatherView {
         weatherImage.image = UIImage(named: weather.setImageAtCondition)
     }
     
-    func setupColorViewAtCondition(_ condition: WeatherGeneralManager.WeatherCondition) {
+    func setupColorViewAtCondition(_ condition: MainWeather.WeatherCondition) {
         
         switch condition {
         case .tempesta:

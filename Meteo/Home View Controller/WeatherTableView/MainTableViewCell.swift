@@ -44,7 +44,7 @@ class MainTableViewCell: UITableViewCell {
     
     //MARK: - SetupCell
     
-    func configureCell(_ weather: WeatherGeneralManager,atIndexPath indexPath: IndexPath ,_ condition: WeatherGeneralManager.WeatherCondition) {
+    func configureCell(_ weather: MainWeather,atIndexPath indexPath: IndexPath ,_ condition: MainWeather.WeatherCondition) {
         
         var temperatureMaxString: String {
             String(format: "%.1f", weather.weathersCell[indexPath.row].temperatureMax)
@@ -81,7 +81,7 @@ class MainTableViewCell: UITableViewCell {
     
     //MARK: - SetColorUIViewForBackground
     
-     func setColorUIViewForBackground(_ condition: WeatherGeneralManager.WeatherCondition){
+     func setColorUIViewForBackground(_ condition: MainWeather.WeatherCondition){
         
         switch condition {
         case .tempesta:

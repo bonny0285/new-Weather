@@ -11,7 +11,7 @@ import Lottie
 import RealmSwift
 
 protocol SetupPreferedWeatherAfterFetching: class {
-    func setupUI(_ weather: [WeatherGeneralManager])
+    func setupUI(_ weather: [MainWeather])
 }
 
 
@@ -23,7 +23,7 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
     @IBOutlet weak var progressLabel: UILabel!
     
     @IBOutlet weak var progressSave: UIProgressView!
-
+    
     @IBOutlet weak var lottieContainer: UIView!
     
     @IBOutlet weak var tableView: UITableView! {
@@ -41,11 +41,7 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
     var coordinator: MainCoordinator?
     var progress = Progress(totalUnitCount: 10)
     var dataSource: PreferredDataSource?
-   // var realmManager = RealmManager()
-    
-    //var weatherGeneralManager: [WeatherGeneralManager] = []
-    //var loadingController = UIViewController()
-    //var fetchManager: WeatherFetchManager?
+
     var state: State = .loading {
         didSet {
             switch state {
@@ -120,7 +116,6 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         footerView.backgroundColor = .red
         tableView.tableFooterView = footerView
         
-        
     }
     
     
@@ -166,13 +161,10 @@ extension PreferredWeatherViewController: UITableViewDelegate{
         100
     }
     
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(indexPath.row)
         
     }
-    
-    
     
     private func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
@@ -192,21 +184,11 @@ extension PreferredWeatherViewController: UITableViewDelegate{
             self.state = .loading
             self.coordinator?.realmManager?.delegate = self
             self.coordinator?.realmManager?.deleteWeather(indexPath)
-            //self.coordinator?.retriveWeather = nil
             self.coordinator?.realmManager?.retriveWeatherForFetchManager()
-            
-//            if self.coordinator?.retriveWeather?.count == 0 {
-//                self.coordinator?.popViewController()
-//            } else {
-//                self.coordinator?.smartManager?.weatherFetchManager?.delegate = self
-//                self.coordinator?.smartManager?.weatherFetchManager?.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
-//            }
-            
         }
         
         action.image = UIImage(named: "i_Elimina")
         action.backgroundColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
-        
         return action
     }
     
@@ -214,7 +196,7 @@ extension PreferredWeatherViewController: UITableViewDelegate{
 
 
 extension PreferredWeatherViewController: WeatherFetchManagerDelegate {
-    func getArrayData(_ weather: [WeatherGeneralManager]) {
+    func getArrayData(_ weather: [MainWeather]) {
         print(weather.count)
         self.delegate = self
         self.delegate?.setupUI(weather)
@@ -224,7 +206,7 @@ extension PreferredWeatherViewController: WeatherFetchManagerDelegate {
 
 
 extension PreferredWeatherViewController: SetupPreferedWeatherAfterFetching {
-    func setupUI(_ weather: [WeatherGeneralManager]) {
+    func setupUI(_ weather: [MainWeather]) {
         self.dataSource = PreferredDataSource(weatherManager: weather)
         self.tableView.dataSource = self.dataSource
         self.backgroundImage.image = dataSource?.imageNavigationBar()
@@ -247,11 +229,8 @@ extension PreferredWeatherViewController: RealmManagerDelegate {
     
     func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
         self.coordinator?.retriveWeather = weather
-        
-        
-            self.coordinator?.smartManager?.weatherFetchManager?.delegate = self
-            self.coordinator?.smartManager?.weatherFetchManager?.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
-        
+        self.coordinator?.smartManager?.weatherFetchManager?.delegate = self
+        self.coordinator?.smartManager?.weatherFetchManager?.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
     }
     
     func retriveIsEmpty() {

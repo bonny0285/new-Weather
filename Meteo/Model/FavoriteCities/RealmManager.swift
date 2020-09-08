@@ -10,27 +10,22 @@ import UIKit
 import RealmSwift
 
 
-protocol RealmWeatherManagerDelegate: class {
-    func retriveResultsDidFinished(_ weather: WeatherGeneralManager)
-    func retriveEmptyResult()
-}
-
 protocol RealmManagerDelegate: class {
     func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>)
-    
     func retriveIsEmpty()
-    
     func locationDidSaved(_ isPresent: Bool)
-    
     func isLimitDidOver(_ isLimitOver: Bool)
 }
+
+
+
 
 class RealmManager {
     
     var delegate: RealmManagerDelegate?
-    var delegation: RealmWeatherManagerDelegate?
-    var weatherFetchManager: WeatherFetchManager?
-    var weatherGeneralManager: [WeatherGeneralManager] = []
+   
+    //var weatherFetchManager: WeatherFetchManager?
+    var weatherGeneralManager: [MainWeather] = []
     var isElementsAreEmpty: Bool = false
     
     func saveWeather(_ cityName: String, _ latitude: Double, _ longitude: Double) {

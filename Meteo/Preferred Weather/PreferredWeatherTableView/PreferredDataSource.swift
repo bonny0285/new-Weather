@@ -11,15 +11,15 @@ import UIKit
 
 class PreferredDataSource: NSObject {
     
-
-    
     let organizer: DataOrganizer
-    let weatherManager: [WeatherGeneralManager]
+    let weatherManager: [MainWeather]
     
-    init(weatherManager: [WeatherGeneralManager]) {
+    
+    init(weatherManager: [MainWeather]) {
         self.weatherManager = weatherManager
         self.organizer = DataOrganizer(weatherManager: weatherManager)
     }
+    
     
     func itemsCount() -> Int {
         weatherManager.count
@@ -28,8 +28,8 @@ class PreferredDataSource: NSObject {
     func imageNavigationBar() -> UIImage? {
         UIImage(named: (weatherManager.first?.condition.getWeatherConditionFromID(weatherID: weatherManager.first!.conditionID).rawValue)!)!
     }
-
-    func conditionForNavigationBar() -> WeatherGeneralManager.WeatherCondition? {
+    
+    func conditionForNavigationBar() -> MainWeather.WeatherCondition? {
         weatherManager.first?.condition ?? nil
     }
 }
@@ -43,13 +43,13 @@ extension PreferredDataSource {
             weatherManager.count
         }
         
-        let weatherManager: [WeatherGeneralManager]
+        let weatherManager: [MainWeather]
         
-        init(weatherManager: [WeatherGeneralManager]) {
+        init(weatherManager: [MainWeather]) {
             self.weatherManager = weatherManager
-
+            
         }
-
+        
         func locationName(_ index: IndexPath) -> String {
             weatherManager[index.row].name
         }
@@ -58,7 +58,7 @@ extension PreferredDataSource {
             weatherManager[index.row].weathersCell[index.row]
         }
         
-        func condition(_ index: IndexPath) -> WeatherGeneralManager.WeatherCondition {
+        func condition(_ index: IndexPath) -> MainWeather.WeatherCondition {
             weatherManager[index.row].condition
         }
         
@@ -69,9 +69,9 @@ extension PreferredDataSource {
         func gradi(_ index: IndexPath) -> String {
             weatherManager[index.row].temperatureString
         }
-         
-    }
         
+    }
+    
 }
 
 
@@ -93,32 +93,24 @@ extension PreferredDataSource: UITableViewDataSource {
         
         return cell
     }
-
+    
 }
 
 
 extension PreferredTableViewCell {
     
-    func configure(_ row: String,_ weather: WeatherGeneralManagerCell, _ condition: WeatherGeneralManager.WeatherCondition, _ background: UIImage,_ gradi: String) {
+    func configure(_ row: String,_ weather: WeatherGeneralManagerCell, _ condition: MainWeather.WeatherCondition, _ background: UIImage,_ gradi: String) {
         
         self.name.text = row
-        
         self.weatherImage.image = UIImage(named: weather.setCellImageAtCondition)
-//        if #available(iOS 13.0, *) {
-//            self.weatherImage.image = UIImage(systemName: weather.conditionName)
-//        } else {
-//            self.weatherImage.image = UIImage(named: weather.conditionNameOldVersion)
-//        }
-        
         self.degreesLabel.text = gradi
-        
         self.backgroundImage.image = background
         setColorUIViewForBackground(condition)
     }
     
     
     //MARK: - SetColorUIViewForBackground
-    func setColorUIViewForBackground(_ condition: WeatherGeneralManager.WeatherCondition) {
+    func setColorUIViewForBackground(_ condition: MainWeather.WeatherCondition) {
         
         switch condition {
         case .tempesta:
