@@ -46,6 +46,7 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         didSet {
             switch state {
             case .loading:
+                navigationController?.navigationBar.isHidden = true
                 tableView.isHidden = true
                 progressLabel.isHidden = true
                 progressSave.isHidden = true
@@ -54,6 +55,7 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
                 let animation = Animation.named("loading")
                 setupAnimation(for: animation!)
             case .preparing:
+                navigationController?.navigationBar.isHidden = false
                 tableView.isHidden = false
                 progressSave.isHidden = false
                 progressLabel.isHidden = false
@@ -103,11 +105,9 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         }
         
         state = .loading
-        fetchManger.delegate = self
-        fetchManger.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
-//        self.coordinator?.smartManager?.weatherFetchManager.delegate = self
-//        self.coordinator?.smartManager?.weatherFetchManager.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
-        
+        self.delegate = self
+        self.delegate?.setupUI((coordinator?.savedWeather)!)
+
         let leftButton = UIBarButtonItem(image: UIImage(named: "new_back"), style: .plain, target: self, action: #selector(cancelTapped(_:)))
         navigationItem.leftBarButtonItem = leftButton
         
@@ -187,6 +187,9 @@ extension PreferredWeatherViewController: UITableViewDelegate{
             self.coordinator?.realmManager?.delegate = self
             self.coordinator?.realmManager?.deleteWeather(indexPath)
             self.coordinator?.realmManager?.retriveWeatherForFetchManager()
+            self.coordinator?.savedWeather?.remove(at: indexPath.row)
+            self.delegate = self
+            self.delegate?.setupUI((self.coordinator?.savedWeather)!)
         }
         
         action.image = UIImage(named: "i_Elimina")
@@ -196,15 +199,6 @@ extension PreferredWeatherViewController: UITableViewDelegate{
     
 }
 
-
-extension PreferredWeatherViewController: WeatherFetchManagerPreferedDelegate {
-    func getArrayData(_ weather: [MainWeather]) {
-        print(weather.count)
-        self.delegate = self
-        self.delegate?.setupUI(weather)
-        
-    }
-}
 
 
 extension PreferredWeatherViewController: SetupPreferedWeatherAfterFetching {
@@ -231,9 +225,7 @@ extension PreferredWeatherViewController: RealmManagerDelegate {
     
     func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
         self.coordinator?.retriveWeather = weather
-        self.fetchManger.retriveMultipleLocation(for: (coordinator?.retriveWeather)!)
-//        self.coordinator?.smartManager?.weatherFetchManager.delegate = self
-//        self.coordinator?.smartManager?.weatherFetchManager.retriveMultipleLocation(for: (self.coordinator?.retriveWeather)!)
+        //self.fetchManger.retriveMultipleLocation(for: weather)
     }
     
     func retriveIsEmpty() {

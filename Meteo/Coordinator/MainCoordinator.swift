@@ -17,7 +17,6 @@ protocol ProvenienceDelegate: class {
 class MainCoordinator: Coordinator {
 
     //MARK: - Main Properies
-
     var children = [Coordinator]()
     var navigationController: UINavigationController
     let windows: UIWindow
@@ -27,17 +26,20 @@ class MainCoordinator: Coordinator {
     //MARK: - RealmManager
     var realmManager: RealmManager?
     var retriveWeather: Results<RealmWeatherManager>?
+    var fetchManager = WeatherFetchManager()
+    var savedWeather: [MainWeather]?
     var isPresentLocation: Bool? = nil
     var isLimitOver: Bool? = nil
     
     //MARK: - Navigation Properies
     var provenience: Provenience?
     var provenienceDelegate: ProvenienceDelegate?
-    var cameFromCitiesList: Bool? = nil
-    var cameFromPreferedWeather: Bool? = nil
-    var cameFromMainViewController: Bool? = nil
+
     
+    //MARK: - User Location
     var userLocation: MainWeather?
+    
+    //MARK: - Cities List
     var allCitiesList: AllCitiesList?
     var city: CitiesList?
     
@@ -54,6 +56,9 @@ class MainCoordinator: Coordinator {
         self.realmManager?.delegate = self
         self.realmManager?.retriveWeatherForFetchManager()
         self.realmManager?.checkForLimitsCitySaved()
+        
+        self.fetchManager.delegate = self
+        self.fetchManager.retriveMultipleLocation(for: retriveWeather!)
     }
     
     
@@ -120,11 +125,18 @@ extension MainCoordinator {
         case mainViewController
         case citiesListViewController
         case preferedViewController
+        case mainCoordinator
     }
 }
 
 extension MainCoordinator: ProvenienceDelegate {
     func proveniceDidSelected(_ provenience: Provenience) {
         self.provenience = provenience
+    }
+}
+
+extension MainCoordinator: WeatherFetchManagerPreferedDelegate {
+    func getArrayData(_ weather: [MainWeather]) {
+        self.savedWeather = weather
     }
 }

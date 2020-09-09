@@ -9,14 +9,14 @@
 import UIKit
 
 
-class SavedWeather {
-    
-    var realmManager: RealmManager?
-    var savedWeather: [MainWeather]?
-    
-    init() {
-        
-        realmManager = RealmManager()
-        self.savedWeather = realmManager?.weatherGeneralManager
-    }
-}
+//class SavedWeather {
+//    
+//    var realmManager: RealmManager?
+//    var savedWeather: [MainWeather]?
+//    
+//    init() {
+//        
+//        realmManager = RealmManager()
+//        self.savedWeather = realmManager?.weatherGeneralManager
+//    }
+//}

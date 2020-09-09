@@ -22,16 +22,16 @@ protocol WeatherFetchManagerSingleLocationDelegate: class {
 
 class WeatherFetchManager {
 
-    var weatherGeneralManager: MainWeather?
+    //var weatherGeneralManager: MainWeather?
     var delegate: WeatherFetchManagerPreferedDelegate?
     var singleWeatherDelegate: WeatherFetchManagerSingleLocationDelegate?
-    var arrayWeather: [MainWeather] = []
+    private var arrayWeather: [MainWeather] = []
     
-    init() {}
-    
-    init(latitude: Double, longitude: Double) {
-        getMyWeatherData(forLatitude: latitude, forLongitude: longitude)
-    }
+//    init() {}
+//    
+//    init(latitude: Double, longitude: Double) {
+//        getMyWeatherData(forLatitude: latitude, forLongitude: longitude)
+//    }
     
     
     func retriveMultipleLocation(for locations: Results<RealmWeatherManager>) {

@@ -60,8 +60,8 @@ class CitiesListViewController: UIViewController, Storyboarded {
     
     
     @objc func cancelTapped(_ sender: UIBarButtonItem) {
-        coordinator?.cameFromCitiesList = false
-        coordinator?.cameFromPreferedWeather = false
+//        coordinator?.cameFromCitiesList = false
+//        coordinator?.cameFromPreferedWeather = false
         coordinator?.popViewController()
     }
     
