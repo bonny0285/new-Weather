@@ -79,7 +79,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pioggia" translatesAutoresizingMaskIntoConstraints="NO" id="35l-3T-vwl">
-                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Città salvate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5oU-zv-45d">
                                 <rect key="frame" x="159.5" y="44" width="95" height="21"/>
@@ -118,11 +118,11 @@
                             <constraint firstItem="rHr-wv-EWj" firstAttribute="leading" secondItem="ciJ-JB-jCR" secondAttribute="leading" constant="10" id="ESH-nR-lnG"/>
                             <constraint firstItem="35l-3T-vwl" firstAttribute="leading" secondItem="ciJ-JB-jCR" secondAttribute="leading" id="Ge7-Oe-aw9"/>
                             <constraint firstItem="Apa-mV-NPk" firstAttribute="top" secondItem="5oU-zv-45d" secondAttribute="bottom" constant="10" id="K0J-4H-ntX"/>
-                            <constraint firstItem="35l-3T-vwl" firstAttribute="top" secondItem="ciJ-JB-jCR" secondAttribute="top" id="Qfa-lo-1VN"/>
                             <constraint firstItem="ciJ-JB-jCR" firstAttribute="bottom" secondItem="bIc-r0-Bdc" secondAttribute="bottom" id="WpX-je-tUC"/>
                             <constraint firstAttribute="bottom" secondItem="35l-3T-vwl" secondAttribute="bottom" id="bZK-0Q-yWq"/>
                             <constraint firstItem="5oU-zv-45d" firstAttribute="centerX" secondItem="u25-E3-5zk" secondAttribute="centerX" id="hBo-m4-tdJ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Apa-mV-NPk" secondAttribute="trailing" constant="20" id="jUt-11-tO7"/>
+                            <constraint firstItem="35l-3T-vwl" firstAttribute="top" secondItem="u25-E3-5zk" secondAttribute="top" id="mdi-lv-efq"/>
                             <constraint firstItem="bIc-r0-Bdc" firstAttribute="top" secondItem="Apa-mV-NPk" secondAttribute="bottom" constant="10" id="trO-e2-t5G"/>
                             <constraint firstItem="35l-3T-vwl" firstAttribute="trailing" secondItem="ciJ-JB-jCR" secondAttribute="trailing" id="vhh-3p-DCp"/>
                         </constraints>

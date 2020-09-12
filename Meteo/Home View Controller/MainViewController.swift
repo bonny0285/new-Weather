@@ -53,32 +53,33 @@ class MainViewController: UIViewController, Storyboarded {
     var weatherGeneralManagerCell: [WeatherGeneralManagerCell] = []
     let fetchManager = WeatherFetchManager()
     var coordinateUserLocation: LocationForUser = (0.0, 0.0)
+    var timer: Timer?
     
     //var citiesList: [CitiesList] = []
    // var currentLocation: LocationForUser = (0.0, 0.0)
     
-    var imageForNavigationBar: UIImage! {
-        didSet {
-            navigationController?.navigationBar.setBackgroundImage(mainBackgroundImage.image, for: .default)
-            let condition = weatherCondition
-            switch condition {
-            case .tempesta:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .pioggiaLeggera:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .neve:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            }
-        }
-    }
+//    var imageForNavigationBar: UIImage! {
+//        didSet {
+//            navigationController?.navigationBar.setBackgroundImage(mainBackgroundImage.image, for: .default)
+//            let condition = weatherCondition
+//            switch condition {
+//            case .tempesta:
+//                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+//            case .pioggia:
+//                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+//            case .pioggiaLeggera:
+//                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+//            case .neve:
+//                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+//            case .nebbia:
+//                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+//            case .sole:
+//                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+//            case .nuvole:
+//                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+//            }
+//        }
+//    }
     
     var navigationBarStatus: NavigationBarStatus = .noOne {
         didSet {
@@ -87,6 +88,11 @@ class MainViewController: UIViewController, Storyboarded {
             let searchButton = UIBarButtonItem(image: UIImage(named: "new_search"), style: .plain, target: self, action: #selector(searchButtonBarWasPressed(_:)))
             let favoriteButton = UIBarButtonItem(image: UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(favoriteButtonBarWasPressed(_:)))
             let addButton = UIBarButtonItem(image: UIImage(named: "new_add"), style: .plain, target: self, action: #selector(addButtonBarWasPressed(_:)))
+            
+            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            navigationController?.navigationBar.shadowImage = UIImage()
+            navigationController?.navigationBar.isTranslucent = true
+            navigationController?.view.backgroundColor = .clear
             
             switch navigationBarStatus {
             case .allPresent:
@@ -122,6 +128,7 @@ class MainViewController: UIViewController, Storyboarded {
         didSet {
             switch state {
             case .loading:
+               // self.timer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
                 navigationBarStatus = .noOne
                 currentWeatherView.isHidden = false
                 tableView.isHidden = true
@@ -130,6 +137,7 @@ class MainViewController: UIViewController, Storyboarded {
                 let animation = Animation.named("loading")
                 setupAnimation(for: animation!)
             case .presenting:
+               // timer?.invalidate()
                 currentWeatherView.isHidden = false
                 tableView.isHidden = false
                 lottieContainer.isHidden = true
@@ -158,11 +166,16 @@ class MainViewController: UIViewController, Storyboarded {
         
         language = Locale.current.languageCode!
         
+        
+        
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //navigationController?.navigationBar.isHidden = false
+        
         
         self.coordinator?.realmManager?.delegate = self
         self.coordinator?.realmManager?.checkForLimitsCitySaved()
@@ -188,7 +201,7 @@ class MainViewController: UIViewController, Storyboarded {
             setupNavigationBarButton()
         }
         
-        self.imageForNavigationBar = self.mainBackgroundImage.image
+        //self.imageForNavigationBar = self.mainBackgroundImage.image
         tableView.delegate = self
         tableView.reloadData()
     }
@@ -196,7 +209,9 @@ class MainViewController: UIViewController, Storyboarded {
     //MARK: - Navigation
     
     
-    @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {}
+    @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {
+        
+    }
     
     //MARK: - Actions & Functions
     
@@ -212,6 +227,13 @@ class MainViewController: UIViewController, Storyboarded {
         loadingView.trailingAnchor.constraint(equalTo: lottieContainer.trailingAnchor).isActive = true
         loadingView.leadingAnchor.constraint(equalTo: lottieContainer.leadingAnchor).isActive = true
         self.loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
+    }
+    
+    
+    @objc func timerAction() {
+        //locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
     }
     
     //MARK: - Search Button Bar Action
@@ -343,7 +365,25 @@ extension MainViewController: CLLocationManagerDelegate{
             self.currentWeatherView.setupColorViewAtCondition(weather.condition)
             self.mainBackgroundImage.image = UIImage(named: weather.condition.getWeatherConditionFromID(weatherID: weather.conditionID).rawValue)
             self.weatherCondition = weather.condition
-            self.imageForNavigationBar = self.mainBackgroundImage.image
+            
+            switch self.weatherCondition {
+                case .tempesta:
+                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                case .pioggia:
+                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                case .pioggiaLeggera:
+                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                case .neve:
+                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                case .nebbia:
+                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                case .sole:
+                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                case .nuvole:
+                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+            
+            //self.imageForNavigationBar = self.mainBackgroundImage.image
             self.weatherGeneralManagerCell = weather.weathersCell
             self.callerRealmForFetching()
             self.setupNavigationBarButton()
@@ -374,6 +414,22 @@ extension MainViewController: UITableViewDelegate {
 }
 
 extension MainViewController: WeatherFetchManagerSingleLocationDelegate {
+    func didGetError(_ error: String) {
+        debugPrint("DID GET ERROR ON FETCHING DATA",error)
+        
+        let action = UIAlertAction(title: "OK", style: .cancel) {[weak self] (action) in
+            guard let self = self else { return }
+            //self.state = .loading
+            self.locationManager.requestWhenInUseAuthorization()
+            self.locationManager.requestLocation()
+        }
+        
+        let controller = UIAlertController(title: NSLocalizedString("attention_alert_title", comment: ""), message: NSLocalizedString("alert_message", comment: ""), preferredStyle: .alert)
+        controller.addAction(action)
+        
+        self.present(controller, animated: true, completion: nil)
+    }
+    
     func weatherDidFetchedAtLocation(_ weather: MainWeather) {
         
         if case .mainViewController = coordinator?.provenience {
@@ -401,7 +457,10 @@ extension MainViewController: RealmManagerDelegate {
     
     func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
         weather.forEach { print($0.name)}
-        self.coordinator?.retriveWeather = weather
+        //self.coordinator?.retriveWeather = weather
+        fetchManager.retriveMultipleLocation(for: weather)
+        self.coordinator?.fetchManager.retriveMultipleLocation(for: weather)
+        self.timer?.invalidate()
     }
     
     func retriveIsEmpty() {

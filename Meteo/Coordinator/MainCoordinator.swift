@@ -49,6 +49,11 @@ class MainCoordinator: Coordinator {
         self.windows = windows
         self.navigationController = navigationController
         
+        navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController.navigationBar.shadowImage = UIImage()
+        navigationController.navigationBar.isTranslucent = true
+        navigationController.view.backgroundColor = .clear
+        
         self.provenienceDelegate = self
         self.allCitiesList = AllCitiesList()
         
@@ -57,8 +62,11 @@ class MainCoordinator: Coordinator {
         self.realmManager?.retriveWeatherForFetchManager()
         self.realmManager?.checkForLimitsCitySaved()
         
-        self.fetchManager.delegate = self
-        self.fetchManager.retriveMultipleLocation(for: retriveWeather!)
+        if self.retriveWeather != nil {
+            self.fetchManager.delegate = self
+            self.fetchManager.retriveMultipleLocation(for: retriveWeather!)
+        }
+        
     }
     
     
@@ -136,6 +144,10 @@ extension MainCoordinator: ProvenienceDelegate {
 }
 
 extension MainCoordinator: WeatherFetchManagerPreferedDelegate {
+    func didGetError(_ error: String) {
+        debugPrint(error)
+    }
+    
     func getArrayData(_ weather: [MainWeather]) {
         self.savedWeather = weather
     }

@@ -24,3 +24,6 @@
 "alert_message_city_already_saved" = "Città gia salavata.\nNon puoi salavare la stessa città due volte.";
 
 "alert_message_limit_been_over" = "Hai già salvato 10 città.\nNon puoi salvare più di 10 città.";
+
+"attention_alert_title" = "Attenzione !!!";
+"alert_message" = "Prova a controllare la tua connessione internet e riprova.";

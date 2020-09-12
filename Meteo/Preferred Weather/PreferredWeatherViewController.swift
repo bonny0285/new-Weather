@@ -68,7 +68,7 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
     
     var imageForNavigationBar: UIImage! {
         didSet {
-            navigationController?.navigationBar.setBackgroundImage(dataSource?.imageNavigationBar(), for: .default)
+           // navigationController?.navigationBar.setBackgroundImage(dataSource?.imageNavigationBar(), for: .default)
             let condition = dataSource?.conditionForNavigationBar()
             switch condition {
             case .tempesta:
@@ -120,6 +120,14 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         
     }
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.view.backgroundColor = .clear
+    }
     
     
     
@@ -188,8 +196,15 @@ extension PreferredWeatherViewController: UITableViewDelegate{
             self.coordinator?.realmManager?.deleteWeather(indexPath)
             self.coordinator?.realmManager?.retriveWeatherForFetchManager()
             self.coordinator?.savedWeather?.remove(at: indexPath.row)
-            self.delegate = self
-            self.delegate?.setupUI((self.coordinator?.savedWeather)!)
+            
+            if self.coordinator?.retriveWeather?.count == 0 {
+                self.coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
+                self.coordinator?.popViewController()
+            } else {
+                self.delegate = self
+                self.delegate?.setupUI((self.coordinator?.savedWeather)!)
+            }
+            
         }
         
         action.image = UIImage(named: "i_Elimina")
@@ -206,7 +221,7 @@ extension PreferredWeatherViewController: SetupPreferedWeatherAfterFetching {
         self.dataSource = PreferredDataSource(weatherManager: weather)
         self.tableView.dataSource = self.dataSource
         self.backgroundImage.image = dataSource?.imageNavigationBar()
-        self.imageForNavigationBar = self.dataSource?.imageNavigationBar()
+        //self.imageForNavigationBar = self.dataSource?.imageNavigationBar()
         self.tableView.reloadData()
         self.setCurrentProgress(weather.count)
         self.state = .preparing

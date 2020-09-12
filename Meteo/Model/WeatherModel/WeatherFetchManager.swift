@@ -14,10 +14,12 @@ import RealmSwift
 
 protocol WeatherFetchManagerPreferedDelegate: class {
     func getArrayData(_ weather: [MainWeather])
+    func didGetError(_ error: String)
 }
 
 protocol WeatherFetchManagerSingleLocationDelegate: class {
     func weatherDidFetchedAtLocation(_ weather: MainWeather)
+    func didGetError(_ error: String)
 }
 
 class WeatherFetchManager {
@@ -56,6 +58,7 @@ class WeatherFetchManager {
                     dispatch.leave()
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self.delegate?.didGetError(error.localizedDescription)
                 }
             }
             
@@ -80,7 +83,8 @@ class WeatherFetchManager {
                 self.singleWeatherDelegate?.weatherDidFetchedAtLocation(weather)
             case .failure(let error):
                 print(error.localizedDescription)
-                MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
+                self.singleWeatherDelegate?.didGetError(error.localizedDescription)
+               // MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
             }
         }
     }
