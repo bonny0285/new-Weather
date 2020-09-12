@@ -27,7 +27,7 @@ class MainCoordinator: Coordinator {
     var realmManager: RealmManager?
     var retriveWeather: Results<RealmWeatherManager>?
     var fetchManager = WeatherFetchManager()
-    var savedWeather: [MainWeather]?
+    //var savedWeather: [MainWeather]?
     var isPresentLocation: Bool? = nil
     var isLimitOver: Bool? = nil
     
@@ -43,6 +43,8 @@ class MainCoordinator: Coordinator {
     var allCitiesList: AllCitiesList?
     var city: CitiesList?
     
+    var savedWeather: SavedWeather?
+    
     //MARK: - Lifecycle
 
     init(windows: UIWindow, navigationController: UINavigationController) {
@@ -57,16 +59,17 @@ class MainCoordinator: Coordinator {
         self.provenienceDelegate = self
         self.allCitiesList = AllCitiesList()
         
-        self.realmManager = RealmManager()
-        self.realmManager?.delegate = self
-        self.realmManager?.retriveWeatherForFetchManager()
-        self.realmManager?.checkForLimitsCitySaved()
+//        self.realmManager = RealmManager()
+//        self.realmManager?.delegate = self
+//        self.realmManager?.retriveWeatherForFetchManager()
+//        self.realmManager?.checkForLimitsCitySaved()
+//
+//        if self.retriveWeather != nil {
+//            self.fetchManager.delegate = self
+//            self.fetchManager.retriveMultipleLocation(for: retriveWeather!)
+//        }
         
-        if self.retriveWeather != nil {
-            self.fetchManager.delegate = self
-            self.fetchManager.retriveMultipleLocation(for: retriveWeather!)
-        }
-        
+        self.savedWeather = SavedWeather()
     }
     
     
@@ -77,7 +80,8 @@ class MainCoordinator: Coordinator {
         windows.makeKeyAndVisible()
         let controller = MainViewController.instantiate()
         controller.coordinator = self
-        realmManager = RealmManager()
+        //realmManager = RealmManager()
+        provenience = .mainViewController
         navigationController.pushViewController(controller, animated: true)
     }
     
@@ -121,7 +125,7 @@ extension MainCoordinator:  RealmManagerDelegate {
         self.retriveWeather = weather
     }
     
-    func retriveIsEmpty() {
+    func retriveIsEmpty(_ isEmpty: Bool) {
         self.retriveWeather = nil
     }
 
@@ -149,6 +153,6 @@ extension MainCoordinator: WeatherFetchManagerPreferedDelegate {
     }
     
     func getArrayData(_ weather: [MainWeather]) {
-        self.savedWeather = weather
+        //self.savedWeather = weather
     }
 }

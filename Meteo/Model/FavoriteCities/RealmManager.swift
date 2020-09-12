@@ -12,7 +12,7 @@ import RealmSwift
 
 protocol RealmManagerDelegate: class {
     func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>)
-    func retriveIsEmpty()
+    func retriveIsEmpty(_ isEmpty: Bool)
     func locationDidSaved(_ isPresent: Bool)
     func isLimitDidOver(_ isLimitOver: Bool)
 }
@@ -109,7 +109,7 @@ class RealmManager {
             
             if results.count == 0 {
                 isElementsAreEmpty = true
-                delegate?.retriveIsEmpty()
+                delegate?.retriveIsEmpty(true)
             } else {
                 isElementsAreEmpty = false
                 delegate?.retriveWeatherDidFinisched(results)

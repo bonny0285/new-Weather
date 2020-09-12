@@ -106,7 +106,8 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         
         state = .loading
         self.delegate = self
-        self.delegate?.setupUI((coordinator?.savedWeather)!)
+        self.delegate?.setupUI(self.coordinator?.savedWeather?.retriveWeathers ?? [])
+        //self.delegate?.setupUI((coordinator?.savedWeather)!)
 
         let leftButton = UIBarButtonItem(image: UIImage(named: "new_back"), style: .plain, target: self, action: #selector(cancelTapped(_:)))
         navigationItem.leftBarButtonItem = leftButton
@@ -192,17 +193,18 @@ extension PreferredWeatherViewController: UITableViewDelegate{
         let action = UIContextualAction(style: .destructive, title: "") { (contextualAction: UIContextualAction, view : UIView,completion: (Bool) -> Void) in
             
             self.state = .loading
-            self.coordinator?.realmManager?.delegate = self
-            self.coordinator?.realmManager?.deleteWeather(indexPath)
-            self.coordinator?.realmManager?.retriveWeatherForFetchManager()
-            self.coordinator?.savedWeather?.remove(at: indexPath.row)
+            self.coordinator?.savedWeather?.realmManager?.deleteWeather(indexPath)
+//            self.coordinator?.realmManager?.delegate = self
+//            self.coordinator?.realmManager?.deleteWeather(indexPath)
+//            self.coordinator?.realmManager?.retriveWeatherForFetchManager()
+           // self.coordinator?.savedWeather?.remove(at: indexPath.row)
             
             if self.coordinator?.retriveWeather?.count == 0 {
                 self.coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
                 self.coordinator?.popViewController()
             } else {
                 self.delegate = self
-                self.delegate?.setupUI((self.coordinator?.savedWeather)!)
+                //self.delegate?.setupUI((self.coordinator?.savedWeather)!)
             }
             
         }
@@ -243,7 +245,7 @@ extension PreferredWeatherViewController: RealmManagerDelegate {
         //self.fetchManger.retriveMultipleLocation(for: weather)
     }
     
-    func retriveIsEmpty() {
+    func retriveIsEmpty(_ isEmpty: Bool) {
         coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
         self.coordinator?.popViewController()
     }
