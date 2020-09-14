@@ -66,33 +66,9 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         }
     }
     
-    var imageForNavigationBar: UIImage! {
-        didSet {
-           // navigationController?.navigationBar.setBackgroundImage(dataSource?.imageNavigationBar(), for: .default)
-            let condition = dataSource?.conditionForNavigationBar()
-            switch condition {
-            case .tempesta:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .pioggia:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .pioggiaLeggera:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            case .neve:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            case .nebbia:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .sole:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            case .nuvole:
-                navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            default:
-                break
-                
-            }
-        }
-    }
+
     
-    var fetchManger = WeatherFetchManager()
+//    var fetchManger = WeatherFetchManager()
     
     //MARK: - Lifecycle
     
@@ -155,6 +131,27 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         self.loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
     }
     
+    func setupNavigationBarColor(_ condition: MainWeather.WeatherCondition) {
+        
+        switch condition {
+        case .tempesta:
+            navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        case .pioggia:
+            navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        case .pioggiaLeggera:
+            navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        case .neve:
+            navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        case .nebbia:
+            navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        case .sole:
+            navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        case .nuvole:
+            navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        }
+    }
+    
+    
     func setCurrentProgress(_ progressDone: Int) {
         progress.completedUnitCount = Int64(progressDone)
         let progressFloat = Float(progress.fractionCompleted)
@@ -193,18 +190,18 @@ extension PreferredWeatherViewController: UITableViewDelegate{
         let action = UIContextualAction(style: .destructive, title: "") { (contextualAction: UIContextualAction, view : UIView,completion: (Bool) -> Void) in
             
             self.state = .loading
+            self.coordinator?.savedWeather?.realmManager?.delegate = self
             self.coordinator?.savedWeather?.realmManager?.deleteWeather(indexPath)
-//            self.coordinator?.realmManager?.delegate = self
-//            self.coordinator?.realmManager?.deleteWeather(indexPath)
-//            self.coordinator?.realmManager?.retriveWeatherForFetchManager()
-           // self.coordinator?.savedWeather?.remove(at: indexPath.row)
+            self.coordinator?.savedWeather?.retriveWeathers?.remove(at: indexPath.row)
+            self.coordinator?.savedWeather?.realmManager?.retriveWeatherForFetchManager()
+            self.coordinator?.savedWeather?.realmManager?.checkForLimitsCitySaved()
+            guard let weather = self.coordinator?.savedWeather?.retriveWeathers else { return }
             
-            if self.coordinator?.retriveWeather?.count == 0 {
+            if weather.count == 0 {
                 self.coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
                 self.coordinator?.popViewController()
             } else {
-                self.delegate = self
-                //self.delegate?.setupUI((self.coordinator?.savedWeather)!)
+                self.delegate?.setupUI(weather)
             }
             
         }
@@ -223,7 +220,7 @@ extension PreferredWeatherViewController: SetupPreferedWeatherAfterFetching {
         self.dataSource = PreferredDataSource(weatherManager: weather)
         self.tableView.dataSource = self.dataSource
         self.backgroundImage.image = dataSource?.imageNavigationBar()
-        //self.imageForNavigationBar = self.dataSource?.imageNavigationBar()
+        self.setupNavigationBarColor((dataSource?.conditionForNavigationBar())!)
         self.tableView.reloadData()
         self.setCurrentProgress(weather.count)
         self.state = .preparing
@@ -232,23 +229,26 @@ extension PreferredWeatherViewController: SetupPreferedWeatherAfterFetching {
 }
 
 extension PreferredWeatherViewController: RealmManagerDelegate {
+    func retriveIsEmpty(_ isEmpty: Bool?) {
+        if isEmpty == true {
+            coordinator?.savedWeather?.isDatabaseEmpty = isEmpty
+            coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
+            self.coordinator?.popViewController()
+        }
+    }
+    
     func isLimitDidOver(_ isLimitOver: Bool) {
         /// Non viene effettuato nessun check in questo ViewController
     }
-    
+
     func locationDidSaved(_ isPresent: Bool) {
         /// Non viene effettuato nessun check in questo ViewController
     }
-    
+
     func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
-        self.coordinator?.retriveWeather = weather
-        //self.fetchManger.retriveMultipleLocation(for: weather)
+        self.coordinator?.savedWeather?.weatherResults = weather
     }
-    
-    func retriveIsEmpty(_ isEmpty: Bool) {
-        coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
-        self.coordinator?.popViewController()
-    }
+
 }
 
 extension PreferredWeatherViewController {

@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Lottie
 
 
 protocol ProvenienceDelegate: class {
@@ -24,12 +25,12 @@ class MainCoordinator: Coordinator {
     //MARK: - Properties
 
     //MARK: - RealmManager
-    var realmManager: RealmManager?
-    var retriveWeather: Results<RealmWeatherManager>?
-    var fetchManager = WeatherFetchManager()
+    //var realmManager: RealmManager?
+    //var retriveWeather: Results<RealmWeatherManager>?
+    //var fetchManager = WeatherFetchManager()
     //var savedWeather: [MainWeather]?
-    var isPresentLocation: Bool? = nil
-    var isLimitOver: Bool? = nil
+    //var isPresentLocation: Bool? = nil
+    //var isLimitOver: Bool? = nil
     
     //MARK: - Navigation Properies
     var provenience: Provenience?
@@ -51,6 +52,7 @@ class MainCoordinator: Coordinator {
         self.windows = windows
         self.navigationController = navigationController
         
+        navigationController.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController.navigationBar.shadowImage = UIImage()
         navigationController.navigationBar.isTranslucent = true
@@ -58,17 +60,7 @@ class MainCoordinator: Coordinator {
         
         self.provenienceDelegate = self
         self.allCitiesList = AllCitiesList()
-        
-//        self.realmManager = RealmManager()
-//        self.realmManager?.delegate = self
-//        self.realmManager?.retriveWeatherForFetchManager()
-//        self.realmManager?.checkForLimitsCitySaved()
-//
-//        if self.retriveWeather != nil {
-//            self.fetchManager.delegate = self
-//            self.fetchManager.retriveMultipleLocation(for: retriveWeather!)
-//        }
-        
+
         self.savedWeather = SavedWeather()
     }
     
@@ -111,25 +103,25 @@ class MainCoordinator: Coordinator {
 
 //MARK: - Realm Manager Delegate
 
-extension MainCoordinator:  RealmManagerDelegate {
-    
-    func isLimitDidOver(_ isLimitOver: Bool) {
-        self.isLimitOver = isLimitOver
-    }
-    
-    func locationDidSaved(_ isPresent: Bool) {
-        self.isPresentLocation = isPresent
-    }
-    
-    func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
-        self.retriveWeather = weather
-    }
-    
-    func retriveIsEmpty(_ isEmpty: Bool) {
-        self.retriveWeather = nil
-    }
-
-}
+//extension MainCoordinator:  RealmManagerDelegate {
+//    
+//    func isLimitDidOver(_ isLimitOver: Bool) {
+//        self.isLimitOver = isLimitOver
+//    }
+//    
+//    func locationDidSaved(_ isPresent: Bool) {
+//        self.isPresentLocation = isPresent
+//    }
+//    
+//    func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
+//        self.retriveWeather = weather
+//    }
+//    
+//    func retriveIsEmpty(_ isEmpty: Bool) {
+//        self.retriveWeather = nil
+//    }
+//
+//}
 
 
 extension MainCoordinator {
@@ -138,6 +130,7 @@ extension MainCoordinator {
         case citiesListViewController
         case preferedViewController
         case mainCoordinator
+        case addAction
     }
 }
 
@@ -147,12 +140,20 @@ extension MainCoordinator: ProvenienceDelegate {
     }
 }
 
-extension MainCoordinator: WeatherFetchManagerPreferedDelegate {
-    func didGetError(_ error: String) {
-        debugPrint(error)
-    }
-    
-    func getArrayData(_ weather: [MainWeather]) {
-        //self.savedWeather = weather
-    }
-}
+//extension MainCoordinator: WeatherFetchDelegate {
+//    func multipleWeather(_ weathers: [MainWeather]) {
+//        <#code#>
+//    }
+//    
+//    func singleWeather(_ weather: MainWeather) {
+//        <#code#>
+//    }
+//    
+//    func didGetError(_ error: String) {
+//        debugPrint(error)
+//    }
+//    
+//    func getArrayData(_ weather: [MainWeather]) {
+//        //self.savedWeather = weather
+//    }
+//}

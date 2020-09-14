@@ -12,21 +12,17 @@ import SwiftyJSON
 import RealmSwift
 
 
-protocol WeatherFetchManagerPreferedDelegate: class {
-    func getArrayData(_ weather: [MainWeather])
+protocol WeatherFetchDelegate: class {
+    func multipleWeather(_ weathers: [MainWeather])
+    func singleWeather(_ weather: MainWeather)
     func didGetError(_ error: String)
 }
 
-protocol WeatherFetchManagerSingleLocationDelegate: class {
-    func weatherDidFetchedAtLocation(_ weather: MainWeather)
-    func didGetError(_ error: String)
-}
 
 class WeatherFetchManager {
 
     //var weatherGeneralManager: MainWeather?
-    var delegate: WeatherFetchManagerPreferedDelegate?
-    var singleWeatherDelegate: WeatherFetchManagerSingleLocationDelegate?
+    var delegate: WeatherFetchDelegate?
     private var arrayWeather: [MainWeather] = []
     
 //    init() {}
@@ -63,7 +59,7 @@ class WeatherFetchManager {
             }
             
             dispatch.notify(queue: .main) {
-                self.delegate?.getArrayData(self.arrayWeather)
+                self.delegate?.multipleWeather(self.arrayWeather)
             }
         }
     }
@@ -80,10 +76,10 @@ class WeatherFetchManager {
                 let json: JSON = JSON(arrayLiteral: value)
                 debugPrint(json)
                 let weather = self.JSONTransform(json)
-                self.singleWeatherDelegate?.weatherDidFetchedAtLocation(weather)
+                self.delegate?.singleWeather(weather)
             case .failure(let error):
                 print(error.localizedDescription)
-                self.singleWeatherDelegate?.didGetError(error.localizedDescription)
+                self.delegate?.didGetError(error.localizedDescription)
                // MyAlert.alertError(forError: error.localizedDescription, forViewController: MainViewController())
             }
         }

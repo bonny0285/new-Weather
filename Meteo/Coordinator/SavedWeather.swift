@@ -19,7 +19,7 @@ class SavedWeather {
     
     //MARK: - Main Private Properties
     var realmManager: RealmManager?
-    private var weatherFetchManager: WeatherFetchManager?
+    var weatherFetchManager: WeatherFetchManager?
     
     weak var delegate: SavedWeatherDelegate?
     
@@ -55,8 +55,8 @@ extension SavedWeather: RealmManagerDelegate {
         
     }
     
-    func retriveIsEmpty(_ isEmpty: Bool) {
-        self.isDatabaseEmpty = true
+    func retriveIsEmpty(_ isEmpty: Bool?) {
+        self.isDatabaseEmpty = isEmpty
     }
     
     func locationDidSaved(_ isPresent: Bool) {
@@ -69,13 +69,18 @@ extension SavedWeather: RealmManagerDelegate {
 }
 
 
-extension SavedWeather: WeatherFetchManagerPreferedDelegate {
-    func getArrayData(_ weather: [MainWeather]) {
-        self.retriveWeathers = weather
+extension SavedWeather: WeatherFetchDelegate {
+    func multipleWeather(_ weathers: [MainWeather]) {
+        self.retriveWeathers = weathers
         self.delegate?.retriveDidFinished()
+    }
+    
+    func singleWeather(_ weather: MainWeather) {
+        self.retriveWeathers?.append(weather)
     }
     
     func didGetError(_ error: String) {
         self.retriveWeathersError = error
     }
 }
+
