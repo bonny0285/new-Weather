@@ -8,10 +8,11 @@
 
 import UIKit
 import RealmSwift
+import Alamofire
 
 
 protocol SavedWeatherDelegate: class {
-    func retriveDidFinished()
+    func retriveDidGetError(_ didGetError: Bool?)
 }
 
 class SavedWeather {
@@ -20,7 +21,7 @@ class SavedWeather {
     //MARK: - Main Private Properties
     var realmManager: RealmManager?
     var weatherFetchManager: WeatherFetchManager?
-    
+    var io = NetworkReachabilityManager()?.isReachable
     weak var delegate: SavedWeatherDelegate?
     
     //MARK: - Realm
@@ -31,14 +32,25 @@ class SavedWeather {
     
     //MARK: - MainWeather
     var retriveWeathers: [MainWeather]? = nil
+    var didGetError: Bool? = nil
     var retriveWeathersError: String? = nil
     
     
+    var weatherError: WeatherError?
+    
     init() {
-        realmManager = RealmManager()
-        realmManager?.delegate = self
-        realmManager?.retriveWeatherForFetchManager()
-        realmManager?.checkForLimitsCitySaved()
+        
+        self.weatherError = WeatherError()
+        self.weatherError?.delegate = self
+        
+        if NetworkReachabilityManager()?.isReachable == true {
+            realmManager = RealmManager()
+            realmManager?.delegate = self
+            realmManager?.retriveWeatherForFetchManager()
+            realmManager?.checkForLimitsCitySaved()
+        } else {
+            print("NO INTERNET")
+        }
     }
 }
 
@@ -72,7 +84,6 @@ extension SavedWeather: RealmManagerDelegate {
 extension SavedWeather: WeatherFetchDelegate {
     func multipleWeather(_ weathers: [MainWeather]) {
         self.retriveWeathers = weathers
-        self.delegate?.retriveDidFinished()
     }
     
     func singleWeather(_ weather: MainWeather) {
@@ -80,7 +91,23 @@ extension SavedWeather: WeatherFetchDelegate {
     }
     
     func didGetError(_ error: String) {
+        self.didGetError = true
+        self.delegate?.retriveDidGetError(true)
         self.retriveWeathersError = error
     }
 }
 
+
+extension SavedWeather: WeatherErrorDelegate {
+    func genericError() {
+        
+    }
+    
+    func singleError() {
+        
+    }
+    
+    func multipleError() {
+        
+    }
+}

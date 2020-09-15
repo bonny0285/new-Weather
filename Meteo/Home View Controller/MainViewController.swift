@@ -280,7 +280,12 @@ class MainViewController: UIViewController, Storyboarded {
     //MARK: - Favorite Button Bar Action
     
     @objc func favoriteButtonBarWasPressed(_ sender: UIBarButtonItem) {
-        coordinator?.preferedWeatherViewController()
+        
+        if self.coordinator?.savedWeather?.didGetError == true {
+            /// Ricaricare tutti i weather salòvati
+        } else {
+            coordinator?.preferedWeatherViewController()
+        }
     }
     
 }
@@ -420,7 +425,7 @@ extension MainViewController: WeatherFetchDelegate {
     }
     
     func didGetError(_ error: String) {
-        debugPrint("DID GET ERROR ON FETCHING DATA",error)
+        debugPrint("ERROR FETCHING CURRENT WEATHER",error)
         
         let action = UIAlertAction(title: "OK", style: .cancel) {[weak self] (action) in
             guard let self = self else { return }
@@ -437,9 +442,28 @@ extension MainViewController: WeatherFetchDelegate {
 }
 
 extension MainViewController: SavedWeatherDelegate {
-    func retriveDidFinished() {
-        state = .presenting
+    func retriveDidGetError(_ didGetError: Bool?) {
+        guard let error = didGetError else { return }
+        
+        debugPrint("ERRORE FETCHING PREFERED WEATHER")
+        
+        if error == true {
+            let action = UIAlertAction(title: "OK", style: .cancel) {[weak self] (action) in
+                guard let self = self else { return }
+                //self.state = .loading
+                self.locationManager.requestWhenInUseAuthorization()
+                self.locationManager.requestLocation()
+            }
+            
+            let controller = UIAlertController(title: NSLocalizedString("attention_alert_title", comment: ""), message: NSLocalizedString("alert_message", comment: ""), preferredStyle: .alert)
+            controller.addAction(action)
+            
+            self.present(controller, animated: true, completion: nil)
+        }
+        
+        
     }
+
 }
 
 //MARK: - State
