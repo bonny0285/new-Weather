@@ -49,6 +49,7 @@ class SavedWeather {
             realmManager?.retriveWeatherForFetchManager()
             realmManager?.checkForLimitsCitySaved()
         } else {
+            didGetError = true
             print("NO INTERNET")
         }
     }

@@ -10,6 +10,7 @@ import UIKit
 import CoreLocation
 import Lottie
 import RealmSwift
+import Alamofire
 
 
 
@@ -128,7 +129,7 @@ class MainViewController: UIViewController, Storyboarded {
         }
     }
     
-
+    var weatherError: WeatherError?
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -146,32 +147,43 @@ class MainViewController: UIViewController, Storyboarded {
         super.viewWillAppear(animated)
         state = .loading
         
-        if case .citiesListViewController = self.coordinator?.provenience {
-            state = .loading
-            guard let lat = coordinator?.city?.coord.lat, let lon = coordinator?.city?.coord.lon else { return }
-            
-            fetchManager.delegate = self
-            fetchManager.getMyWeatherData(forLatitude: lat, forLongitude: lon)
-        } else if case .preferedViewController = coordinator?.provenience {
-            DispatchQueue.main.async {
-                self.setup(weather: self.currentWeather!)
+        weatherError = WeatherError()
+        weatherError?.delegate = self
+        
+        if NetworkReachabilityManager()?.isReachable == true {
+            if let _ = coordinator?.savedWeather?.didGetError {
+                
+                self.coordinator?.savedWeather = SavedWeather()
+                
+            } else {
+                if case .citiesListViewController = self.coordinator?.provenience {
+                    ///state = .loading
+                    guard let lat = coordinator?.city?.coord.lat, let lon = coordinator?.city?.coord.lon else { return }
+                    
+                    fetchManager.delegate = self
+                    fetchManager.getMyWeatherData(forLatitude: lat, forLongitude: lon)
+                } else if case .preferedViewController = coordinator?.provenience {
+                    DispatchQueue.main.async {
+                        self.setup(weather: self.currentWeather!)
+                    }
+                } else if case .mainViewController = self.coordinator?.provenience {
+                    locationManager.delegate = self
+                    locationManager.requestWhenInUseAuthorization()
+                    locationManager.requestLocation()
+                }
+                
+                tableView.delegate = self
+                tableView.reloadData()
             }
-        } else if case .mainViewController = self.coordinator?.provenience {
-            locationManager.delegate = self
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.requestLocation()
+        } else {
+            weatherError?.delegate?.singleError()
         }
         
-        tableView.delegate = self
-        tableView.reloadData()
     }
     
     //MARK: - Navigation
+    @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {}
     
-    
-    @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {
-        
-    }
     
     //MARK: - Actions & Functions
     
@@ -364,6 +376,7 @@ extension MainViewController: UITableViewDelegate {
 
 }
 
+//MARK: - RealmManagerDelegate
 
 extension MainViewController: RealmManagerDelegate {
     func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
@@ -395,6 +408,8 @@ extension MainViewController: RealmManagerDelegate {
         }
     }
 }
+
+//MARK: - WeatherFetchDelegate
 
 extension MainViewController: WeatherFetchDelegate {
     func multipleWeather(_ weathers: [MainWeather]) {
@@ -441,6 +456,8 @@ extension MainViewController: WeatherFetchDelegate {
     }
 }
 
+//MARK: - SavedWeatherDelegate
+
 extension MainViewController: SavedWeatherDelegate {
     func retriveDidGetError(_ didGetError: Bool?) {
         guard let error = didGetError else { return }
@@ -464,6 +481,24 @@ extension MainViewController: SavedWeatherDelegate {
         
     }
 
+}
+
+//MARK: - WeatherErrorDelegate
+
+extension MainViewController: WeatherErrorDelegate {
+    func genericError() {
+        
+    }
+    
+    func singleError() {
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+    }
+    
+    func multipleError() {
+        
+    }
 }
 
 //MARK: - State
