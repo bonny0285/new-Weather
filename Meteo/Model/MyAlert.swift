@@ -29,9 +29,11 @@ public struct MyAlert{
         viewController.present(controller, animated: true, completion: nil)
     }
     
-    public static func limitBeenOver(_ viewController: UIViewController){
+    public static func limitBeenOver(_ viewController: UIViewController, completion: @escaping () -> ()){
         let controller = UIAlertController(title: NSLocalizedString("attention_alert_tile", comment: ""), message: NSLocalizedString("alert_message_limit_been_over", comment: ""), preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        let action = UIAlertAction(title: "OK", style: .cancel) { (action) in
+            completion()
+        }
         controller.addAction(action)
         viewController.present(controller, animated: true, completion: nil)
     }

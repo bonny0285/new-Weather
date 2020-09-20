@@ -13,9 +13,11 @@ import RealmSwift
 import Alamofire
 
 
-
-protocol MainViewControllerLocationDelegate: class {
-    func locationDidChange(_ response: CitiesList)
+protocol MainViewControllerDidGetSavedWeathers: class {
+    func didGetSavedWeatherDidCompleted(_ weathers: [MainWeather])
+    func isDatabaseEmpty(_ isEmpty: Bool?)
+    func isLocationSaved(_ isPresent: Bool)
+    func isLimitBeenOver(_ isLimitBeenOver: Bool)
 }
 
 
@@ -48,52 +50,35 @@ class MainViewController: UIViewController, Storyboarded {
     typealias LocationForUser = (latitude: Double,longitude: Double)
     let locationManager = CLLocationManager()
     var language: String = ""
-    var delegate: MainViewControllerLocationDelegate?
     var currentWeather: MainWeather?
     var dataSource: WeatherDataSource?
     private var loadingView = AnimationView()
     var weatherGeneralManagerCell: [WeatherGeneralManagerCell] = []
-    let fetchManager = WeatherFetchManager()
+    
     var coordinateUserLocation: LocationForUser = (0.0, 0.0)
     var timer: Timer?
     
     var navigationBarStatus: NavigationBarStatus = .noOne {
         didSet {
-            navigationController?.navigationBar.isHidden = false
+            
             let currentLocationButton = UIBarButtonItem(image: UIImage(named: "new_location"), style: .plain, target: self, action: #selector(currentLocationButtonBarWasPressed(_:)))
             let searchButton = UIBarButtonItem(image: UIImage(named: "new_search"), style: .plain, target: self, action: #selector(searchButtonBarWasPressed(_:)))
             let favoriteButton = UIBarButtonItem(image: UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(favoriteButtonBarWasPressed(_:)))
             let addButton = UIBarButtonItem(image: UIImage(named: "new_add"), style: .plain, target: self, action: #selector(addButtonBarWasPressed(_:)))
             
-            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-            navigationController?.navigationBar.shadowImage = UIImage()
-            navigationController?.navigationBar.isTranslucent = true
-            navigationController?.view.backgroundColor = .clear
-            
             switch navigationBarStatus {
             case .allPresent:
                 navigationItem.leftBarButtonItems = [currentLocationButton, favoriteButton]
                 navigationItem.rightBarButtonItems = [searchButton, addButton]
-            case .noCurrentLocation:
-                navigationItem.leftBarButtonItems = [favoriteButton]
-                //navigationItem.rightBarButtonItems = [searchButton, addButton]
             case .noFavorite:
                 navigationItem.leftBarButtonItems = [currentLocationButton]
-                //navigationItem.rightBarButtonItems = [searchButton, addButton]
+                navigationItem.rightBarButtonItems = [searchButton, addButton]
             case .noAdd:
-                //navigationItem.leftBarButtonItems = [currentLocationButton, favoriteButton]
                 navigationItem.rightBarButtonItems = [searchButton]
-            case .noSearch:
-                //navigationItem.leftBarButtonItems = [currentLocationButton, favoriteButton]
-                navigationItem.rightBarButtonItems = [addButton]
+                navigationItem.leftBarButtonItems = [currentLocationButton, favoriteButton]
             case .noOne:
-                navigationController?.navigationBar.isHidden = true
                 navigationItem.leftBarButtonItems = nil
                 navigationItem.rightBarButtonItems = nil
-            case .justRight:
-                navigationItem.rightBarButtonItems = [searchButton, addButton]
-            case .justLeft:
-                navigationItem.leftBarButtonItems = [currentLocationButton, favoriteButton]
             }
         }
     }
@@ -108,8 +93,7 @@ class MainViewController: UIViewController, Storyboarded {
         didSet {
             switch state {
             case .loading:
-               // self.timer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
-                navigationBarStatus = .noOne
+                // self.timer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
                 containerView.isHidden = false
                 currentWeatherView.isHidden = false
                 tableView.isHidden = true
@@ -118,7 +102,7 @@ class MainViewController: UIViewController, Storyboarded {
                 let animation = Animation.named("loading")
                 setupAnimation(for: animation!)
             case .presenting:
-               // timer?.invalidate()
+                // timer?.invalidate()
                 containerView.isHidden = true
                 currentWeatherView.isHidden = false
                 tableView.isHidden = false
@@ -129,12 +113,20 @@ class MainViewController: UIViewController, Storyboarded {
         }
     }
     
-    var weatherError: WeatherError?
+    var realmManager: RealmManager?
+    var weathersRealmManager: WeatherRealmManger?
+    var fetchManager: WeatherFetchManager?
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        weathersRealmManager = WeatherRealmManger()
+        weathersRealmManager?.delegate = self
+        weathersRealmManager?.retriveData()
+        
+        
+        
         /// Chimate alla TableView
         let nib = UINib(nibName: "MainTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "MainTableViewCell")
@@ -145,38 +137,21 @@ class MainViewController: UIViewController, Storyboarded {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+       
         state = .loading
         
-        weatherError = WeatherError()
-        weatherError?.delegate = self
-        
         if NetworkReachabilityManager()?.isReachable == true {
-            if let _ = coordinator?.savedWeather?.didGetError {
-                
-                self.coordinator?.savedWeather = SavedWeather()
-                
-            } else {
-                if case .citiesListViewController = self.coordinator?.provenience {
-                    ///state = .loading
-                    guard let lat = coordinator?.city?.coord.lat, let lon = coordinator?.city?.coord.lon else { return }
-                    
-                    fetchManager.delegate = self
-                    fetchManager.getMyWeatherData(forLatitude: lat, forLongitude: lon)
-                } else if case .preferedViewController = coordinator?.provenience {
-                    DispatchQueue.main.async {
-                        self.setup(weather: self.currentWeather!)
-                    }
-                } else if case .mainViewController = self.coordinator?.provenience {
-                    locationManager.delegate = self
-                    locationManager.requestWhenInUseAuthorization()
-                    locationManager.requestLocation()
-                }
-                
-                tableView.delegate = self
-                tableView.reloadData()
+            
+            if case .preferedViewController = coordinator?.provenience {
+                self.setup(weather: currentWeather!)
+                //self.setup(weather: (coordinator?.userLocation)!)
+            } else if case .citiesListViewController = self.coordinator?.provenience {
+                guard let lat = coordinator?.city?.coord.lat, let lon = coordinator?.city?.coord.lon else { return }
+                fetchManager?.delegate = self
+                fetchManager?.getMyWeatherData(forLatitude: lat, forLongitude: lon)
             }
         } else {
-            weatherError?.delegate?.singleError()
+            #warning("Gestione Errore")
         }
         
     }
@@ -218,7 +193,7 @@ class MainViewController: UIViewController, Storyboarded {
     
     @objc func currentLocationButtonBarWasPressed(_ sender: UIBarButtonItem) {
         self.state = .loading
-        self.coordinator?.provenience = .mainViewController
+        //self.coordinator?.provenience = .mainViewController
         setup(weather: (coordinator?.userLocation)!)
         self.currentWeather = coordinator?.userLocation
         let index = IndexPath(row: 0, section: 0)
@@ -229,102 +204,75 @@ class MainViewController: UIViewController, Storyboarded {
     
     @objc func addButtonBarWasPressed(_ sender: UIBarButtonItem) {
         
-        state = .loading
+        //state = .loading
         
-        if self.coordinator?.savedWeather?.isLimitOver == false {
-            self.coordinator?.savedWeather?.realmManager?.delegate = self
-            self.coordinator?.savedWeather?.realmManager?.checkForAPresentLocation(city: currentWeather?.name ?? "")
-            
-            if self.coordinator?.savedWeather?.isLocationSaved == true {
-                print("Location already saved")
-                MyAlert.cityAlreadySaved(self) {
-                    if self.coordinator?.savedWeather?.isLimitOver == true {
-                        self.navigationBarStatus = .noAdd
-                    } else {
-                        self.navigationBarStatus = .allPresent
-                    }
-                    self.state = .presenting
-                }
-                
-            } else {
-                if case .mainViewController = self.coordinator?.provenience {
-                    self.coordinator?.provenience = .addAction
-                    self.fetchManager.delegate = self
-                    self.fetchManager.getMyWeatherData(forLatitude: currentWeather?.latitude ?? 0.0, forLongitude: currentWeather?.longitude ?? 0.0)
-                    self.coordinator?.savedWeather?.realmManager?.delegate = self
-                    self.coordinator?.savedWeather?.realmManager?.saveWeather(self.currentWeather?.name ?? "", self.currentWeather?.latitude ?? 0.0, self.currentWeather?.longitude ?? 0.0)
-                    self.coordinator?.savedWeather?.realmManager?.retriveWeatherForFetchManager()
-                    self.coordinator?.savedWeather?.realmManager?.checkForLimitsCitySaved()
-                    self.state = .presenting
-                } else {
-                    self.coordinator?.provenience = .preferedViewController
-                    self.fetchManager.delegate = self
-                    self.fetchManager.getMyWeatherData(forLatitude: currentWeather?.latitude ?? 0.0, forLongitude: currentWeather?.longitude ?? 0.0)
-                    self.coordinator?.savedWeather?.realmManager?.delegate = self
-                    self.coordinator?.savedWeather?.realmManager?.saveWeather(self.currentWeather?.name ?? "", self.currentWeather?.latitude ?? 0.0, self.currentWeather?.longitude ?? 0.0)
-                    self.coordinator?.savedWeather?.realmManager?.retriveWeatherForFetchManager()
-                    self.coordinator?.savedWeather?.realmManager?.checkForLimitsCitySaved()
-                    self.state = .presenting
-                }
-
+        guard let city = currentWeather?.name, let latitude = currentWeather?.latitude, let longitude = currentWeather?.longitude else { return }
+        coordinator?.provenience = .addAction
+        
+        if coordinator?.realmManagerCount == 10 {
+            state = .loading
+            MyAlert.limitBeenOver(self) {
+                self.state = .presenting
             }
+        } else {
+            realmManager = RealmManager()
+            let isPresent = realmManager?.checkForAPresentLocation(city: city)
             
-        } else {
-            self.navigationBarStatus = .noAdd
-            state = .presenting
-        }
-           
-    }
-    
-    
-    func setupNavigationBarButton() {
-        
-        if self.coordinator?.savedWeather?.weatherResults?.count == 0 || self.coordinator?.savedWeather?.isDatabaseEmpty == true {
-            self.navigationBarStatus = .noFavorite
-        } else if self.coordinator?.savedWeather?.isLimitOver == true {
-            self.navigationBarStatus = .noAdd
-        } else {
-            self.navigationBarStatus = .allPresent
+            if isPresent == true {
+                self.state = .loading
+                MyAlert.cityAlreadySaved(self) {
+                    self.state = .presenting
+                }
+            } else {
+                realmManager?.saveWeather(city, latitude, longitude)
+                coordinator?.realmManagerCount += 1
+                fetchManager?.getMyWeatherData(forLatitude: latitude, forLongitude: longitude)
+            }
         }
         
     }
+    
+    
+//    func setupNavigationBarButton() {
+//
+//        if self.coordinator?.savedWeather?.weatherResults?.count == 0 || self.coordinator?.savedWeather?.isDatabaseEmpty == true {
+//            self.navigationBarStatus = .noFavorite
+//        } else if self.coordinator?.savedWeather?.isLimitOver == true {
+//            self.navigationBarStatus = .noAdd
+//        } else {
+//            self.navigationBarStatus = .allPresent
+//        }
+//
+//    }
     
     //MARK: - Favorite Button Bar Action
     
     @objc func favoriteButtonBarWasPressed(_ sender: UIBarButtonItem) {
-        
-        if self.coordinator?.savedWeather?.didGetError == true {
-            /// Ricaricare tutti i weather salòvati
-        } else {
-            coordinator?.preferedWeatherViewController()
-        }
+        coordinator?.preferedWeatherViewController()
     }
     
 }
 
 //MARK: - CLLocationManagerDelegate
 
-extension MainViewController: CLLocationManagerDelegate{
+extension MainViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
-            //locationManager.stopUpdatingLocation()
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
             coordinateUserLocation = (lat, lon)
             self.weatherGeneralManagerCell.removeAll()
-            self.coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
-            self.fetchManager.delegate = self
-            self.fetchManager.getMyWeatherData(forLatitude: lat, forLongitude: lon)
+
+            fetchManager = WeatherFetchManager()
+            fetchManager?.delegate = self
+            fetchManager?.getMyWeatherData(forLatitude: lat, forLongitude: lon)
         }
     }
     
     
     
     func setup(weather: MainWeather) {
-        self.coordinator?.savedWeather?.realmManager?.delegate = self
-        self.coordinator?.savedWeather?.realmManager?.retriveWeatherForFetchManager()
-        self.coordinator?.savedWeather?.realmManager?.checkForLimitsCitySaved()
         
         DispatchQueue.main.async {
             self.currentWeatherView.setupCurrentWeatherView(weather)
@@ -333,25 +281,26 @@ extension MainViewController: CLLocationManagerDelegate{
             self.weatherCondition = weather.condition
             
             switch self.weatherCondition {
-                case .tempesta:
-                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                case .pioggia:
-                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-                case .pioggiaLeggera:
-                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-                case .neve:
-                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                case .nebbia:
-                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                case .sole:
-                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                case .nuvole:
-                    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .tempesta:
+                self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .pioggia:
+                self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .pioggiaLeggera:
+                self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            case .neve:
+                self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            case .nebbia:
+                self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .sole:
+                self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .nuvole:
+                self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             }
             
             self.weatherGeneralManagerCell = weather.weathersCell
             self.dataSource = WeatherDataSource(weathers: weather.weathersCell, condition: weather.condition)
             self.tableView.dataSource = self.dataSource
+            self.tableView.delegate = self
             self.tableView.reloadData()
             self.state = .presenting
         }
@@ -367,139 +316,74 @@ extension MainViewController: CLLocationManagerDelegate{
 
 
 //MARK: - UITableViewDelegate, UITableViewDataSource
-
 extension MainViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         120
     }
-
 }
 
-//MARK: - RealmManagerDelegate
-
-extension MainViewController: RealmManagerDelegate {
-    func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
-        self.coordinator?.savedWeather?.weatherResults = weather
-    }
-    
-    func retriveIsEmpty(_ isEmpty: Bool?) {
-        self.coordinator?.savedWeather?.isDatabaseEmpty = isEmpty
+extension MainViewController: WeatherRealmManagerDelegate {
+    func setupNavigationBar(_ count: Int, _ favoriteButton: Bool, _ addButton: Bool) {
+        self.coordinator?.realmManagerCount = count
         
-        if isEmpty == true {
-            self.navigationBarStatus = .noFavorite
-        } else {
-            self.navigationBarStatus = .justLeft
-        }
-    
-    }
-    
-    func locationDidSaved(_ isPresent: Bool) {
-        self.coordinator?.savedWeather?.isLocationSaved = isPresent
-    }
-    
-    func isLimitDidOver(_ isLimitOver: Bool) {
-        self.coordinator?.savedWeather?.isLimitOver = isLimitOver
-        
-        if isLimitOver {
-            self.navigationBarStatus = .noAdd
-        } else {
-            self.navigationBarStatus = .justRight
-        }
-    }
-}
-
-//MARK: - WeatherFetchDelegate
-
-extension MainViewController: WeatherFetchDelegate {
-    func multipleWeather(_ weathers: [MainWeather]) {
-        
-    }
-    
-    func singleWeather(_ weather: MainWeather) {
-        if case .mainViewController = coordinator?.provenience {
-            currentWeather = weather
-            coordinator?.userLocation = weather
-        }
-
-        if case .citiesListViewController = coordinator?.provenience {
-            currentWeather = weather
+        if favoriteButton == true && addButton == true {
+            navigationBarStatus = .allPresent
+        } else if addButton == false {
+            navigationBarStatus = .noAdd
+        } else if favoriteButton == false {
+            navigationBarStatus = .noFavorite
         }
         
-        if case .addAction = self.coordinator?.provenience {
-            currentWeather = weather
-            self.coordinator?.savedWeather?.retriveWeathers?.append(weather)
-        }
-        
-        if case .preferedViewController = self.coordinator?.provenience {
-            self.coordinator?.savedWeather?.retriveWeathers?.append(weather)
-        }
-        
-        self.currentWeather = weather
-        self.setup(weather: weather)
-    }
-    
-    func didGetError(_ error: String) {
-        debugPrint("ERROR FETCHING CURRENT WEATHER",error)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel) {[weak self] (action) in
-            guard let self = self else { return }
-            //self.state = .loading
-            self.locationManager.requestWhenInUseAuthorization()
-            self.locationManager.requestLocation()
-        }
-        
-        let controller = UIAlertController(title: NSLocalizedString("attention_alert_title", comment: ""), message: NSLocalizedString("alert_message", comment: ""), preferredStyle: .alert)
-        controller.addAction(action)
-        
-        self.present(controller, animated: true, completion: nil)
-    }
-}
-
-//MARK: - SavedWeatherDelegate
-
-extension MainViewController: SavedWeatherDelegate {
-    func retriveDidGetError(_ didGetError: Bool?) {
-        guard let error = didGetError else { return }
-        
-        debugPrint("ERRORE FETCHING PREFERED WEATHER")
-        
-        if error == true {
-            let action = UIAlertAction(title: "OK", style: .cancel) {[weak self] (action) in
-                guard let self = self else { return }
-                //self.state = .loading
-                self.locationManager.requestWhenInUseAuthorization()
-                self.locationManager.requestLocation()
-            }
-            
-            let controller = UIAlertController(title: NSLocalizedString("attention_alert_title", comment: ""), message: NSLocalizedString("alert_message", comment: ""), preferredStyle: .alert)
-            controller.addAction(action)
-            
-            self.present(controller, animated: true, completion: nil)
-        }
-        
-        
-    }
-
-}
-
-//MARK: - WeatherErrorDelegate
-
-extension MainViewController: WeatherErrorDelegate {
-    func genericError() {
-        
-    }
-    
-    func singleError() {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
     }
     
-    func multipleError() {
-        
+    func weathersDidFetched(_ weathers: [MainWeather]?) {
+        self.coordinator?.savedWeathers = weathers
     }
 }
+
+
+extension MainViewController: WeatherSingleFetchDelegate {
+
+    func singleWeather(_ weather: MainWeather) {
+        
+        if case .mainCoordinator =  coordinator?.provenience {
+            currentWeather = weather
+            coordinator?.userLocation = weather
+            self.setup(weather: weather)
+        }
+        
+//        if case .mainViewController = coordinator?.provenience {
+//            currentWeather = weather
+//            coordinator?.userLocation = weather
+//        }
+//
+        if case .citiesListViewController = coordinator?.provenience {
+            currentWeather = weather
+            self.setup(weather: weather)
+        }
+//
+        if case .addAction = self.coordinator?.provenience {
+            coordinator?.savedWeathers?.append(weather)
+            //self.coordinator?.savedWeather?.retriveWeathers?.append(weather)
+            state = .presenting
+        }
+//
+//        if case .preferedViewController = self.coordinator?.provenience {
+//            self.coordinator?.savedWeather?.retriveWeathers?.append(weather)
+//        }
+        
+        
+    }
+    
+    func didGetError(_ error: String) {
+        ///Manage Error
+    }
+}
+
+
 
 //MARK: - State
 
@@ -507,13 +391,9 @@ extension MainViewController {
     
     enum NavigationBarStatus{
         case allPresent
-        case noCurrentLocation
         case noFavorite
         case noAdd
-        case noSearch
         case noOne
-        case justRight
-        case justLeft
     }
     
     enum State {
@@ -521,5 +401,9 @@ extension MainViewController {
         case presenting
     }
 }
+
+
+
+
 
 

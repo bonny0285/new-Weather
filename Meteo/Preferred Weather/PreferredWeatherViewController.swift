@@ -80,9 +80,14 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
             overrideUserInterfaceStyle = .light
         }
         
+        guard let weathers = coordinator?.savedWeathers else {
+            coordinator?.popViewController()
+            return
+        }
+        
         state = .loading
         self.delegate = self
-        self.delegate?.setupUI(self.coordinator?.savedWeather?.retriveWeathers ?? [])
+        self.delegate?.setupUI(weathers)
         //self.delegate?.setupUI((coordinator?.savedWeather)!)
 
         let leftButton = UIBarButtonItem(image: UIImage(named: "new_back"), style: .plain, target: self, action: #selector(cancelTapped(_:)))
@@ -112,7 +117,7 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
     
     
     @objc func cancelTapped(_ sender: UIBarButtonItem) {
-        coordinator?.provenienceDelegate?.proveniceDidSelected(.preferedViewController)
+        coordinator?.provenience = .preferedViewController
         coordinator?.popViewController()
     }
     
@@ -198,7 +203,6 @@ extension PreferredWeatherViewController: UITableViewDelegate{
             guard let weather = self.coordinator?.savedWeather?.retriveWeathers else { return }
             
             if weather.count == 0 {
-                self.coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
                 self.coordinator?.popViewController()
             } else {
                 self.delegate?.setupUI(weather)
@@ -229,10 +233,13 @@ extension PreferredWeatherViewController: SetupPreferedWeatherAfterFetching {
 }
 
 extension PreferredWeatherViewController: RealmManagerDelegate {
+    func setupNavigationBar(_ addButton: Bool, _ favoriteButton: Bool, _ allButton: Bool) {
+        
+    }
+    
     func retriveIsEmpty(_ isEmpty: Bool?) {
         if isEmpty == true {
             coordinator?.savedWeather?.isDatabaseEmpty = isEmpty
-            coordinator?.provenienceDelegate?.proveniceDidSelected(.mainViewController)
             self.coordinator?.popViewController()
         }
     }

@@ -9,11 +9,8 @@
 import UIKit
 import RealmSwift
 import Lottie
+import Alamofire
 
-
-protocol ProvenienceDelegate: class {
-    func proveniceDidSelected(_ provenience: MainCoordinator.Provenience)
-}
 
 class MainCoordinator: Coordinator {
 
@@ -24,27 +21,20 @@ class MainCoordinator: Coordinator {
     
     //MARK: - Properties
 
-    //MARK: - RealmManager
-    //var realmManager: RealmManager?
-    //var retriveWeather: Results<RealmWeatherManager>?
-    //var fetchManager = WeatherFetchManager()
-    //var savedWeather: [MainWeather]?
-    //var isPresentLocation: Bool? = nil
-    //var isLimitOver: Bool? = nil
-    
     //MARK: - Navigation Properies
     var provenience: Provenience?
-    var provenienceDelegate: ProvenienceDelegate?
-
     
     //MARK: - User Location
     var userLocation: MainWeather?
     
     //MARK: - Cities List
     var allCitiesList: AllCitiesList?
-    var city: CitiesList?
+    var city: CitiesList? = nil
+
     
-    var savedWeather: SavedWeather?
+    var savedWeathers: [MainWeather]?
+    
+    var realmManagerCount: Int = 0
     
     //MARK: - Lifecycle
 
@@ -58,10 +48,8 @@ class MainCoordinator: Coordinator {
         navigationController.navigationBar.isTranslucent = true
         navigationController.view.backgroundColor = .clear
         
-        self.provenienceDelegate = self
         self.allCitiesList = AllCitiesList()
 
-        self.savedWeather = SavedWeather()
     }
     
     
@@ -72,8 +60,7 @@ class MainCoordinator: Coordinator {
         windows.makeKeyAndVisible()
         let controller = MainViewController.instantiate()
         controller.coordinator = self
-        //realmManager = RealmManager()
-        provenience = .mainViewController
+        provenience = .mainCoordinator
         navigationController.pushViewController(controller, animated: true)
     }
     
@@ -101,28 +88,6 @@ class MainCoordinator: Coordinator {
     
 }
 
-//MARK: - Realm Manager Delegate
-
-//extension MainCoordinator:  RealmManagerDelegate {
-//    
-//    func isLimitDidOver(_ isLimitOver: Bool) {
-//        self.isLimitOver = isLimitOver
-//    }
-//    
-//    func locationDidSaved(_ isPresent: Bool) {
-//        self.isPresentLocation = isPresent
-//    }
-//    
-//    func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
-//        self.retriveWeather = weather
-//    }
-//    
-//    func retriveIsEmpty(_ isEmpty: Bool) {
-//        self.retriveWeather = nil
-//    }
-//
-//}
-
 
 extension MainCoordinator {
     enum Provenience {
@@ -134,26 +99,6 @@ extension MainCoordinator {
     }
 }
 
-extension MainCoordinator: ProvenienceDelegate {
-    func proveniceDidSelected(_ provenience: Provenience) {
-        self.provenience = provenience
-    }
-}
 
-//extension MainCoordinator: WeatherFetchDelegate {
-//    func multipleWeather(_ weathers: [MainWeather]) {
-//        <#code#>
-//    }
-//    
-//    func singleWeather(_ weather: MainWeather) {
-//        <#code#>
-//    }
-//    
-//    func didGetError(_ error: String) {
-//        debugPrint(error)
-//    }
-//    
-//    func getArrayData(_ weather: [MainWeather]) {
-//        //self.savedWeather = weather
-//    }
-//}
+
+

@@ -15,6 +15,7 @@ protocol RealmManagerDelegate: class {
     func retriveIsEmpty(_ isEmpty: Bool?)
     func locationDidSaved(_ isPresent: Bool)
     func isLimitDidOver(_ isLimitOver: Bool)
+    func setupNavigationBar(_ addButton: Bool, _ favoriteButton: Bool, _ allButton: Bool)
 }
 
 
@@ -75,7 +76,7 @@ class RealmManager {
         }
     }
     
-    func checkForAPresentLocation(city: String) {
+    func checkForAPresentLocation(city: String) -> Bool {
         var isPresent: Bool = false
         
         do {
@@ -91,31 +92,54 @@ class RealmManager {
                     isPresent = false
                 }
             }
-            delegate?.locationDidSaved(isPresent)
             
         } catch let error {
             debugPrint(error.localizedDescription)
         }
-        
+        return isPresent
     }
     
     
     func retriveWeatherForFetchManager() {
+        var addButton = Bool()
+        var favoriteButton = Bool()
+        var allButton = Bool()
         
         do {
             let realm = try Realm.init()
             
             let results = realm.objects(RealmWeatherManager.self)
             
-            if results.count == 0 {
-                isElementsAreEmpty = true
-                delegate?.retriveIsEmpty(true)
-            } else {
-                isElementsAreEmpty = false
-                delegate?.retriveIsEmpty(false)
-                delegate?.retriveWeatherDidFinisched(results)
-
+            switch results.count {
+            case 0:
+                favoriteButton = false
+                allButton = false
+                addButton = true
+            case 1 ... 9:
+                allButton = true
+                addButton = true
+                favoriteButton = true
+            case 10:
+                favoriteButton = true
+                allButton = false
+                addButton = false
+            default:
+                break
             }
+            delegate?.setupNavigationBar(addButton, favoriteButton, allButton)
+//            if results.count == 0 {
+//                favoriteButton = false
+//                addButton = false
+//                delegate?.retriveIsEmpty(true)
+//            } else if results.count <= 9 {
+//                favoriteButton = true
+//                addButton = true
+//                delegate?.retriveIsEmpty(false)
+//                delegate?.retriveWeatherDidFinisched(results)
+//            } else if results.count == 10 {
+//
+//            }
+            
         } catch let error {
             debugPrint(error.localizedDescription)
         }
