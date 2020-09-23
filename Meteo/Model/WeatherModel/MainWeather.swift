@@ -147,4 +147,13 @@ extension MainWeather {
         }
 }
 
+extension MainWeather: Equatable {
+    static func ==(lhs: MainWeather, rhs: MainWeather) -> Bool {
+        if lhs.name == rhs.name {
+            return true
+        } else {
+            return false
+        }
+    }
+}
 

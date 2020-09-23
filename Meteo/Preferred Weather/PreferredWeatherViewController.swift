@@ -19,8 +19,11 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
     
     //MARK: - Outlets
     
-    #warning("cambiare il testo e metterlo in inglese")
-    @IBOutlet weak var progressLabel: UILabel!
+    @IBOutlet weak var progressLabel: UILabel! {
+        didSet {
+            progressLabel.text = NSLocalizedString("cities_progress_bar_label_text", comment: "")
+        }
+    }
     
     @IBOutlet weak var progressSave: UIProgressView!
     
@@ -41,7 +44,7 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
     var coordinator: MainCoordinator?
     var progress = Progress(totalUnitCount: 10)
     var dataSource: PreferredDataSource?
-
+    
     var state: State = .loading {
         didSet {
             switch state {
@@ -88,7 +91,6 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         state = .loading
         self.delegate = self
         self.delegate?.setupUI(weathers)
-        //self.delegate?.setupUI((coordinator?.savedWeather)!)
 
         let leftButton = UIBarButtonItem(image: UIImage(named: "new_back"), style: .plain, target: self, action: #selector(cancelTapped(_:)))
         navigationItem.leftBarButtonItem = leftButton
@@ -140,18 +142,25 @@ class PreferredWeatherViewController: UIViewController, Storyboarded {
         
         switch condition {
         case .tempesta:
+            progressLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         case .pioggia:
+            progressLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         case .pioggiaLeggera:
+            progressLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         case .neve:
+            progressLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         case .nebbia:
+            progressLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         case .sole:
+            progressLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         case .nuvole:
+            progressLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         }
     }
@@ -173,12 +182,7 @@ extension PreferredWeatherViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         100
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
-        
-    }
-    
+
     private func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
@@ -195,19 +199,22 @@ extension PreferredWeatherViewController: UITableViewDelegate{
         let action = UIContextualAction(style: .destructive, title: "") { (contextualAction: UIContextualAction, view : UIView,completion: (Bool) -> Void) in
             
             self.state = .loading
-            self.coordinator?.savedWeather?.realmManager?.delegate = self
-            self.coordinator?.savedWeather?.realmManager?.deleteWeather(indexPath)
-            self.coordinator?.savedWeather?.retriveWeathers?.remove(at: indexPath.row)
-            self.coordinator?.savedWeather?.realmManager?.retriveWeatherForFetchManager()
-            self.coordinator?.savedWeather?.realmManager?.checkForLimitsCitySaved()
-            guard let weather = self.coordinator?.savedWeather?.retriveWeathers else { return }
             
-            if weather.count == 0 {
+            let selectedCity = self.coordinator?.savedWeathers[indexPath.row].name
+            
+            let filteredWeathers = self.coordinator?.savedWeathers.filter { $0.name != selectedCity }
+            
+            self.coordinator?.savedWeathers = filteredWeathers!
+            self.coordinator?.realmManagerCount = (filteredWeathers?.count)!
+            let realmManager = RealmManager()
+            realmManager.deleteWeather(selectedCity!)
+            
+            if filteredWeathers?.count == 0 {
+                self.coordinator?.provenience = .preferedViewController
                 self.coordinator?.popViewController()
             } else {
-                self.delegate?.setupUI(weather)
+                self.delegate?.setupUI((filteredWeathers)!)
             }
-            
         }
         
         action.image = UIImage(named: "i_Elimina")
@@ -232,31 +239,6 @@ extension PreferredWeatherViewController: SetupPreferedWeatherAfterFetching {
     }
 }
 
-extension PreferredWeatherViewController: RealmManagerDelegate {
-    func setupNavigationBar(_ addButton: Bool, _ favoriteButton: Bool, _ allButton: Bool) {
-        
-    }
-    
-    func retriveIsEmpty(_ isEmpty: Bool?) {
-        if isEmpty == true {
-            coordinator?.savedWeather?.isDatabaseEmpty = isEmpty
-            self.coordinator?.popViewController()
-        }
-    }
-    
-    func isLimitDidOver(_ isLimitOver: Bool) {
-        /// Non viene effettuato nessun check in questo ViewController
-    }
-
-    func locationDidSaved(_ isPresent: Bool) {
-        /// Non viene effettuato nessun check in questo ViewController
-    }
-
-    func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>) {
-        self.coordinator?.savedWeather?.weatherResults = weather
-    }
-
-}
 
 extension PreferredWeatherViewController {
     enum State {

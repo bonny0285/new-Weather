@@ -32,7 +32,7 @@ class MainCoordinator: Coordinator {
     var city: CitiesList? = nil
 
     
-    var savedWeathers: [MainWeather]?
+    var savedWeathers: [MainWeather] = []
     
     var realmManagerCount: Int = 0
     

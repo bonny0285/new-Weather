@@ -21,7 +21,6 @@ class CitiesListViewController: UIViewController, Storyboarded {
     
     //MARK: - Properies
     var coordinator: MainCoordinator?
-    //var delegate: MainViewControllerLocationDelegate?
     var citiesResult: [CitiesList]?
     var dataSource: CitiesListDataSource?
     var citiesArray: [CitiesList]? {
@@ -64,8 +63,6 @@ class CitiesListViewController: UIViewController, Storyboarded {
     
     
     @objc func cancelTapped(_ sender: UIBarButtonItem) {
-//        coordinator?.cameFromCitiesList = false
-//        coordinator?.cameFromPreferedWeather = false
         coordinator?.popViewController()
     }
     
@@ -79,7 +76,7 @@ extension CitiesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       // var result: CitiesList?
+        
         guard let reuslt = citiesResult else {
             coordinator?.city = citiesArray?[indexPath.row]
             coordinator?.provenience = .citiesListViewController
@@ -90,15 +87,6 @@ extension CitiesListViewController: UITableViewDelegate {
         coordinator?.city = reuslt[indexPath.row]
         coordinator?.provenience = .citiesListViewController
         coordinator?.popViewController()
-//        if let citiesResult = citiesResult {
-//            result = citiesResult[indexPath.row]
-//        } else {
-//            result = citiesArray?[indexPath.row]
-//        }
-//
-//       // coordinator?.cameFromCitiesList = true
-//        coordinator?.city = result
-//        coordinator?.popViewController()
     }
 }
 

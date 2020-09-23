@@ -10,24 +10,20 @@ import UIKit
 import RealmSwift
 
 
-protocol RealmManagerDelegate: class {
-    func retriveWeatherDidFinisched(_ weather: Results<RealmWeatherManager>)
-    func retriveIsEmpty(_ isEmpty: Bool?)
-    func locationDidSaved(_ isPresent: Bool)
-    func isLimitDidOver(_ isLimitOver: Bool)
-    func setupNavigationBar(_ addButton: Bool, _ favoriteButton: Bool, _ allButton: Bool)
-}
-
-
+/// aggiungere il delegate del weather realm manager
 
 
 class RealmManager {
     
-    var delegate: RealmManagerDelegate?
+    var delegate: WeatherRealmManagerDelegate?
    
     //var weatherFetchManager: WeatherFetchManager?
     var weatherGeneralManager: [MainWeather] = []
     var isElementsAreEmpty: Bool = false
+    
+    
+    
+    
     
     func saveWeather(_ cityName: String, _ latitude: Double, _ longitude: Double) {
         
@@ -42,10 +38,11 @@ class RealmManager {
             let results = realm.objects(RealmWeatherManager.self)
             
             if results.count == 10 {
-                delegate?.isLimitDidOver(true)
+                delegate?.setupNavigationBar(results.count, true, false)
             } else {
                 try realm.write {
                     realm.add(weather)
+                    delegate?.setupNavigationBar(results.count + 1, true, true)
                     debugPrint("ITEM ADDED: \(cityName)")
                 }
             }
@@ -53,6 +50,9 @@ class RealmManager {
             debugPrint(error.localizedDescription)
         }
     }
+    
+    
+    
  
     func checkForLimitsCitySaved() {
         var isLimitBeenOver: Bool = false
@@ -69,7 +69,6 @@ class RealmManager {
                     isLimitBeenOver = false
                     
                 }
-            delegate?.isLimitDidOver(isLimitBeenOver)
             
         } catch let error {
             debugPrint(error.localizedDescription)
@@ -101,10 +100,6 @@ class RealmManager {
     
     
     func retriveWeatherForFetchManager() {
-        var addButton = Bool()
-        var favoriteButton = Bool()
-        var allButton = Bool()
-        
         do {
             let realm = try Realm.init()
             
@@ -112,52 +107,59 @@ class RealmManager {
             
             switch results.count {
             case 0:
-                favoriteButton = false
-                allButton = false
-                addButton = true
+                delegate?.setupNavigationBar(results.count, false, true)
             case 1 ... 9:
-                allButton = true
-                addButton = true
-                favoriteButton = true
+                delegate?.setupNavigationBar(results.count, true, true)
             case 10:
-                favoriteButton = true
-                allButton = false
-                addButton = false
+                delegate?.setupNavigationBar(results.count, true, false)
             default:
                 break
             }
-            delegate?.setupNavigationBar(addButton, favoriteButton, allButton)
-//            if results.count == 0 {
-//                favoriteButton = false
-//                addButton = false
-//                delegate?.retriveIsEmpty(true)
-//            } else if results.count <= 9 {
-//                favoriteButton = true
-//                addButton = true
-//                delegate?.retriveIsEmpty(false)
-//                delegate?.retriveWeatherDidFinisched(results)
-//            } else if results.count == 10 {
-//
-//            }
-            
         } catch let error {
             debugPrint(error.localizedDescription)
         }
     }
     
-    func deleteWeather(_ index: IndexPath) {
+//    func deleteWeather(_ index: IndexPath) {
+//
+//        do {
+//            let realm = try Realm.init()
+//
+//            let results = realm.objects(RealmWeatherManager.self)
+//
+//            try realm.write {
+//                realm.delete(results[index.row])
+//            }
+//        } catch let error {
+//            debugPrint(error.localizedDescription)
+//        }
+//
+//    }
+    
+    func deleteWeather(_ city: String) {
+        
+        var weatherToDelete: RealmWeatherManager? = nil
         
         do {
             let realm = try Realm.init()
-            
             let results = realm.objects(RealmWeatherManager.self)
             
-            try realm.write {
-                realm.delete(results[index.row])
+            if results.count > 0 {
+                for res in results {
+                    if res.name == city {
+                        weatherToDelete = res
+                        break
+                    }
+                }
+                
+                try realm.write {
+                    realm.delete(weatherToDelete!)
+                }
             }
         } catch let error {
             debugPrint(error.localizedDescription)
         }
         
     }
+
 }

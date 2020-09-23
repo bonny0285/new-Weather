@@ -26,3 +26,6 @@
 
 "attention_alert_title" = "Attention !!!";
 "alert_message" = "Please check your internrt connection and try again.";
+
+
+"cities_progress_bar_label_text" = "Saved cities";

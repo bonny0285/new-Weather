@@ -27,3 +27,6 @@
 
 "attention_alert_title" = "Attenzione !!!";
 "alert_message" = "Prova a controllare la tua connessione internet e riprova.";
+
+
+"cities_progress_bar_label_text" = "Città salvate";
