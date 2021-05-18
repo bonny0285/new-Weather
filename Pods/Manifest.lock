@@ -1,12 +1,12 @@
 PODS:
-  - Alamofire (5.2.2)
-  - lottie-ios (3.1.8)
-  - Realm (5.4.1):
-    - Realm/Headers (= 5.4.1)
-  - Realm/Headers (5.4.1)
-  - RealmSwift (5.4.1):
-    - Realm (= 5.4.1)
-  - SwiftyJSON (5.0.0)
+  - Alamofire (5.4.3)
+  - lottie-ios (3.2.3)
+  - Realm (10.7.6):
+    - Realm/Headers (= 10.7.6)
+  - Realm/Headers (10.7.6)
+  - RealmSwift (10.7.6):
+    - Realm (= 10.7.6)
+  - SwiftyJSON (5.0.1)
 
 DEPENDENCIES:
   - Alamofire
@@ -23,12 +23,12 @@ SPEC REPOS:
     - SwiftyJSON
 
 SPEC CHECKSUMS:
-  Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
-  lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
-  Realm: 7e887608ef1de2d0c3a33dd9b1449e08fc9d9807
-  RealmSwift: ef998d9b678fd74e047c56ef4d99d9b77e87c1eb
-  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
+  Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
+  lottie-ios: c058aeafa76daa4cf64d773554bccc8385d0150e
+  Realm: ed860452717c8db8f4bf832b6807f7f2ce708839
+  RealmSwift: e31c4ddbcc42ac879313d656b86f9ca539f6f4f4
+  SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
 
 PODFILE CHECKSUM: b9ff9620bce61407707a50d24d30a9fddc3dba7f
 
-COCOAPODS: 1.10.0.rc.1
+COCOAPODS: 1.10.1
