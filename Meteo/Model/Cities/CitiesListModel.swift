@@ -9,16 +9,16 @@
 import UIKit
 
 
-struct CitiesList: Decodable {
-    let id: Int
-    let name: String
-    let country: String
-    let coord: Coord
-}
-
-
-
-struct Coord: Decodable {
-    let lat: Double
-    let lon: Double
-}
+//struct CitiesList: Decodable {
+//    let id: Int
+//    let name: String
+//    let country: String
+//    let coord: Coord
+//}
+//
+//
+//
+//struct Coord: Decodable {
+//    let lat: Double
+//    let lon: Double
+//}

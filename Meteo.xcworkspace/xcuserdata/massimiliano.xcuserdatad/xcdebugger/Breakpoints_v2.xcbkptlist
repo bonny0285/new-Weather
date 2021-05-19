@@ -21,53 +21,5 @@
             landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "26599FE8-8BAB-4D6E-A612-E9EDB87A3ADD"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Meteo/Model/WeatherModel/WeatherSingleFetchManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
-            landmarkName = "getMyWeatherData(forLatitude:forLongitude:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "26599FE8-8BAB-4D6E-A612-E9EDB87A3ADD - b8b43f1da9228fe6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Meteo.WeatherFetchManager.getMyWeatherData(forLatitude: Swift.Double, forLongitude: Swift.Double) -&gt; ()"
-                  moduleName = "Meteo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/massimiliano/Developer/Personal%20Projects/CV%20PROJECTS/Meteo/Meteo/Model/WeatherModel/WeatherSingleFetchManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "32"
-                  endingLineNumber = "32"
-                  offsetFromSymbolStart = "1151">
-               </Location>
-               <Location
-                  uuid = "26599FE8-8BAB-4D6E-A612-E9EDB87A3ADD - 1fb222b61e1bbbed"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Alamofire.DataResponse&lt;Any, Alamofire.AFError&gt;) -&gt; () in Meteo.WeatherFetchManager.getMyWeatherData(forLatitude: Swift.Double, forLongitude: Swift.Double) -&gt; ()"
-                  moduleName = "Meteo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/massimiliano/Developer/Personal%20Projects/CV%20PROJECTS/Meteo/Meteo/Model/WeatherModel/WeatherSingleFetchManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "33"
-                  endingLineNumber = "33"
-                  offsetFromSymbolStart = "216">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

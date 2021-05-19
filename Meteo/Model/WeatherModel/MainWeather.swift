@@ -102,7 +102,6 @@ class MainWeather {
         default:
             return "cloud"
         }
-        
     }
 
     

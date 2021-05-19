@@ -10,6 +10,44 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import RealmSwift
+import Combine
+
+//
+//class WeatherRepository {
+//    private var cancellable: AnyCancellable?
+//    
+////    var weathers: JSONObject!
+//    
+//    
+//    func fetchWeather(_ latitude: Double, _ longitude: Double, _ language: String) {
+//        let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=-\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric")!
+//        
+//        cancellable = URLSession.shared.dataTaskPublisher(for: url)
+//            .map { $0.data }
+//            .decode(type: JSONObject.self, decoder: JSONDecoder())
+//            .print()
+//            //.replaceError(with: [])
+//            .eraseToAnyPublisher()
+//            .sink(receiveCompletion: { completion in
+//                
+//                switch completion {
+//                case .finished:
+//                    print("Finisched")
+//                    
+//                case .failure(let error):
+//                    print("Failure: \(error)")
+//                }
+//                
+//            }, receiveValue: { [weak self] weathersResult in
+//                guard let self = self else { return }
+//                
+//                print("RISULTATO\(weathersResult)")
+//                self.weathers = weathersResult
+//                
+//            })
+//    }
+//}
+
 
 
 protocol WeatherSingleFetchDelegate: class {
