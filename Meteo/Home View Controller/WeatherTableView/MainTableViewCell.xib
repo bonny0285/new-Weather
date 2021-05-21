@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -30,32 +29,32 @@
                                 <rect key="frame" x="161" y="10" width="196" height="111"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fP7-2D-Q0Y">
-                                        <rect key="frame" x="0.0" y="0.0" width="32" height="18"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="32" height="19.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YTK-0Z-8ll">
-                                        <rect key="frame" x="0.0" y="28" width="74" height="18"/>
+                                        <rect key="frame" x="0.0" y="29.5" width="74" height="19"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="S9b-lI-SOu">
-                                        <rect key="frame" x="0.0" y="56" width="122" height="55"/>
+                                        <rect key="frame" x="0.0" y="58.5" width="122" height="52.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="EpB-dv-KCV">
-                                                <rect key="frame" x="0.0" y="0.0" width="122" height="21.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="122" height="17"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thermometer.sun.fill" translatesAutoresizingMaskIntoConstraints="NO" id="Fwx-QZ-HbT">
-                                                        <rect key="frame" x="0.0" y="0.0" width="40" height="21.5"/>
+                                                        <rect key="frame" x="0.0" y="0.5" width="40" height="16"/>
                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="40" id="oFz-Z8-Ak5"/>
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EiB-0o-HrG">
-                                                        <rect key="frame" x="62" y="2.5" width="60" height="17"/>
+                                                        <rect key="frame" x="62" y="0.0" width="60" height="17"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="60" id="d1d-qM-3u4"/>
                                                         </constraints>
@@ -66,17 +65,17 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="22" translatesAutoresizingMaskIntoConstraints="NO" id="mIJ-Zo-KSv">
-                                                <rect key="frame" x="0.0" y="36" width="122" height="19"/>
+                                                <rect key="frame" x="0.0" y="35.5" width="122" height="17"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thermometer.snowflake" translatesAutoresizingMaskIntoConstraints="NO" id="qHQ-xE-1HO">
-                                                        <rect key="frame" x="0.0" y="0.0" width="40" height="19"/>
+                                                        <rect key="frame" x="0.0" y="1" width="40" height="15"/>
                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="40" id="caB-ka-Hhc"/>
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bF9-I5-PcE">
-                                                        <rect key="frame" x="62" y="1" width="60" height="17"/>
+                                                        <rect key="frame" x="62" y="0.0" width="60" height="17"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="60" id="EeJ-s8-xYN"/>
                                                         </constraints>
@@ -111,8 +110,8 @@
                     <constraint firstItem="Zz3-cq-6SD" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="vzN-38-eoh"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="sfondo" destination="Zz3-cq-6SD" id="htJ-EN-olI"/>
                 <outlet property="weatherDescription" destination="YTK-0Z-8ll" id="XR5-Hu-miK"/>
@@ -125,7 +124,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="thermometer.snowflake" width="16" height="19"/>
-        <image name="thermometer.sun.fill" width="17" height="22"/>
+        <image name="thermometer.snowflake" width="12" height="15"/>
+        <image name="thermometer.sun.fill" width="13" height="17"/>
     </resources>
 </document>

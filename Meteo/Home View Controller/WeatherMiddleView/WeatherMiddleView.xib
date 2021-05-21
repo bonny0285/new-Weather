@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WeatherMiddleView" customModule="Meteo" customModuleProvider="target">
+            <connections>
+                <outlet property="backgroundWeatherImage" destination="2ew-fE-ZnH" id="AhZ-Pa-Khf"/>
+                <outlet property="containerView" destination="Tm3-mS-AIg" id="W4J-GQ-p4a"/>
+                <outlet property="descriptionLabel" destination="R2O-tv-UuR" id="G7Q-Sk-Tjw"/>
+                <outlet property="tempMaxLabel" destination="CEP-ot-Rku" id="EZm-IN-9CI"/>
+                <outlet property="tempMinLabel" destination="Zjc-3q-rFe" id="To2-h3-AyA"/>
+                <outlet property="timeLabel" destination="BSm-cz-2Qu" id="m4G-sQ-dZT"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tm3-mS-AIg">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2ew-fE-ZnH">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time: 17:17" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BSm-cz-2Qu">
+                            <rect key="frame" x="148" y="60" width="118" height="27.5"/>
+                            <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="20"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description: sun" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R2O-tv-UuR">
+                            <rect key="frame" x="0.0" y="127.5" width="414" height="27.5"/>
+                            <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="20"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="Ccb-Ki-U8I">
+                            <rect key="frame" x="162.5" y="726" width="89.5" height="110"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="wtF-tq-oPQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="89.5" height="40"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thermometer.sun.fill" translatesAutoresizingMaskIntoConstraints="NO" id="nMy-2e-YgY">
+                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="40" id="Ani-L9-eEL"/>
+                                                <constraint firstAttribute="width" secondItem="nMy-2e-YgY" secondAttribute="height" multiplier="1:1" id="zzc-H0-tdd"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEP-ot-Rku">
+                                            <rect key="frame" x="57" y="3" width="32.5" height="34.5"/>
+                                            <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="25"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="NG2-u5-6Lf">
+                                    <rect key="frame" x="8" y="70" width="73.5" height="40"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thermometer.snowflake" translatesAutoresizingMaskIntoConstraints="NO" id="V03-hI-r3x">
+                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="40" id="VWO-Pf-Avl"/>
+                                                <constraint firstAttribute="width" secondItem="V03-hI-r3x" secondAttribute="height" multiplier="1:1" id="fk8-ly-oK9"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zjc-3q-rFe">
+                                            <rect key="frame" x="57" y="3" width="16.5" height="34.5"/>
+                                            <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="25"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="2ew-fE-ZnH" secondAttribute="bottom" id="406-1c-ubr"/>
+                        <constraint firstItem="R2O-tv-UuR" firstAttribute="top" secondItem="BSm-cz-2Qu" secondAttribute="bottom" constant="40" id="Ggu-hm-Pg6"/>
+                        <constraint firstAttribute="trailing" secondItem="R2O-tv-UuR" secondAttribute="trailing" id="R1j-9p-tSv"/>
+                        <constraint firstAttribute="bottom" secondItem="Ccb-Ki-U8I" secondAttribute="bottom" constant="60" id="VOe-1O-7K7"/>
+                        <constraint firstItem="Ccb-Ki-U8I" firstAttribute="centerX" secondItem="Tm3-mS-AIg" secondAttribute="centerX" id="XVH-RA-2vc"/>
+                        <constraint firstItem="BSm-cz-2Qu" firstAttribute="centerX" secondItem="Tm3-mS-AIg" secondAttribute="centerX" id="ZdW-lj-mS3"/>
+                        <constraint firstItem="R2O-tv-UuR" firstAttribute="leading" secondItem="Tm3-mS-AIg" secondAttribute="leading" id="fPo-36-ZI9"/>
+                        <constraint firstItem="2ew-fE-ZnH" firstAttribute="top" secondItem="Tm3-mS-AIg" secondAttribute="top" id="hG6-lm-xiQ"/>
+                        <constraint firstItem="R2O-tv-UuR" firstAttribute="centerX" secondItem="Tm3-mS-AIg" secondAttribute="centerX" id="iXh-1B-QXo"/>
+                        <constraint firstItem="2ew-fE-ZnH" firstAttribute="leading" secondItem="Tm3-mS-AIg" secondAttribute="leading" id="wUR-xZ-oad"/>
+                        <constraint firstItem="BSm-cz-2Qu" firstAttribute="top" secondItem="Tm3-mS-AIg" secondAttribute="top" constant="60" id="wmw-cx-sqT"/>
+                        <constraint firstAttribute="trailing" secondItem="2ew-fE-ZnH" secondAttribute="trailing" id="zn1-Rv-Wj9"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Tm3-mS-AIg" secondAttribute="trailing" id="AbG-Kg-5Yp"/>
+                <constraint firstItem="Tm3-mS-AIg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="RCH-qU-qyf"/>
+                <constraint firstAttribute="bottom" secondItem="Tm3-mS-AIg" secondAttribute="bottom" id="pgL-bw-a1g"/>
+                <constraint firstItem="Tm3-mS-AIg" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="sH0-Zr-PXI"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-23.188405797101453" y="78.348214285714278"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="thermometer.snowflake" width="12" height="15"/>
+        <image name="thermometer.sun.fill" width="13" height="17"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
