@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RealmSwift
-import Lottie
+//import RealmSwift
+//import Lottie
 import Alamofire
 
 

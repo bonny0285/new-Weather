@@ -32,6 +32,11 @@ class DashboardViewController: UIViewController {
     private var weatherRepository = WeatherRepository()
     private var weathers: JSONObject!
     
+    private lazy var sideMenu: SideMenuViewController = {
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        return storyboard.instantiateViewController(identifier: "SideMenuViewController") as SideMenuViewController
+    }()
+    
     
     //MARK: - Lifecycle
 
@@ -41,6 +46,40 @@ class DashboardViewController: UIViewController {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
+        
+        createBarButtonMenu()
+    }
+    
+    private func createBarButtonMenu() {
+        guard let navigationBar = navigationController?.navigationBar else { return }
+        
+        let button = UIButton()
+        button.addTarget(self, action: #selector(menuIsPressed(_:)), for: .touchUpInside)
+        let menuImage = UIImage(named: "menu")
+        button.setImage(menuImage, for: .normal)
+        
+        navigationBar.addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let height = (navigationBar.frame.height - 10)
+        button.heightAnchor.constraint(equalToConstant: height).isActive = true
+        button.widthAnchor.constraint(equalToConstant: height).isActive = true
+        button.centerYAnchor.constraint(equalTo: navigationBar.centerYAnchor).isActive = true
+        button.leadingAnchor.constraint(equalTo: navigationBar.leadingAnchor, constant: 10).isActive = true
+    }
+    
+    @objc func menuIsPressed(_ sender: UIButton) {
+        guard sideMenu.isPresent || sideMenu.isClosed else { return }
+
+        if sideMenu.isPresent {
+            sideMenu.close(parent: self, withDuration: 0.2)
+        } else if sideMenu.isClosed {
+            sideMenu.open(
+                parent: self,
+                width: view.frame.width,
+                height: view.frame.height,
+                navigationBarHeight: navigationController?.navigationBar.frame.height ?? 0
+            )
+        }
     }
     
     //MARK: - Methods
@@ -99,6 +138,28 @@ class DashboardViewController: UIViewController {
 
 }
 
+extension DashboardViewController: SideMenuViewControllerDelegate {
+    func sideMenuDidPressOption(_ option: String) {
+        
+    }
+    
+    func sideMenuDidPressLogout() {
+        
+    }
+    
+    func sideMenuDidPressPrivacy() {
+        
+    }
+    
+    func sideMenuDidPressSupport() {
+        
+    }
+    
+    func sideMenuDidPressUserProfile() {
+        
+    }
+}
+
 //MARK: - CLLocationManagerDelegate
 
 extension DashboardViewController: CLLocationManagerDelegate {
@@ -112,6 +173,13 @@ extension DashboardViewController: CLLocationManagerDelegate {
                 DispatchQueue.main.async {
                     let temp = result.list.first!.main.temp.temperatureString
                     self.title = "\(result.city.name) \(temp)°C"
+                    
+                    
+                    
+//                    let menuButton = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(self.menuIsPressed(_:)))
+//            //        let menuButton = UIBarButtonItem(title: "M", style: .plain, target: self, action: #selector(menuIsPressed(_:)))
+//                    self.navigationItem.leftBarButtonItem = menuButton
+                    
                     self.populationLabel.text = "Population: \(result.city.population)"
                     self.mainWeatherImage.image = (result.list.first?.weather.first?.id.weatherImage)
                     self.sunriseLabel.text = result.city.sunrise.transformTimestampToString()

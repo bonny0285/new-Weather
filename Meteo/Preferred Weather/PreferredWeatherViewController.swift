@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import Lottie
-import RealmSwift
+//import Lottie
+//mport RealmSwift
 
 //protocol SetupPreferedWeatherAfterFetching: class {
 //    func setupUI(_ weather: [MainWeather])

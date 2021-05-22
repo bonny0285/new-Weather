@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
-import RealmSwift
+//import RealmSwift
 import Combine
 
 //
