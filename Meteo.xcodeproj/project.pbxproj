@@ -53,6 +53,7 @@
 		B4A288C524380269002E857F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A288C424380269002E857F /* MainViewController.swift */; };
 		B4ACA1632659A1180042ACB5 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA1612659A1180042ACB5 /* MenuCell.swift */; };
 		B4ACA1642659A1180042ACB5 /* MenuCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B4ACA1622659A1180042ACB5 /* MenuCell.xib */; };
+		B4ACA173265C45D20042ACB5 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA172265C45D20042ACB5 /* DashboardViewModel.swift */; };
 		B4CCC6AD2657E33D00293437 /* WeatherMiddleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6AC2657E33D00293437 /* WeatherMiddleView.swift */; };
 		B4CCC6AF2657E34D00293437 /* WeatherMiddleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B4CCC6AE2657E34D00293437 /* WeatherMiddleView.xib */; };
 /* End PBXBuildFile section */
@@ -127,6 +128,7 @@
 		B4A288C424380269002E857F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		B4ACA1612659A1180042ACB5 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 		B4ACA1622659A1180042ACB5 /* MenuCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuCell.xib; sourceTree = "<group>"; };
+		B4ACA172265C45D20042ACB5 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		B4CCC6AC2657E33D00293437 /* WeatherMiddleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherMiddleView.swift; sourceTree = "<group>"; };
 		B4CCC6AE2657E34D00293437 /* WeatherMiddleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WeatherMiddleView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -316,6 +318,7 @@
 				B4A288C82438D36E002E857F /* WeatherTableView */,
 				B4A288C424380269002E857F /* MainViewController.swift */,
 				B48BAACE265433A700867253 /* DashboardViewController.swift */,
+				B4ACA172265C45D20042ACB5 /* DashboardViewModel.swift */,
 			);
 			path = "Home View Controller";
 			sourceTree = "<group>";
@@ -592,6 +595,7 @@
 				703F6F8A24E0A2180085A265 /* RealmManager.swift in Sources */,
 				706EA85824E6B8EC001354C7 /* WeatherSingleFetchManager.swift in Sources */,
 				B48BAAD22654348800867253 /* BaseCoordinator.swift in Sources */,
+				B4ACA173265C45D20042ACB5 /* DashboardViewModel.swift in Sources */,
 				B48BAAD42654350400867253 /* AppCoordinator.swift in Sources */,
 				704F7AA524D86ABB008359D7 /* CitiesListDataSource.swift in Sources */,
 				70F9DD22251757940031E6C5 /* WeatherRealmManger.swift in Sources */,

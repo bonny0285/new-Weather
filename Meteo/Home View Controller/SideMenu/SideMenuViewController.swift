@@ -213,7 +213,7 @@ extension SideMenuViewController: UITableViewDelegate {
     }
 
     private func snapshotDataSource() {
-        let optionsContainer: [String] = ["Preferiti", "Ricerca"]
+        let optionsContainer: [String] = ["Your cities", "Search", "more apps"]
         var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
         snapshot.appendSections([.main])
         snapshot.appendItems(optionsContainer)

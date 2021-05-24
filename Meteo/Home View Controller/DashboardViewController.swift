@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import CoreLocation
+//import CoreLocation
 import Combine
 
 class DashboardViewController: UIViewController {
@@ -26,12 +26,10 @@ class DashboardViewController: UIViewController {
     
     //MARK: - Properties
     
-    var language: String { Locale.current.languageCode! }
-    let locationManager = CLLocationManager()
-    private var cancellable: AnyCancellable?
-    private var weatherRepository = WeatherRepository()
-    private var weathers: JSONObject!
+    var viewModel = DashboardViewModel()
     
+    var language: String { Locale.current.languageCode! }
+    var cancelBag = Set<AnyCancellable>()
     private lazy var sideMenu: SideMenuViewController = {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         return storyboard.instantiateViewController(identifier: "SideMenuViewController") as SideMenuViewController
@@ -42,10 +40,17 @@ class DashboardViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.requestLocation()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.$_weatherObject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                guard let self = self, let result = result else { return }
+                self.setupUIForWeather(result)
+            }
+            .store(in: &cancelBag)
         
         createBarButtonMenu()
     }
@@ -68,6 +73,7 @@ class DashboardViewController: UIViewController {
     }
     
     @objc func menuIsPressed(_ sender: UIButton) {
+        
         guard sideMenu.isPresent || sideMenu.isClosed else { return }
 
         if sideMenu.isPresent {
@@ -102,7 +108,7 @@ class DashboardViewController: UIViewController {
         for i in 0 ..< list.count {
             let middleView = WeatherMiddleView()
             middleView.viewModel = WeatherMiddleView.ViewModel(
-                weatherImage: UIImage(named: getWeatherConditionFromID(weatherID: list[i].weather.first!.id).rawValue)!,
+                weatherImage: list[i].weather.first!.id.weatherBackgroundImage,
                 weatherTime: list[i].txt.stringDateString,
                 weatherDescription: list[i].weather.first!.description,
                 tempMax: list[i].main.temp_max.temperatureString,
@@ -172,67 +178,6 @@ extension DashboardViewController: SideMenuViewControllerDelegate {
 
 //MARK: - CLLocationManagerDelegate
 
-extension DashboardViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last {
-            let lat = location.coordinate.latitude
-            let lon = location.coordinate.longitude
-            weatherRepository.fetchWeather(latitude: lat, longitude: lon, language: language) { result in
-                print("RESULT: \(result)")
-                
-                DispatchQueue.main.async {
-                    self.setupUIForWeather(result)
-                }
-            }
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        debugPrint("Error Location Manager",error.localizedDescription)
-    }
-    
-    
-    enum WeatherCondition: String {
-        case tempesta = "tempesta"
-        case pioggia = "pioggia"
-        case pioggiaLeggera = "pioggia_leggera"
-        case neve = "neve"
-        case nebbia = "nebbia"
-        case sole = "sole"
-        case nuvole = "nuvole"
-    }
-        
-        func getWeatherConditionFromID(weatherID: Int) -> WeatherCondition {
-            var condition = self
-            switch weatherID {
-            case 200...202, 210...212, 221 ,230...232:
-                return .tempesta
-                
-            case 300...302, 310...314, 321:
-                return .pioggiaLeggera
-                
-            case 500...504, 511, 520...522, 531:
-                return .pioggia
-                
-            case 600...602, 611...613, 615, 616, 620...622:
-                return .neve
-                
-            case 701, 711, 721, 731, 741, 751, 761, 762, 771, 781:
-                return .nebbia
-                
-            case 800:
-                return .sole
-                
-            case 801...804:
-                return .nuvole
-                
-            default:
-                return .nuvole
-            }
-            //return condition
-        }
-}
-
 
 extension Double {
     func transformTimestampToString() -> String {
@@ -250,6 +195,10 @@ extension Double {
 }
 
 extension String {
+    var localizable: String {
+        return NSLocalizedString(self, comment: "")
+    }
+    
     var temperatureString: String {
         String(format: "%.1f", self)
     }
@@ -266,7 +215,33 @@ extension String {
    }
 }
 extension Int {
-    
+    var weatherBackgroundImage: UIImage {
+            switch self {
+            case 200...202, 210...212, 221 ,230...232:
+                return UIImage(named: "tempesta")!
+                
+            case 300...302, 310...314, 321:
+                return UIImage(named: "pioggia_leggera")!
+                
+            case 500...504, 511, 520...522, 531:
+                return UIImage(named: "pioggia")!
+                
+            case 600...602, 611...613, 615, 616, 620...622:
+                return UIImage(named: "neve")!
+                
+            case 701, 711, 721, 731, 741, 751, 761, 762, 771, 781:
+                return UIImage(named: "nebbia")!
+                
+            case 800:
+                return UIImage(named: "sole")!
+                
+            case 801...804:
+                return UIImage(named: "nuvole")!
+                
+            default:
+                return UIImage(named: "sole")!
+            }
+        }
     
     
     var weatherImage : UIImage? {

@@ -97,7 +97,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r1M-Ba-CXd">
-                                        <rect key="frame" x="0.0" y="52" width="414" height="772"/>
+                                        <rect key="frame" x="0.0" y="72" width="414" height="752"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </tableView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yPC-A3-sxd">
@@ -123,9 +123,10 @@
                                 <constraints>
                                     <constraint firstAttribute="bottomMargin" secondItem="yPC-A3-sxd" secondAttribute="bottom" id="Axl-0M-e7k"/>
                                     <constraint firstAttribute="trailing" secondItem="yPC-A3-sxd" secondAttribute="trailing" id="HwS-PT-Ysi"/>
-                                    <constraint firstItem="r1M-Ba-CXd" firstAttribute="top" secondItem="YUa-ol-jWF" secondAttribute="topMargin" id="KRi-Ba-4sT"/>
+                                    <constraint firstItem="r1M-Ba-CXd" firstAttribute="top" relation="greaterThanOrEqual" secondItem="YUa-ol-jWF" secondAttribute="topMargin" id="KRi-Ba-4sT"/>
                                     <constraint firstAttribute="height" constant="896" id="NvZ-jb-KXf"/>
                                     <constraint firstItem="yPC-A3-sxd" firstAttribute="leading" secondItem="YUa-ol-jWF" secondAttribute="leading" id="PkL-cu-XC3"/>
+                                    <constraint firstItem="r1M-Ba-CXd" firstAttribute="centerY" secondItem="YUa-ol-jWF" secondAttribute="centerY" id="gEh-BF-nbt"/>
                                     <constraint firstItem="r1M-Ba-CXd" firstAttribute="leading" secondItem="YUa-ol-jWF" secondAttribute="leading" id="iCZ-hQ-pdP"/>
                                     <constraint firstAttribute="width" constant="414" id="o65-ax-ZUZ"/>
                                     <constraint firstAttribute="trailing" secondItem="r1M-Ba-CXd" secondAttribute="trailing" id="rb7-VO-u8J"/>
