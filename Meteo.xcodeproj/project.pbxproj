@@ -54,6 +54,9 @@
 		B4ACA1632659A1180042ACB5 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA1612659A1180042ACB5 /* MenuCell.swift */; };
 		B4ACA1642659A1180042ACB5 /* MenuCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B4ACA1622659A1180042ACB5 /* MenuCell.xib */; };
 		B4ACA173265C45D20042ACB5 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA172265C45D20042ACB5 /* DashboardViewModel.swift */; };
+		B4ACA17C265C55420042ACB5 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA17B265C55420042ACB5 /* StringExtensions.swift */; };
+		B4ACA182265C55520042ACB5 /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA181265C55520042ACB5 /* DoubleExtensions.swift */; };
+		B4ACA186265C55610042ACB5 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA185265C55610042ACB5 /* IntExtensions.swift */; };
 		B4CCC6AD2657E33D00293437 /* WeatherMiddleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6AC2657E33D00293437 /* WeatherMiddleView.swift */; };
 		B4CCC6AF2657E34D00293437 /* WeatherMiddleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B4CCC6AE2657E34D00293437 /* WeatherMiddleView.xib */; };
 /* End PBXBuildFile section */
@@ -129,6 +132,9 @@
 		B4ACA1612659A1180042ACB5 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 		B4ACA1622659A1180042ACB5 /* MenuCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuCell.xib; sourceTree = "<group>"; };
 		B4ACA172265C45D20042ACB5 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
+		B4ACA17B265C55420042ACB5 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		B4ACA181265C55520042ACB5 /* DoubleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtensions.swift; sourceTree = "<group>"; };
+		B4ACA185265C55610042ACB5 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 		B4CCC6AC2657E33D00293437 /* WeatherMiddleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherMiddleView.swift; sourceTree = "<group>"; };
 		B4CCC6AE2657E34D00293437 /* WeatherMiddleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WeatherMiddleView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -284,6 +290,7 @@
 		B408AC8B229AB56B0000AE68 /* Meteo */ = {
 			isa = PBXGroup;
 			children = (
+				B4ACA17A265C55250042ACB5 /* Utilities */,
 				7016320D25063C1900574882 /* LottieResurce */,
 				B48BAAD72654F44400867253 /* Repository */,
 				7041CE792506117D002B7D92 /* Coordinator */,
@@ -370,6 +377,16 @@
 				B4ACA1622659A1180042ACB5 /* MenuCell.xib */,
 			);
 			path = SideMenu;
+			sourceTree = "<group>";
+		};
+		B4ACA17A265C55250042ACB5 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B4ACA17B265C55420042ACB5 /* StringExtensions.swift */,
+				B4ACA181265C55520042ACB5 /* DoubleExtensions.swift */,
+				B4ACA185265C55610042ACB5 /* IntExtensions.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		B4CCC6AB2657E32100293437 /* WeatherMiddleView */ = {
@@ -571,9 +588,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B48BAAD62654354700867253 /* DashboardCoordinator.swift in Sources */,
+				B4ACA186265C55610042ACB5 /* IntExtensions.swift in Sources */,
 				B4A288C3243800C9002E857F /* MyAlert.swift in Sources */,
 				7041CE7F250611D2002B7D92 /* MainCoordinator.swift in Sources */,
 				70B1E4B924E050FF00D067DB /* PreferredWeatherViewController.swift in Sources */,
+				B4ACA182265C55520042ACB5 /* DoubleExtensions.swift in Sources */,
 				7041CE7B250611A0002B7D92 /* Coordinator.swift in Sources */,
 				B4ACA1632659A1180042ACB5 /* MenuCell.swift in Sources */,
 				706EA85524E6A642001354C7 /* MainWeatherCell.swift in Sources */,
@@ -587,6 +606,7 @@
 				B4CCC6AD2657E33D00293437 /* WeatherMiddleView.swift in Sources */,
 				701DA02524ED9CEE007F14DF /* CurrentWeatherView.swift in Sources */,
 				701DA02124EB3342007F14DF /* MainTableViewCell.swift in Sources */,
+				B4ACA17C265C55420042ACB5 /* StringExtensions.swift in Sources */,
 				B4375BF926589E8000C57B36 /* SideMenuViewController.swift in Sources */,
 				704F7A9324D7E538008359D7 /* WeatherDataSource.swift in Sources */,
 				704F7AA224D86A99008359D7 /* CitiesListTableViewCell.swift in Sources */,

@@ -11,7 +11,7 @@ import CoreLocation
 import Combine
 
 protocol DashboardViewModelDelegate: AnyObject {
-    func openSideMenu()
+    func openSideMenu(parent: UIViewController & SideMenuViewControllerDelegate, height: CGFloat, width: CGFloat, navigationBarHeight: CGFloat)
 }
 
 

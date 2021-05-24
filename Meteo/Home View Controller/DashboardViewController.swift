@@ -27,14 +27,8 @@ class DashboardViewController: UIViewController {
     //MARK: - Properties
     
     var viewModel = DashboardViewModel()
-    
     var language: String { Locale.current.languageCode! }
     var cancelBag = Set<AnyCancellable>()
-    private lazy var sideMenu: SideMenuViewController = {
-        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        return storyboard.instantiateViewController(identifier: "SideMenuViewController") as SideMenuViewController
-    }()
-    
     
     //MARK: - Lifecycle
 
@@ -73,19 +67,12 @@ class DashboardViewController: UIViewController {
     }
     
     @objc func menuIsPressed(_ sender: UIButton) {
-        
-        guard sideMenu.isPresent || sideMenu.isClosed else { return }
-
-        if sideMenu.isPresent {
-            sideMenu.close(parent: self, withDuration: 0.2)
-        } else if sideMenu.isClosed {
-            sideMenu.open(
-                parent: self,
-                width: view.frame.width,
-                height: view.frame.height,
-                navigationBarHeight: navigationController?.navigationBar.frame.height ?? 0
-            )
-        }
+        viewModel.delegate?.openSideMenu(
+            parent: self,
+            height: view.frame.height,
+            width: view.frame.width,
+            navigationBarHeight: navigationController?.navigationBar.frame.height ?? 0
+        )
     }
     
     //MARK: - Methods
@@ -176,92 +163,9 @@ extension DashboardViewController: SideMenuViewControllerDelegate {
     }
 }
 
-//MARK: - CLLocationManagerDelegate
 
 
-extension Double {
-    func transformTimestampToString() -> String {
-        let date = NSDate(timeIntervalSince1970: self)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        //formatter.timeStyle = .short
-        let string = formatter.string(from: date as Date)
-        return string
-    }
-    
-    var temperatureString: String {
-        String(format: "%.1f", self)
-    }
-}
 
-extension String {
-    var localizable: String {
-        return NSLocalizedString(self, comment: "")
-    }
-    
-    var temperatureString: String {
-        String(format: "%.1f", self)
-    }
-    
-    var stringDateString: String {
-       let dateFormatter1 = DateFormatter()
-       dateFormatter1.dateFormat = "yyyy-MM-dd HH:mm:ss"
-       let dateFromString = dateFormatter1.date(from: self)
-       let dateFormatter = DateFormatter()
-       dateFormatter.dateFormat = "HH:mm E, d MMM y"
-       //dateFormatter.dateFormat = "dd'/'MM'/'yyyy' 'HH':'mm':'ss"
-       let date = dateFormatter.string(from: dateFromString!)
-       return date
-   }
-}
-extension Int {
-    var weatherBackgroundImage: UIImage {
-            switch self {
-            case 200...202, 210...212, 221 ,230...232:
-                return UIImage(named: "tempesta")!
-                
-            case 300...302, 310...314, 321:
-                return UIImage(named: "pioggia_leggera")!
-                
-            case 500...504, 511, 520...522, 531:
-                return UIImage(named: "pioggia")!
-                
-            case 600...602, 611...613, 615, 616, 620...622:
-                return UIImage(named: "neve")!
-                
-            case 701, 711, 721, 731, 741, 751, 761, 762, 771, 781:
-                return UIImage(named: "nebbia")!
-                
-            case 800:
-                return UIImage(named: "sole")!
-                
-            case 801...804:
-                return UIImage(named: "nuvole")!
-                
-            default:
-                return UIImage(named: "sole")!
-            }
-        }
-    
-    
-    var weatherImage : UIImage? {
-        switch self {
-        case 200...202, 210...212, 221 ,230...232:
-            return UIImage(named: "new_tempesta")
-        case 300...302, 310...314, 321:
-            return UIImage(named: "new_pioggia_leggera")
-        case 500...504, 511, 520...522, 531:
-            return UIImage(named: "new_pioggia")
-        case 600...602, 611...613, 615, 616, 620...622:
-            return UIImage(named: "new_neve")
-        case 701, 711, 721, 731, 741, 751, 761, 762, 771, 781:
-            return UIImage(named: "new_nebbia")
-        case 800:
-            return UIImage(named: "new_sun")
-        case 801 ... 804:
-            return UIImage(named: "new_cloud")
-        default:
-            return UIImage(named: "cloud")
-        }
-    }
-}
+
+
+

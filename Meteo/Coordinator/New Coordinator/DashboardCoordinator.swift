@@ -9,8 +9,15 @@
 import UIKit
 
 class DashboardCoordinator: BaseCoordinator {
+    
+    //MARK: - Properties
+    
     let rootNavigationController: UINavigationController!
     private(set) var storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+    private lazy var sideMenu: SideMenuViewController = {
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        return storyboard.instantiateViewController(identifier: "SideMenuViewController") as SideMenuViewController
+    }()
     
     //MARK: - Lifecycle
 
@@ -20,7 +27,7 @@ class DashboardCoordinator: BaseCoordinator {
     
     override func start(allowsReturnToPreviousCoordinator: Bool) {
         let loginViewController: DashboardViewController = storyboard.instantiateViewController(identifier: "DashboardViewController")
-        //loginViewController.viewModel = loginViewModel
+        loginViewController.viewModel.delegate = self
        // loginViewController.viewModel.delegate = self
         
         if allowsReturnToPreviousCoordinator {
@@ -31,4 +38,23 @@ class DashboardCoordinator: BaseCoordinator {
     }
     
     override func finish() {}
+}
+
+extension DashboardCoordinator: DashboardViewModelDelegate {
+    func openSideMenu(parent: UIViewController & SideMenuViewControllerDelegate, height: CGFloat, width: CGFloat, navigationBarHeight: CGFloat) {
+        
+        guard sideMenu.isPresent || sideMenu.isClosed else { return }
+
+        if sideMenu.isPresent {
+            sideMenu.close(parent: parent, withDuration: 0.2)
+        } else if sideMenu.isClosed {
+            sideMenu.open(
+                parent: parent,
+                width: width,
+                height: height,
+                navigationBarHeight: navigationBarHeight
+            )
+        }
+        
+    }
 }
