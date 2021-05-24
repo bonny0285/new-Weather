@@ -84,6 +84,16 @@ class DashboardViewController: UIViewController {
     
     //MARK: - Methods
 
+    private func setupUIForWeather(_ weather: JSONObject) {
+        let temp = weather.list.first!.main.temp.temperatureString
+        self.title = "\(weather.city.name) \(temp)°C"
+        self.populationLabel.text = "Population: \(weather.city.population)"
+        self.mainWeatherImage.image = (weather.list.first?.weather.first?.id.weatherImage)
+        self.sunriseLabel.text = weather.city.sunrise.transformTimestampToString()
+        self.sunsetLabel.text = weather.city.sunset.transformTimestampToString()
+        self.setupMiddleWeatherCards(with: weather.list)
+    }
+    
     private func setupMiddleWeatherCards(with list: [List]) {
         horizontalScrollView.subviews.forEach { $0.removeFromSuperview() }
         
@@ -171,23 +181,8 @@ extension DashboardViewController: CLLocationManagerDelegate {
                 print("RESULT: \(result)")
                 
                 DispatchQueue.main.async {
-                    let temp = result.list.first!.main.temp.temperatureString
-                    self.title = "\(result.city.name) \(temp)°C"
-                    
-                    
-                    
-//                    let menuButton = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(self.menuIsPressed(_:)))
-//            //        let menuButton = UIBarButtonItem(title: "M", style: .plain, target: self, action: #selector(menuIsPressed(_:)))
-//                    self.navigationItem.leftBarButtonItem = menuButton
-                    
-                    self.populationLabel.text = "Population: \(result.city.population)"
-                    self.mainWeatherImage.image = (result.list.first?.weather.first?.id.weatherImage)
-                    self.sunriseLabel.text = result.city.sunrise.transformTimestampToString()
-                    self.sunsetLabel.text = result.city.sunset.transformTimestampToString()
-                    
-                    self.setupMiddleWeatherCards(with: result.list)
+                    self.setupUIForWeather(result)
                 }
-                
             }
         }
     }
