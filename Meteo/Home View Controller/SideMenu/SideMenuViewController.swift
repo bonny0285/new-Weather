@@ -9,11 +9,7 @@
 import UIKit
 
 protocol SideMenuViewControllerDelegate: AnyObject {
-    func sideMenuDidPressOption(_ option: String)
-    func sideMenuDidPressLogout()
-    func sideMenuDidPressPrivacy()
-    func sideMenuDidPressSupport()
-    func sideMenuDidPressUserProfile()
+    func sideMenuDidPressOption(_ option: SideMenuViewController.MenuOptions)
 }
 
 class SideMenuViewController: UIViewController {
@@ -196,28 +192,35 @@ extension SideMenuViewController: UITableViewDelegate {
 //    }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let option = MainManager.Menu.allCases[indexPath.row]
-//        delegate?.sideMenuDidPressOption(option)
+        let option = MenuOptions.allCases[indexPath.row]
+        delegate?.sideMenuDidPressOption(option)
     }
 
-    private func configureDataSource() -> UITableViewDiffableDataSource<Section, String> {
+    private func configureDataSource() -> UITableViewDiffableDataSource<Section, MenuOptions> {
         return UITableViewDiffableDataSource(tableView: tableView) { (tableView, indexPath, title) -> UITableViewCell? in
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "MenuCell",
                 for: indexPath
             ) as? MenuCell
             
-            cell?.configureWhit(title)
+            cell?.configureWhit(title.rawValue)
             return cell
         }
     }
 
     private func snapshotDataSource() {
-        let optionsContainer: [String] = ["Your cities", "Search", "more apps"]
-        var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
+        let optionsContainer = MenuOptions.allCases
+        var snapshot = NSDiffableDataSourceSnapshot<Section, MenuOptions>()
         snapshot.appendSections([.main])
         snapshot.appendItems(optionsContainer)
         dataSource.apply(snapshot)
+    }
+}
+
+extension SideMenuViewController {
+    enum MenuOptions: String, CaseIterable {
+        case search = "Search"
+        case saved = "Preferred"
     }
 }
 

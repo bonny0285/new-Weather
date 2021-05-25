@@ -41,6 +41,20 @@ class DashboardCoordinator: BaseCoordinator {
 }
 
 extension DashboardCoordinator: DashboardViewModelDelegate {
+    func openSearchViewController() {
+        guard let parent = rootNavigationController.viewControllers.first else { return }
+        sideMenu.close(parent: parent)
+        let controller: SearchForCityViewController = storyboard.instantiateViewController(identifier: "SearchForCityViewController")
+        rootNavigationController.pushViewController(controller, animated: true)
+    }
+    
+    func openSavedViewController() {
+        guard let parent = rootNavigationController.viewControllers.first else { return }
+        sideMenu.close(parent: parent)
+        let controller: SavedWeatherViewController = storyboard.instantiateViewController(identifier: "SavedWeatherViewController")
+        rootNavigationController.pushViewController(controller, animated: true)
+    }
+    
     func openSideMenu(parent: UIViewController & SideMenuViewControllerDelegate, height: CGFloat, width: CGFloat, navigationBarHeight: CGFloat) {
         
         guard sideMenu.isPresent || sideMenu.isClosed else { return }

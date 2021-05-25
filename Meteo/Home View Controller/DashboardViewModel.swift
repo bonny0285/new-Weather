@@ -12,10 +12,14 @@ import Combine
 
 protocol DashboardViewModelDelegate: AnyObject {
     func openSideMenu(parent: UIViewController & SideMenuViewControllerDelegate, height: CGFloat, width: CGFloat, navigationBarHeight: CGFloat)
+    func openSearchViewController()
+    func openSavedViewController()
 }
 
-
 class DashboardViewModel: NSObject {
+    
+    //MARK: - Properties
+
     private let locationManager = CLLocationManager()
     private var language: String { Locale.current.languageCode! }
     private var weatherRepository = WeatherRepository()
@@ -23,7 +27,10 @@ class DashboardViewModel: NSObject {
     private(set) var longitude: Double = 0.0
     @Published var _weatherObject: JSONObject?
     weak var delegate: DashboardViewModelDelegate?
+    let defaults = UserDefaults.standard
     
+    //MARK: - Lifecycle
+
     override init() {
         super.init()
         locationManager.delegate = self
@@ -31,7 +38,10 @@ class DashboardViewModel: NSObject {
         locationManager.requestLocation()
     }
     
-    
+    private func saveUserLocation(latitude: Double, longitude: Double) {
+        defaults.set(latitude, forKey: "latitude")
+        defaults.set(longitude, forKey: "longitude")
+    }
     
 }
 

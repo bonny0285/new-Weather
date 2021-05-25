@@ -59,6 +59,9 @@
 		B4ACA186265C55610042ACB5 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA185265C55610042ACB5 /* IntExtensions.swift */; };
 		B4CCC6AD2657E33D00293437 /* WeatherMiddleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6AC2657E33D00293437 /* WeatherMiddleView.swift */; };
 		B4CCC6AF2657E34D00293437 /* WeatherMiddleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B4CCC6AE2657E34D00293437 /* WeatherMiddleView.xib */; };
+		B4CCC6D5265CF9F300293437 /* ConstraintBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6D4265CF9F300293437 /* ConstraintBuilder.swift */; };
+		B4CCC6D7265CFE7900293437 /* SearchForCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6D6265CFE7900293437 /* SearchForCityViewController.swift */; };
+		B4CCC6D9265CFEA100293437 /* SavedWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6D8265CFEA100293437 /* SavedWeatherViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,6 +140,9 @@
 		B4ACA185265C55610042ACB5 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 		B4CCC6AC2657E33D00293437 /* WeatherMiddleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherMiddleView.swift; sourceTree = "<group>"; };
 		B4CCC6AE2657E34D00293437 /* WeatherMiddleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WeatherMiddleView.xib; sourceTree = "<group>"; };
+		B4CCC6D4265CF9F300293437 /* ConstraintBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintBuilder.swift; sourceTree = "<group>"; };
+		B4CCC6D6265CFE7900293437 /* SearchForCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchForCityViewController.swift; sourceTree = "<group>"; };
+		B4CCC6D8265CFEA100293437 /* SavedWeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedWeatherViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -290,6 +296,7 @@
 		B408AC8B229AB56B0000AE68 /* Meteo */ = {
 			isa = PBXGroup;
 			children = (
+				B4CCC6D3265CF9C700293437 /* ConstraintBuilder */,
 				B4ACA17A265C55250042ACB5 /* Utilities */,
 				7016320D25063C1900574882 /* LottieResurce */,
 				B48BAAD72654F44400867253 /* Repository */,
@@ -326,6 +333,8 @@
 				B4A288C424380269002E857F /* MainViewController.swift */,
 				B48BAACE265433A700867253 /* DashboardViewController.swift */,
 				B4ACA172265C45D20042ACB5 /* DashboardViewModel.swift */,
+				B4CCC6D6265CFE7900293437 /* SearchForCityViewController.swift */,
+				B4CCC6D8265CFEA100293437 /* SavedWeatherViewController.swift */,
 			);
 			path = "Home View Controller";
 			sourceTree = "<group>";
@@ -396,6 +405,14 @@
 				B4CCC6AE2657E34D00293437 /* WeatherMiddleView.xib */,
 			);
 			path = WeatherMiddleView;
+			sourceTree = "<group>";
+		};
+		B4CCC6D3265CF9C700293437 /* ConstraintBuilder */ = {
+			isa = PBXGroup;
+			children = (
+				B4CCC6D4265CF9F300293437 /* ConstraintBuilder.swift */,
+			);
+			path = ConstraintBuilder;
 			sourceTree = "<group>";
 		};
 		BD8283F79E82B4FE64C1879D /* Pods */ = {
@@ -605,6 +622,7 @@
 				B48BAAD92654F46D00867253 /* WeatherRepository.swift in Sources */,
 				B4CCC6AD2657E33D00293437 /* WeatherMiddleView.swift in Sources */,
 				701DA02524ED9CEE007F14DF /* CurrentWeatherView.swift in Sources */,
+				B4CCC6D9265CFEA100293437 /* SavedWeatherViewController.swift in Sources */,
 				701DA02124EB3342007F14DF /* MainTableViewCell.swift in Sources */,
 				B4ACA17C265C55420042ACB5 /* StringExtensions.swift in Sources */,
 				B4375BF926589E8000C57B36 /* SideMenuViewController.swift in Sources */,
@@ -621,8 +639,10 @@
 				70F9DD22251757940031E6C5 /* WeatherRealmManger.swift in Sources */,
 				B408AC8D229AB56B0000AE68 /* AppDelegate.swift in Sources */,
 				7041CE7D250611B6002B7D92 /* Storyboarded.swift in Sources */,
+				B4CCC6D7265CFE7900293437 /* SearchForCityViewController.swift in Sources */,
 				70B1E4B624E0488D00D067DB /* RealmWeatherManager.swift in Sources */,
 				704F7A9D24D86962008359D7 /* CitiesListViewController.swift in Sources */,
+				B4CCC6D5265CF9F300293437 /* ConstraintBuilder.swift in Sources */,
 				70F9DD2A25178D7A0031E6C5 /* WeatherMultipleFetchManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

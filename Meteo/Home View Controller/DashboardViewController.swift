@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import CoreLocation
+import Lottie
 import Combine
 
 class DashboardViewController: UIViewController {
@@ -27,43 +27,70 @@ class DashboardViewController: UIViewController {
     //MARK: - Properties
     
     var viewModel = DashboardViewModel()
-    var language: String { Locale.current.languageCode! }
-    var cancelBag = Set<AnyCancellable>()
+    private var cancelBag = Set<AnyCancellable>()
+    private let menuButton = UIButton()
+    private var lottieContainer = UIView()
+    private var loadingView = AnimationView()
     
     //MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        let animation = Animation.named("loading")
+        setupAnimation(animation)
+        
         viewModel.$_weatherObject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 guard let self = self, let result = result else { return }
                 self.setupUIForWeather(result)
+                self.lottieContainer.removeFromSuperview()
+                self.loadingView.stop()
             }
             .store(in: &cancelBag)
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         createBarButtonMenu()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+    }
+    
+    private func setupAnimation(_ animation: Animation?) {
+        guard let animation = animation else { return }
+        lottieContainer.backgroundColor = .white
+        loadingView.frame = animation.bounds
+        loadingView.animation = animation
+        loadingView.contentMode = .scaleAspectFill
+        loadingView.backgroundBehavior = .pauseAndRestore
+        ConstraintBuilder.setupAllEdgesConstrainFor(child: lottieContainer, into: self.view)
+        self.view.bringSubviewToFront(lottieContainer)
+        ConstraintBuilder.setupAllEdgesConstrainFor(child: loadingView, into: lottieContainer)
+        loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
     }
     
     private func createBarButtonMenu() {
         guard let navigationBar = navigationController?.navigationBar else { return }
         
-        let button = UIButton()
-        button.addTarget(self, action: #selector(menuIsPressed(_:)), for: .touchUpInside)
+        //let button = UIButton()
+        menuButton.addTarget(self, action: #selector(menuIsPressed(_:)), for: .touchUpInside)
         let menuImage = UIImage(named: "menu")
-        button.setImage(menuImage, for: .normal)
+        menuButton.setImage(menuImage, for: .normal)
         
-        navigationBar.addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let height = (navigationBar.frame.height - 10)
-        button.heightAnchor.constraint(equalToConstant: height).isActive = true
-        button.widthAnchor.constraint(equalToConstant: height).isActive = true
-        button.centerYAnchor.constraint(equalTo: navigationBar.centerYAnchor).isActive = true
-        button.leadingAnchor.constraint(equalTo: navigationBar.leadingAnchor, constant: 10).isActive = true
+        let buttonRatio = (navigationBar.frame.height - 10)
+        ConstraintBuilder.setupConstraintFor(
+            child: menuButton,
+            into: navigationBar,
+            constraints: [
+                .height(constant: buttonRatio),
+                .width(constant: buttonRatio),
+                .centerY(),
+                .leading(constant: 10)
+            ]
+        )
     }
     
     @objc func menuIsPressed(_ sender: UIButton) {
@@ -103,16 +130,19 @@ class DashboardViewController: UIViewController {
             )
             
             let containerMiddleView = UIView()
-            containerMiddleView.addSubview(middleView)
             
-            middleView.translatesAutoresizingMaskIntoConstraints = false
-            middleView.heightAnchor.constraint(equalToConstant: horizontalScrollView.frame.height).isActive = true
-            //middleView.heightAnchor.constraint(equalTo: horizontalScrollView.heightAnchor, constant: 0).isActive = true
-            middleView.widthAnchor.constraint(equalToConstant: self.view.frame.width).isActive = true
-            middleView.topAnchor.constraint(equalTo: containerMiddleView.topAnchor).isActive = true
-            middleView.bottomAnchor.constraint(equalTo: containerMiddleView.bottomAnchor).isActive = true
-            middleView.trailingAnchor.constraint(equalTo: containerMiddleView.trailingAnchor).isActive = true
-            middleView.leadingAnchor.constraint(equalTo: containerMiddleView.leadingAnchor).isActive = true
+            ConstraintBuilder.setupConstraintFor(
+                child: middleView,
+                into: containerMiddleView,
+                constraints: [
+                    .height(constant: horizontalScrollView.frame.height),
+                    .width(constant: self.view.frame.width),
+                    .top(),
+                    .bottom(),
+                    .trailing(),
+                    .leading()
+                ]
+            )
             
             containerView.append(containerMiddleView)
         }
@@ -126,14 +156,7 @@ class DashboardViewController: UIViewController {
         let stack = UIStackView(arrangedSubviews: containerView)
         stack.axis = .horizontal
         
-        horizontalScrollView.addSubview(stack)
-        
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.heightAnchor.constraint(equalTo: horizontalScrollView.heightAnchor).isActive = true 
-        stack.topAnchor.constraint(equalTo: horizontalScrollView.topAnchor, constant: 0).isActive = true
-        stack.bottomAnchor.constraint(equalTo: horizontalScrollView.bottomAnchor, constant: 0).isActive = true
-        stack.trailingAnchor.constraint(equalTo: horizontalScrollView.trailingAnchor, constant: 0).isActive = true
-        stack.leadingAnchor.constraint(equalTo: horizontalScrollView.leadingAnchor, constant: 0).isActive = true
+        ConstraintBuilder.setupAllEdgesConstrainFor(child: stack, into: horizontalScrollView)
     }
     
     //MARK: - Actions
@@ -142,30 +165,15 @@ class DashboardViewController: UIViewController {
 }
 
 extension DashboardViewController: SideMenuViewControllerDelegate {
-    func sideMenuDidPressOption(_ option: String) {
+    func sideMenuDidPressOption(_ option: SideMenuViewController.MenuOptions) {
+        guard let _ = navigationController?.navigationBar else { return }
+        menuButton.removeFromSuperview()
         
-    }
-    
-    func sideMenuDidPressLogout() {
-        
-    }
-    
-    func sideMenuDidPressPrivacy() {
-        
-    }
-    
-    func sideMenuDidPressSupport() {
-        
-    }
-    
-    func sideMenuDidPressUserProfile() {
-        
+        switch option {
+        case .search:
+            viewModel.delegate?.openSearchViewController()
+        case .saved:
+            viewModel.delegate?.openSavedViewController()
+        }
     }
 }
-
-
-
-
-
-
-
