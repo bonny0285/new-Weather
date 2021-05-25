@@ -9,16 +9,25 @@
 import UIKit
 
 
-//struct CitiesList: Decodable {
-//    let id: Int
-//    let name: String
-//    let country: String
-//    let coord: Coord
-//}
-//
-//
-//
-//struct Coord: Decodable {
-//    let lat: Double
-//    let lon: Double
-//}
+struct CitiesList: Decodable, Hashable {
+    let reference = UUID()
+    let id: Int
+    let name: String
+    let country: String
+    let coord: CityCoord
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(reference)
+    }
+
+    static func == (lhs: CitiesList, rhs: CitiesList) -> Bool {
+        return lhs.reference == rhs.reference
+    }
+}
+
+
+
+struct CityCoord: Decodable {
+    let lat: Double
+    let lon: Double
+}

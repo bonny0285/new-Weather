@@ -62,6 +62,7 @@
 		B4CCC6D5265CF9F300293437 /* ConstraintBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6D4265CF9F300293437 /* ConstraintBuilder.swift */; };
 		B4CCC6D7265CFE7900293437 /* SearchForCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6D6265CFE7900293437 /* SearchForCityViewController.swift */; };
 		B4CCC6D9265CFEA100293437 /* SavedWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6D8265CFEA100293437 /* SavedWeatherViewController.swift */; };
+		B4CCC6DB265D31EA00293437 /* SearchForCityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6DA265D31EA00293437 /* SearchForCityViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,6 +144,7 @@
 		B4CCC6D4265CF9F300293437 /* ConstraintBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintBuilder.swift; sourceTree = "<group>"; };
 		B4CCC6D6265CFE7900293437 /* SearchForCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchForCityViewController.swift; sourceTree = "<group>"; };
 		B4CCC6D8265CFEA100293437 /* SavedWeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedWeatherViewController.swift; sourceTree = "<group>"; };
+		B4CCC6DA265D31EA00293437 /* SearchForCityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchForCityViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -334,6 +336,7 @@
 				B48BAACE265433A700867253 /* DashboardViewController.swift */,
 				B4ACA172265C45D20042ACB5 /* DashboardViewModel.swift */,
 				B4CCC6D6265CFE7900293437 /* SearchForCityViewController.swift */,
+				B4CCC6DA265D31EA00293437 /* SearchForCityViewModel.swift */,
 				B4CCC6D8265CFEA100293437 /* SavedWeatherViewController.swift */,
 			);
 			path = "Home View Controller";
@@ -629,6 +632,7 @@
 				704F7A9324D7E538008359D7 /* WeatherDataSource.swift in Sources */,
 				704F7AA224D86A99008359D7 /* CitiesListTableViewCell.swift in Sources */,
 				706EA85324E69B04001354C7 /* MainWeather.swift in Sources */,
+				B4CCC6DB265D31EA00293437 /* SearchForCityViewModel.swift in Sources */,
 				70B1E4BF24E051E000D067DB /* PreferredTableViewCell.swift in Sources */,
 				703F6F8A24E0A2180085A265 /* RealmManager.swift in Sources */,
 				706EA85824E6B8EC001354C7 /* WeatherSingleFetchManager.swift in Sources */,
