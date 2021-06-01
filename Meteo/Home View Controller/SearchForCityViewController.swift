@@ -31,7 +31,7 @@ class SearchForCityViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "SearchForCityViewController"
-        
+        textField.delegate = self
         let animation = Animation.named("loading")
         setupAnimation(animation)
         
@@ -40,11 +40,14 @@ class SearchForCityViewController: UIViewController {
             .sink { [weak self] result in
                 guard let self = self, let result = result else { return }
                 print("RESULT: \(result.count)")
+                
                 self.cityContainer = result
-                    .filter { $0.name != "" }
-                    .filter { $0.name.starts(with: "-") == false }
-                    .filter { $0.name.starts(with: "(") == false }
-                    .filter { $0.name.starts(with: "'") == false }
+                    .filter {
+                        $0.name.isEmpty == false
+                        && $0.name.starts(with: "-") == false
+                        && $0.name.starts(with: "(") == false
+                        && $0.name.starts(with: "'") == false
+                    }
                 
                 self.setupTableView()
                 self.lottieContainer.removeFromSuperview()
@@ -75,19 +78,41 @@ class SearchForCityViewController: UIViewController {
     }
     
     private func setupTableView() {
-        let nib = UINib(nibName: "MenuCell", bundle: Bundle.main)
-        tableView.register(nib, forCellReuseIdentifier: "MenuCell")
-        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
-        tableView.tableFooterView = UIView()
-        tableView.delegate = self
-        tableView.dataSource = dataSource
-        snapshotDataSource()
+            let nib = UINib(nibName: "MenuCell", bundle: Bundle.main)
+            tableView.register(nib, forCellReuseIdentifier: "MenuCell")
+            tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+            tableView.tableFooterView = UIView()
+            tableView.delegate = self
+            tableView.dataSource = dataSource
+            snapshotDataSource(cityContainer)
     }
     
     
     //MARK: - Actions
 
+    @IBAction func textFieldEditingDidChange(_ sender: UITextField) {
+//        guard let text = sender.text else { return }
+//        print("PASSATO: \(text.isEmpty == true)")
+//        let filered = cityContainer.filter { $0.name.starts(with: text) }
+//        print("Filtered: \(filered.count)")
+//        let choise = text.isEmpty == true ? cityContainer : filered
+//        print("Choise: \(choise.count)")
+//        snapshotDataSource( choise )
+    }
+    
+}
 
+extension SearchForCityViewController: UITextFieldDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        
+        guard let text = textField.text else { return }
+        print("PASSATO: \(text.isEmpty == true)")
+        let filered = cityContainer.filter { $0.name.starts(with: text) }
+        print("Filtered: \(filered.count)")
+        let choise = text.isEmpty == true ? cityContainer : filered
+        print("Choise: \(choise.count)")
+        snapshotDataSource( choise )
+    }
 }
 
 extension SearchForCityViewController: UITableViewDelegate {
@@ -115,11 +140,12 @@ extension SearchForCityViewController: UITableViewDelegate {
         }
     }
 
-    private func snapshotDataSource() {
+    private func snapshotDataSource(_ data: [CitiesList]) {
         //let optionsContainer = MenuOptions.allCases
         var snapshot = NSDiffableDataSourceSnapshot<Section, CitiesList>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(cityContainer)
-        dataSource.apply(snapshot)
+        snapshot.appendItems(data)
+        snapshot.reloadItems(data)
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
