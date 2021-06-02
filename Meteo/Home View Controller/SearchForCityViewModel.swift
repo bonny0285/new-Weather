@@ -16,34 +16,48 @@ class SearchForCityViewModel: NSObject {
     override init() {
         super.init()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.fetchCities { [weak self] result in
-                guard let self = self else { return }
-                
-                switch result {
-                case .success(let value):
-                    self.cities = value
-                    
-                case .failure(let error):
-                    print("Error during fetch cities: \(error.localizedDescription)")
-                }
-            }
-       }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            self.fetchCities { [weak self] result in
+//                guard let self = self else { return }
+//                
+//                switch result {
+//                case .success(let value):
+//                    self.cities = value
+//                    
+//                case .failure(let error):
+//                    print("Error during fetch cities: \(error.localizedDescription)")
+//                }
+//            }
+//       }
     }
     
-    private func fetchCities(_ completion: @escaping(Result<[CitiesList], Error>) -> ()) {
-        let file = Bundle.main.path(forResource: "cityList", ofType: "json")
-        
+    func fetchBySearch(startWith text: String, completion: @escaping ([CitiesList]) -> ()) {
+        let file = Bundle.main.path(forResource: "cityList", ofType: "json")!
         do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: file!))
+            let data = try Data(contentsOf: URL(fileURLWithPath: file))
             let decoder = JSONDecoder()
-            let result = try decoder.decode([CitiesList].self, from: data)
-            
+            let result = try decoder.decode([CitiesList].self, from: data).filter { $0.name.starts(with: text) }
             let cities = result.sorted { $0.name < $1.name}.compactMap { $0 }
-            completion(.success(cities))
+            completion(cities)
             
         } catch let error {
-            completion(.failure(error))
+            print(error)
         }
     }
+//    
+//    private func fetchCities(_ completion: @escaping(Result<[CitiesList], Error>) -> ()) {
+//        let file = Bundle.main.path(forResource: "cityList", ofType: "json")
+//        
+//        do {
+//            let data = try Data(contentsOf: URL(fileURLWithPath: file!))
+//            let decoder = JSONDecoder()
+//            let result = try decoder.decode([CitiesList].self, from: data)
+//            
+//            let cities = result.sorted { $0.name < $1.name}.compactMap { $0 }
+//            completion(.success(cities))
+//            
+//        } catch let error {
+//            completion(.failure(error))
+//        }
+//    }
 }

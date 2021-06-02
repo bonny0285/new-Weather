@@ -10,7 +10,7 @@ import UIKit
 import Lottie
 import Combine
 
-class SearchForCityViewController: UIViewController {
+class SearchForCityViewController: BaseViewController {
 
     //MARK: - Outlets
 
@@ -21,8 +21,8 @@ class SearchForCityViewController: UIViewController {
 
     let viewModel = SearchForCityViewModel()
     private var cancelBag = Set<AnyCancellable>()
-    private var lottieContainer = UIView()
-    private var loadingView = AnimationView()
+//    private var lottieContainer = UIView()
+//    private var loadingView = AnimationView()
     private lazy var dataSource = configureDataSource()
     private var cityContainer: [CitiesList] = []
     
@@ -32,28 +32,30 @@ class SearchForCityViewController: UIViewController {
         super.viewDidLoad()
         title = "SearchForCityViewController"
         textField.delegate = self
-        let animation = Animation.named("loading")
-        setupAnimation(animation)
+//        let animation = Animation.named("loading")
+//        setupAnimation(animation)
+        self.setupTableView()
         
-        viewModel.$cities
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] result in
-                guard let self = self, let result = result else { return }
-                print("RESULT: \(result.count)")
-                
-                self.cityContainer = result
-                    .filter {
-                        $0.name.isEmpty == false
-                        && $0.name.starts(with: "-") == false
-                        && $0.name.starts(with: "(") == false
-                        && $0.name.starts(with: "'") == false
-                    }
-                
-                self.setupTableView()
-                self.lottieContainer.removeFromSuperview()
-                self.loadingView.stop()
-            }
-            .store(in: &cancelBag)
+        
+//        viewModel.$cities
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] result in
+//                guard let self = self, let result = result else { return }
+//                print("RESULT: \(result.count)")
+//                
+//                self.cityContainer = result
+//                    .filter {
+//                        $0.name.isEmpty == false
+//                        && $0.name.starts(with: "-") == false
+//                        && $0.name.starts(with: "(") == false
+//                        && $0.name.starts(with: "'") == false
+//                    }
+//                
+//                self.snapshotDataSource(self.cityContainer)
+//                self.lottieContainer.removeFromSuperview()
+//                self.loadingView.stop()
+//            }
+//            .store(in: &cancelBag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,18 +66,18 @@ class SearchForCityViewController: UIViewController {
 
     //MARK: - Methods
 
-    private func setupAnimation(_ animation: Animation?) {
-        guard let animation = animation else { return }
-        lottieContainer.backgroundColor = .white
-        loadingView.frame = animation.bounds
-        loadingView.animation = animation
-        loadingView.contentMode = .scaleAspectFill
-        loadingView.backgroundBehavior = .pauseAndRestore
-        ConstraintBuilder.setupAllEdgesConstrainFor(child: lottieContainer, into: self.view)
-        self.view.bringSubviewToFront(lottieContainer)
-        ConstraintBuilder.setupAllEdgesConstrainFor(child: loadingView, into: lottieContainer)
-        loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
-    }
+//    private func setupAnimation(_ animation: Animation?) {
+//        guard let animation = animation else { return }
+//        lottieContainer.backgroundColor = .white
+//        loadingView.frame = animation.bounds
+//        loadingView.animation = animation
+//        loadingView.contentMode = .scaleAspectFill
+//        loadingView.backgroundBehavior = .pauseAndRestore
+//        ConstraintBuilder.setupAllEdgesConstrainFor(child: lottieContainer, into: self.view)
+//        self.view.bringSubviewToFront(lottieContainer)
+//        ConstraintBuilder.setupAllEdgesConstrainFor(child: loadingView, into: lottieContainer)
+//        loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
+//    }
     
     private func setupTableView() {
             let nib = UINib(nibName: "MenuCell", bundle: Bundle.main)
@@ -84,34 +86,50 @@ class SearchForCityViewController: UIViewController {
             tableView.tableFooterView = UIView()
             tableView.delegate = self
             tableView.dataSource = dataSource
-            snapshotDataSource(cityContainer)
+            //snapshotDataSource(cityContainer)
     }
     
     
     //MARK: - Actions
 
     @IBAction func textFieldEditingDidChange(_ sender: UITextField) {
-//        guard let text = sender.text else { return }
-//        print("PASSATO: \(text.isEmpty == true)")
-//        let filered = cityContainer.filter { $0.name.starts(with: text) }
-//        print("Filtered: \(filered.count)")
-//        let choise = text.isEmpty == true ? cityContainer : filered
-//        print("Choise: \(choise.count)")
-//        snapshotDataSource( choise )
+        super.animationIsNeeded = true
+
+//        if let text = sender.text, text.isEmpty == false {
+//            
+//            if self.cityContainer.count > 0 {
+//                self.snapshotDataSource(self.cityContainer.filter { $0.name.starts(with: text) })
+//                super.animationIsNeeded = false
+//            } else {
+//                self.viewModel.fetchBySearch(startWith: text) { result in
+//                    self.cityContainer = result
+//                    self.snapshotDataSource(result)
+//                    super.animationIsNeeded = false
+//                }
+//            }
+//            
+//        } else {
+//            self.cityContainer.removeAll()
+//            self.snapshotDataSource(self.cityContainer)
+//            super.animationIsNeeded = false
+//        }
     }
-    
 }
 
 extension SearchForCityViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         
-        guard let text = textField.text else { return }
-        print("PASSATO: \(text.isEmpty == true)")
-        let filered = cityContainer.filter { $0.name.starts(with: text) }
-        print("Filtered: \(filered.count)")
-        let choise = text.isEmpty == true ? cityContainer : filered
-        print("Choise: \(choise.count)")
-        snapshotDataSource( choise )
+//        guard let text = textField.text else { return }
+//        print("PASSATO: Text: \(text) - \(text.isEmpty == true)")
+//        let filered = cityContainer.filter { $0.name.starts(with: text) }
+//        print("Filtered: \(filered.count)")
+//        let choise = text.isEmpty == true ? cityContainer : filered
+//        print("Choise: \(choise.count)")
+//
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//            self.snapshotDataSource(choise)
+//        }
+        
     }
 }
 
@@ -125,6 +143,7 @@ extension SearchForCityViewController: UITableViewDelegate {
             print("City name: \(city.name)")
             print("City id: \(city.id)")
             print("City country: \(city.country)")
+            print("UUID: \(city.reference)")
             //delegate?.sideMenuDidPressOption(option)
         }
 
@@ -142,10 +161,48 @@ extension SearchForCityViewController: UITableViewDelegate {
 
     private func snapshotDataSource(_ data: [CitiesList]) {
         //let optionsContainer = MenuOptions.allCases
+        print("SnapshotData: \(data.count)")
         var snapshot = NSDiffableDataSourceSnapshot<Section, CitiesList>()
         snapshot.appendSections([.main])
         snapshot.appendItems(data)
         snapshot.reloadItems(data)
-        dataSource.apply(snapshot, animatingDifferences: true)
+        
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
+}
+
+
+class BaseViewController: UIViewController {
+    
+    private var lottieContainer = UIView()
+    private var loadingView = AnimationView()
+    var animationIsNeeded: Bool = false {
+        didSet {
+            if animationIsNeeded {
+                DispatchQueue.main.asyncAfter(deadline: .now()) {
+                    self.setupAnimation()
+                }
+                
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now()) {
+                    self.loadingView.stop()
+                    self.lottieContainer.removeFromSuperview()
+                }
+            }
+        }
+    }
+    
+    
+    private func setupAnimation() {
+        guard let animation = Animation.named("loading") else { return }
+        lottieContainer.backgroundColor = .white
+        loadingView.frame = animation.bounds
+        loadingView.animation = animation
+        loadingView.contentMode = .scaleAspectFill
+        loadingView.backgroundBehavior = .pauseAndRestore
+        ConstraintBuilder.setupAllEdgesConstrainFor(child: lottieContainer, into: self.view)
+        self.view.bringSubviewToFront(lottieContainer)
+        ConstraintBuilder.setupAllEdgesConstrainFor(child: loadingView, into: lottieContainer)
+        loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
     }
 }

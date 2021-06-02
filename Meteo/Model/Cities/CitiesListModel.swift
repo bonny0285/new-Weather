@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 struct CitiesList: Decodable, Hashable {
     let reference = UUID()
     let id: Int

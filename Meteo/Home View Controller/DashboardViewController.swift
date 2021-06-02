@@ -10,7 +10,7 @@ import UIKit
 import Lottie
 import Combine
 
-class DashboardViewController: UIViewController {
+class DashboardViewController: BaseViewController {
     
     //MARK: - Outlets
     
@@ -29,23 +29,25 @@ class DashboardViewController: UIViewController {
     var viewModel = DashboardViewModel()
     private var cancelBag = Set<AnyCancellable>()
     private let menuButton = UIButton()
-    private var lottieContainer = UIView()
-    private var loadingView = AnimationView()
+//    private var lottieContainer = UIView()
+//    private var loadingView = AnimationView()
     
     //MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let animation = Animation.named("loading")
-        setupAnimation(animation)
+        super.animationIsNeeded = true
+//        let animation = Animation.named("loading")
+//        setupAnimation(animation)
         
         viewModel.$_weatherObject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 guard let self = self, let result = result else { return }
                 self.setupUIForWeather(result)
-                self.lottieContainer.removeFromSuperview()
-                self.loadingView.stop()
+                self.animationIsNeeded = false
+//                self.lottieContainer.removeFromSuperview()
+//                self.loadingView.stop()
             }
             .store(in: &cancelBag)
     }
@@ -59,18 +61,18 @@ class DashboardViewController: UIViewController {
         super.viewDidDisappear(animated)
     }
     
-    private func setupAnimation(_ animation: Animation?) {
-        guard let animation = animation else { return }
-        lottieContainer.backgroundColor = .white
-        loadingView.frame = animation.bounds
-        loadingView.animation = animation
-        loadingView.contentMode = .scaleAspectFill
-        loadingView.backgroundBehavior = .pauseAndRestore
-        ConstraintBuilder.setupAllEdgesConstrainFor(child: lottieContainer, into: self.view)
-        self.view.bringSubviewToFront(lottieContainer)
-        ConstraintBuilder.setupAllEdgesConstrainFor(child: loadingView, into: lottieContainer)
-        loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
-    }
+//    private func setupAnimation(_ animation: Animation?) {
+//        guard let animation = animation else { return }
+//        lottieContainer.backgroundColor = .white
+//        loadingView.frame = animation.bounds
+//        loadingView.animation = animation
+//        loadingView.contentMode = .scaleAspectFill
+//        loadingView.backgroundBehavior = .pauseAndRestore
+//        ConstraintBuilder.setupAllEdgesConstrainFor(child: lottieContainer, into: self.view)
+//        self.view.bringSubviewToFront(lottieContainer)
+//        ConstraintBuilder.setupAllEdgesConstrainFor(child: loadingView, into: lottieContainer)
+//        loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
+//    }
     
     private func createBarButtonMenu() {
         guard let navigationBar = navigationController?.navigationBar else { return }
