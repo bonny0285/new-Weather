@@ -11,31 +11,35 @@ import RealmSwift
 
 class DatabaseRepository {
     
-    func save(_ citiesList: [CitiesList]) {}
+    func save(_ citiesList: [CitiesListRealm]) {
+        do {
+            let realm = try Realm.init()
+            try realm.write {
+                realm.add(citiesList)
+            }
+        } catch {
+            
+        }
+    }
     
-//    func saveWeather(_ cityName: String, _ latitude: Double, _ longitude: Double) {
-//        
-//        do {
-//            let realm = try Realm.init()
-//            
-//            let weather = RealmWeatherManager.init()
-//            weather.name = cityName
-//            weather.latitude = latitude
-//            weather.longitude = longitude
-//            
-//            let results = realm.objects(RealmWeatherManager.self)
-//            
-//            if results.count == 10 {
-//                delegate?.setupNavigationBar(results.count, true, false)
-//            } else {
-//                try realm.write {
-//                    realm.add(weather)
-//                    delegate?.setupNavigationBar(results.count + 1, true, true)
-//                    debugPrint("ITEM ADDED: \(cityName)")
-//                }
-//            }
-//        } catch let error {
-//            debugPrint(error.localizedDescription)
-//        }
-//    }
+    func retriveAll(completion: @escaping ([CitiesListRealm]?) -> ()) {
+        
+        do {
+            let realm = try Realm.init()
+            let results = realm.objects(CitiesListRealm.self).sorted { $0.name < $1.name }
+            completion(results)
+        } catch {
+            completion(nil)
+        }
+    }
+    
+    func retriveByLetter(_ letter: String, completion: @escaping ([CitiesListRealm]?) -> ()) {
+        do {
+            let realm = try Realm.init()
+            let results = realm.objects(CitiesListRealm.self).sorted { $0.name < $1.name }.filter { $0.name.starts(with: letter) }
+            completion(results)
+        } catch {
+            completion(nil)
+        }
+    }
 }

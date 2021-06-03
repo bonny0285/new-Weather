@@ -7,6 +7,20 @@
 //
 
 import UIKit
+import RealmSwift
+
+class CitiesListRealm: Object {
+    @objc dynamic var reference = UUID()
+    @objc dynamic var id: Int = 0
+    @objc dynamic var name: String = ""
+    @objc dynamic var country: String = ""
+    @objc dynamic var coord: CytiCoordRealm = CytiCoordRealm()
+}
+
+class CytiCoordRealm: Object {
+    @objc dynamic var lat: Double = 0.0
+    @objc dynamic var lon: Double = 0.0
+}
 
 struct CitiesList: Decodable, Hashable {
     let reference = UUID()
