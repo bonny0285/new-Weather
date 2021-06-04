@@ -173,7 +173,34 @@ extension DashboardViewController: SideMenuViewControllerDelegate {
         
         switch option {
         case .search:
-            viewModel.delegate?.openSearchViewController()
+            let controller = UIAlertController(title: "Do you want download all cities?", message: "Press Yes for download all cities list or No for not", preferredStyle: .alert)
+            
+            let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                
+                self.viewModel.fetchCities { [weak self] result in
+                    guard let self = self else { return }
+                    
+                    switch result {
+                    case .success(let citiesList):
+                        let databaseRepository = DatabaseRepository()
+                        databaseRepository.save(citiesList)
+                        
+                        self.viewModel.delegate?.openSearchViewController()
+                        
+                    case .failure(let error):
+                        print("Error during download cities list: \(error)")
+                    }
+                }
+                
+                
+            }
+            
+            let noAction = UIAlertAction(title: "No", style: .cancel, handler: nil)
+            
+            controller.addAction(yesAction)
+            controller.addAction(noAction)
+            self.present(controller, animated: true, completion: nil)
+            
         case .saved:
             viewModel.delegate?.openSavedViewController()
         }

@@ -31,7 +31,7 @@ class SearchForCityViewModel: NSObject {
 //       }
     }
     
-    func fetchBySearch(startWith text: String, completion: @escaping ([CitiesList]) -> ()) {
+    func fetchBySearch(startWith text: String, completion: @escaping ([CitiesList]?) -> ()) {
         let file = Bundle.main.path(forResource: "cityList", ofType: "json")!
         do {
             let data = try Data(contentsOf: URL(fileURLWithPath: file))
@@ -42,6 +42,7 @@ class SearchForCityViewModel: NSObject {
             
         } catch let error {
             print(error)
+            completion(nil)
         }
     }
 //    

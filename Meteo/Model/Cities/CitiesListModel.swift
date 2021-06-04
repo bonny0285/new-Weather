@@ -9,21 +9,32 @@
 import UIKit
 import RealmSwift
 
-class CitiesListRealm: Object {
-    @objc dynamic var reference = UUID()
+//@objcMembers
+class CitiesListRealm: Object, Decodable {
+    @objc dynamic var reference = UUID().uuidString
     @objc dynamic var id: Int = 0
     @objc dynamic var name: String = ""
     @objc dynamic var country: String = ""
-    @objc dynamic var coord: CytiCoordRealm = CytiCoordRealm()
+    @objc dynamic var latitude: Double = 0.0
+    @objc dynamic var longitude: Double = 0.0
+    
+    override static func primaryKey() -> String? {
+        return "reference"
+      }
+    
+    init(reference: String,id: Int, name: String, country: String, latitude: Double, longitude: Double) {
+        self.reference = reference
+        self.id = id
+        self.name = name
+        self.country = country
+        self.latitude = latitude
+        self.longitude = longitude
+    }
 }
 
-class CytiCoordRealm: Object {
-    @objc dynamic var lat: Double = 0.0
-    @objc dynamic var lon: Double = 0.0
-}
 
-struct CitiesList: Decodable, Hashable {
-    let reference = UUID()
+class CitiesList: Decodable, Hashable {
+    let reference = UUID().uuidString
     let id: Int
     let name: String
     let country: String

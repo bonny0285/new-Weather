@@ -60,7 +60,11 @@ class SearchForCityViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
- 
+        let databaseRepository = DatabaseRepository()
+        databaseRepository.retriveAll { [weak self] result in
+            guard let self = self, let result = result else { return }
+            print(result.count)
+        }
     }
     
 

@@ -43,6 +43,25 @@ class DashboardViewModel: NSObject {
         defaults.set(longitude, forKey: "longitude")
     }
     
+    func fetchCities(_ completion: @escaping(Result<[CitiesListRealm], Error>) -> ()) {
+        let file = Bundle.main.path(forResource: "cityList", ofType: "json")
+        
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: file!))
+            let decoder = JSONDecoder()
+            let result = try decoder.decode([CitiesList].self, from: data)
+            
+            let cities = result.sorted { $0.name < $1.name}.compactMap { $0 }
+            
+            let newCities = cities.map { CitiesListRealm(reference: $0.reference, id: $0.id, name: $0.name, country: $0.country, latitude: $0.coord.lat, longitude: $0.coord.lon)}
+            
+            completion(.success(newCities))
+            
+        } catch let error {
+            completion(.failure(error))
+        }
+    }
+    
 }
 
 extension DashboardViewModel: CLLocationManagerDelegate {
