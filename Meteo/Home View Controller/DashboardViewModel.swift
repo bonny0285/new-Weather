@@ -34,8 +34,9 @@ class DashboardViewModel: NSObject {
     override init() {
         super.init()
         locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.requestLocation()
+        //locationManager.requestWhenInUseAuthorization()
+        locationManager.requestAlwaysAuthorization()
+        //locationManager.requestLocation()
     }
     
     private func saveUserLocation(latitude: Double, longitude: Double) {
@@ -44,18 +45,19 @@ class DashboardViewModel: NSObject {
     }
     
     func fetchCities(_ completion: @escaping(Result<[CitiesListRealm], Error>) -> ()) {
+   
         let file = Bundle.main.path(forResource: "cityList", ofType: "json")
         
         do {
             let data = try Data(contentsOf: URL(fileURLWithPath: file!))
             let decoder = JSONDecoder()
-            let result = try decoder.decode([CitiesList].self, from: data)
+            let result = try decoder.decode([CitiesListRealm].self, from: data)
             
             let cities = result.sorted { $0.name < $1.name}.compactMap { $0 }
             
-            let newCities = cities.map { CitiesListRealm(reference: $0.reference, id: $0.id, name: $0.name, country: $0.country, latitude: $0.coord.lat, longitude: $0.coord.lon)}
+            //let newCities = cities.map { CitiesListRealm(reference: $0.reference, id: $0.id, name: $0.name, country: $0.country, latitude: $0.coord.lat, longitude: $0.coord.lon)}
             
-            completion(.success(newCities))
+            completion(.success(cities))
             
         } catch let error {
             completion(.failure(error))
@@ -65,6 +67,14 @@ class DashboardViewModel: NSObject {
 }
 
 extension DashboardViewModel: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            manager.requestLocation()
+        } else {
+            manager.requestWhenInUseAuthorization()
+        }
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         if let location = locations.last {

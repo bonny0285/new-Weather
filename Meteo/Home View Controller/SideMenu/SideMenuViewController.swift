@@ -203,7 +203,7 @@ extension SideMenuViewController: UITableViewDelegate {
                 for: indexPath
             ) as? MenuCell
             
-            cell?.configureWhit(title.rawValue)
+            cell?.configureWhitTitle(title.rawValue)
             return cell
         }
     }

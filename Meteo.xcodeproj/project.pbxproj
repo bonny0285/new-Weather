@@ -58,6 +58,7 @@
 		B4ACA182265C55520042ACB5 /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA181265C55520042ACB5 /* DoubleExtensions.swift */; };
 		B4ACA186265C55610042ACB5 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA185265C55610042ACB5 /* IntExtensions.swift */; };
 		B4ACA1932666C4890042ACB5 /* DatabaseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4ACA1922666C4890042ACB5 /* DatabaseRepository.swift */; };
+		B4B3B07C266A6C3700C52809 /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B3B07B266A6C3700C52809 /* CollectionExtensions.swift */; };
 		B4CCC6AD2657E33D00293437 /* WeatherMiddleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6AC2657E33D00293437 /* WeatherMiddleView.swift */; };
 		B4CCC6AF2657E34D00293437 /* WeatherMiddleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B4CCC6AE2657E34D00293437 /* WeatherMiddleView.xib */; };
 		B4CCC6D5265CF9F300293437 /* ConstraintBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CCC6D4265CF9F300293437 /* ConstraintBuilder.swift */; };
@@ -141,6 +142,7 @@
 		B4ACA181265C55520042ACB5 /* DoubleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtensions.swift; sourceTree = "<group>"; };
 		B4ACA185265C55610042ACB5 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 		B4ACA1922666C4890042ACB5 /* DatabaseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseRepository.swift; sourceTree = "<group>"; };
+		B4B3B07B266A6C3700C52809 /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
 		B4CCC6AC2657E33D00293437 /* WeatherMiddleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherMiddleView.swift; sourceTree = "<group>"; };
 		B4CCC6AE2657E34D00293437 /* WeatherMiddleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WeatherMiddleView.xib; sourceTree = "<group>"; };
 		B4CCC6D4265CF9F300293437 /* ConstraintBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintBuilder.swift; sourceTree = "<group>"; };
@@ -400,6 +402,7 @@
 				B4ACA17B265C55420042ACB5 /* StringExtensions.swift */,
 				B4ACA181265C55520042ACB5 /* DoubleExtensions.swift */,
 				B4ACA185265C55610042ACB5 /* IntExtensions.swift */,
+				B4B3B07B266A6C3700C52809 /* CollectionExtensions.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -628,6 +631,7 @@
 				70F9DD2625175D8D0031E6C5 /* FetchingFavoriteWeathers.swift in Sources */,
 				B48BAAD92654F46D00867253 /* WeatherRepository.swift in Sources */,
 				B4CCC6AD2657E33D00293437 /* WeatherMiddleView.swift in Sources */,
+				B4B3B07C266A6C3700C52809 /* CollectionExtensions.swift in Sources */,
 				701DA02524ED9CEE007F14DF /* CurrentWeatherView.swift in Sources */,
 				B4CCC6D9265CFEA100293437 /* SavedWeatherViewController.swift in Sources */,
 				701DA02124EB3342007F14DF /* MainTableViewCell.swift in Sources */,

@@ -11,30 +11,32 @@ import RealmSwift
 
 //@objcMembers
 class CitiesListRealm: Object, Decodable {
-    @objc dynamic var reference = UUID().uuidString
+    //@objc dynamic var reference = UUID().uuidString
     @objc dynamic var id: Int = 0
     @objc dynamic var name: String = ""
     @objc dynamic var country: String = ""
-    @objc dynamic var latitude: Double = 0.0
-    @objc dynamic var longitude: Double = 0.0
+    @objc dynamic var coord: CityCoordRealm? 
     
     override static func primaryKey() -> String? {
-        return "reference"
+        return "id"
       }
     
-    init(reference: String,id: Int, name: String, country: String, latitude: Double, longitude: Double) {
-        self.reference = reference
-        self.id = id
-        self.name = name
-        self.country = country
-        self.latitude = latitude
-        self.longitude = longitude
-    }
+//    init(id: Int, name: String, country: String, coord: CityCoordRealm) {
+//        //self.reference = reference
+//        self.id = id
+//        self.name = name
+//        self.country = country
+//        self.coord = coord
+//    }
 }
 
+class CityCoordRealm: Object, Decodable {
+    @objc dynamic var lat: Double = 0.0
+    @objc dynamic var lon: Double = 0.0
+}
 
 class CitiesList: Decodable, Hashable {
-    let reference = UUID().uuidString
+    let reference = UUID()
     let id: Int
     let name: String
     let country: String

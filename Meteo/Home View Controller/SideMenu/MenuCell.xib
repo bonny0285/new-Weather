@@ -18,21 +18,33 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="83"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jM1-JR-9B0">
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9bl-ZF-yxu">
                         <rect key="frame" x="10" y="24.5" width="310" height="34.5"/>
-                        <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="25"/>
-                        <color key="textColor" name="totalBlack"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jM1-JR-9B0">
+                                <rect key="frame" x="0.0" y="0.0" width="145" height="34.5"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="25"/>
+                                <color key="textColor" name="totalBlack"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5K8-xu-mwa">
+                                <rect key="frame" x="165" y="0.0" width="145" height="34.5"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="25"/>
+                                <color key="textColor" name="totalBlack"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="jM1-JR-9B0" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="dsT-PT-Fvv"/>
-                    <constraint firstItem="jM1-JR-9B0" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="vYh-mp-3rB"/>
-                    <constraint firstAttribute="trailing" secondItem="jM1-JR-9B0" secondAttribute="trailing" id="x50-Wb-ojl"/>
+                    <constraint firstAttribute="trailing" secondItem="9bl-ZF-yxu" secondAttribute="trailing" id="NGi-rf-RAx"/>
+                    <constraint firstItem="9bl-ZF-yxu" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Yo0-dG-b2p"/>
+                    <constraint firstItem="9bl-ZF-yxu" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="zn8-yK-saS"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="subTitleLabel" destination="5K8-xu-mwa" id="VtE-mV-D5B"/>
                 <outlet property="titleLabel" destination="jM1-JR-9B0" id="lPu-U6-rcr"/>
             </connections>
             <point key="canvasLocation" x="131.8840579710145" y="44.53125"/>

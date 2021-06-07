@@ -24,7 +24,8 @@ class SearchForCityViewController: BaseViewController {
 //    private var lottieContainer = UIView()
 //    private var loadingView = AnimationView()
     private lazy var dataSource = configureDataSource()
-    private var cityContainer: [CitiesList] = []
+    private var cityContainer: [CitiesListRealm] = []
+    private let databaseRepository = DatabaseRepository()
     
     //MARK: - Lifecycle
 
@@ -60,10 +61,14 @@ class SearchForCityViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let databaseRepository = DatabaseRepository()
-        databaseRepository.retriveAll { [weak self] result in
-            guard let self = self, let result = result else { return }
-            print(result.count)
+       
+//        databaseRepository.retriveAllDict { [weak self] result in
+//            guard let self = self, let result = result else { return }
+//            print(result.count)
+//        }
+        
+        databaseRepository.retriveAllDictByLetter("R") { cities in
+            print(cities)
         }
     }
     
@@ -98,7 +103,27 @@ class SearchForCityViewController: BaseViewController {
 
     @IBAction func textFieldEditingDidChange(_ sender: UITextField) {
         super.animationIsNeeded = true
-
+        
+        let text = sender.text ?? ""
+        
+        if cityContainer.isEmpty == false, text.isEmpty == false {
+            databaseRepository.retriveAllDictByLetter(text) { cities in
+                
+            }
+            let filteredCityContainer = cityContainer.filter { $0.name.starts(with: text)}
+            snapshotDataSource(filteredCityContainer)
+            
+        } else if text.isEmpty == false {
+            databaseRepository.retriveByLetter(text) { [weak self] cities in
+                guard let self = self, let cities = cities else { return }
+                self.cityContainer = cities
+                self.snapshotDataSource(cities)
+            }
+            
+        } else {
+            cityContainer.removeAll()
+            snapshotDataSource([])
+        }
 //        if let text = sender.text, text.isEmpty == false {
 //            
 //            if self.cityContainer.count > 0 {
@@ -147,31 +172,33 @@ extension SearchForCityViewController: UITableViewDelegate {
             print("City name: \(city.name)")
             print("City id: \(city.id)")
             print("City country: \(city.country)")
-            print("UUID: \(city.reference)")
+            print("UUID: \(city.id)")
             //delegate?.sideMenuDidPressOption(option)
         }
 
-    private func configureDataSource() -> UITableViewDiffableDataSource<Section, CitiesList> {
+    private func configureDataSource() -> UITableViewDiffableDataSource<Section, CitiesListRealm> {
         return UITableViewDiffableDataSource(tableView: tableView) { (tableView, indexPath, city) -> UITableViewCell? in
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "MenuCell",
                 for: indexPath
-            ) as? MenuCell
+            ) as! MenuCell
             
-            cell?.configureWhit(city.name)
+            cell.configureWithTitleAndSubTitle(city.name, city.country)
+
             return cell
         }
     }
 
-    private func snapshotDataSource(_ data: [CitiesList]) {
+    private func snapshotDataSource(_ data: [CitiesListRealm]) {
         //let optionsContainer = MenuOptions.allCases
         print("SnapshotData: \(data.count)")
-        var snapshot = NSDiffableDataSourceSnapshot<Section, CitiesList>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, CitiesListRealm>()
         snapshot.appendSections([.main])
         snapshot.appendItems(data)
         snapshot.reloadItems(data)
         
         dataSource.apply(snapshot, animatingDifferences: false)
+        super.animationIsNeeded = false
     }
 }
 

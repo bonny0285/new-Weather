@@ -10,6 +10,16 @@ import UIKit
 import Lottie
 import Combine
 
+func setSearchForFirstTime(_ value: Bool) {
+    let userdeafult = UserDefaults.standard
+    userdeafult.set(value, forKey: "searchForFirstTime")
+}
+
+func retriveSearchForFirstTime() -> Bool {
+    let userdeafult = UserDefaults.standard
+    return userdeafult.bool(forKey: "searchForFirstTime")
+}
+
 class DashboardViewController: BaseViewController {
     
     //MARK: - Outlets
@@ -173,33 +183,39 @@ extension DashboardViewController: SideMenuViewControllerDelegate {
         
         switch option {
         case .search:
-            let controller = UIAlertController(title: "Do you want download all cities?", message: "Press Yes for download all cities list or No for not", preferredStyle: .alert)
             
-            let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+            if retriveSearchForFirstTime() == false {
+                let controller = UIAlertController(title: "Do you want download all cities?", message: "Press Yes for download all cities list or No for not", preferredStyle: .alert)
                 
-                self.viewModel.fetchCities { [weak self] result in
-                    guard let self = self else { return }
+                let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
                     
-                    switch result {
-                    case .success(let citiesList):
-                        let databaseRepository = DatabaseRepository()
-                        databaseRepository.save(citiesList)
+                    self.viewModel.fetchCities { [weak self] result in
+                        guard let self = self else { return }
                         
-                        self.viewModel.delegate?.openSearchViewController()
-                        
-                    case .failure(let error):
-                        print("Error during download cities list: \(error)")
+                        switch result {
+                        case .success(let citiesList):
+                            let databaseRepository = DatabaseRepository()
+                            databaseRepository.saveToDict(citiesList)
+                            
+                            self.viewModel.delegate?.openSearchViewController()
+                            
+                        case .failure(let error):
+                            print("Error during download cities list: \(error)")
+                        }
                     }
                 }
                 
+                let noAction = UIAlertAction(title: "No", style: .cancel, handler: nil)
                 
+                controller.addAction(yesAction)
+                controller.addAction(noAction)
+                self.present(controller, animated: true, completion: nil)
+                
+            } else {
+                self.viewModel.delegate?.openSearchViewController()
             }
             
-            let noAction = UIAlertAction(title: "No", style: .cancel, handler: nil)
             
-            controller.addAction(yesAction)
-            controller.addAction(noAction)
-            self.present(controller, animated: true, completion: nil)
             
         case .saved:
             viewModel.delegate?.openSavedViewController()
