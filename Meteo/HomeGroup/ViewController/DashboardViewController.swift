@@ -39,25 +39,19 @@ class DashboardViewController: BaseViewController {
     var viewModel = DashboardViewModel()
     private var cancelBag = Set<AnyCancellable>()
     private let menuButton = UIButton()
-//    private var lottieContainer = UIView()
-//    private var loadingView = AnimationView()
     
     //MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         super.animationIsNeeded = true
-//        let animation = Animation.named("loading")
-//        setupAnimation(animation)
-        
+
         viewModel.$_weatherObject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 guard let self = self, let result = result else { return }
                 self.setupUIForWeather(result)
                 self.animationIsNeeded = false
-//                self.lottieContainer.removeFromSuperview()
-//                self.loadingView.stop()
             }
             .store(in: &cancelBag)
     }
@@ -71,28 +65,15 @@ class DashboardViewController: BaseViewController {
         super.viewDidDisappear(animated)
     }
     
-//    private func setupAnimation(_ animation: Animation?) {
-//        guard let animation = animation else { return }
-//        lottieContainer.backgroundColor = .white
-//        loadingView.frame = animation.bounds
-//        loadingView.animation = animation
-//        loadingView.contentMode = .scaleAspectFill
-//        loadingView.backgroundBehavior = .pauseAndRestore
-//        ConstraintBuilder.setupAllEdgesConstrainFor(child: lottieContainer, into: self.view)
-//        self.view.bringSubviewToFront(lottieContainer)
-//        ConstraintBuilder.setupAllEdgesConstrainFor(child: loadingView, into: lottieContainer)
-//        loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
-//    }
-    
     private func createBarButtonMenu() {
         guard let navigationBar = navigationController?.navigationBar else { return }
         
-        //let button = UIButton()
         menuButton.addTarget(self, action: #selector(menuIsPressed(_:)), for: .touchUpInside)
         let menuImage = UIImage(named: "menu")
         menuButton.setImage(menuImage, for: .normal)
         
         let buttonRatio = (navigationBar.frame.height - 10)
+        
         ConstraintBuilder.setupConstraintFor(
             child: menuButton,
             into: navigationBar,
@@ -126,7 +107,7 @@ class DashboardViewController: BaseViewController {
         self.setupMiddleWeatherCards(with: weather.list)
     }
     
-    private func setupMiddleWeatherCards(with list: [List]) {
+    private func setupMiddleWeatherCards(with list: [JSONObjectList]) {
         horizontalScrollView.subviews.forEach { $0.removeFromSuperview() }
         
         var containerView: [UIView] = []
@@ -176,6 +157,8 @@ class DashboardViewController: BaseViewController {
 
 }
 
+//MARK: - SideMenuViewControllerDelegate
+
 extension DashboardViewController: SideMenuViewControllerDelegate {
     func sideMenuDidPressOption(_ option: SideMenuViewController.MenuOptions) {
         guard let _ = navigationController?.navigationBar else { return }
@@ -196,7 +179,7 @@ extension DashboardViewController: SideMenuViewControllerDelegate {
                         case .success(let citiesList):
                             let databaseRepository = DatabaseRepository()
                             databaseRepository.saveToDict(citiesList)
-                            
+                            setSearchForFirstTime(true)
                             self.viewModel.delegate?.openSearchViewController()
                             
                         case .failure(let error):
@@ -212,7 +195,31 @@ extension DashboardViewController: SideMenuViewControllerDelegate {
                 self.present(controller, animated: true, completion: nil)
                 
             } else {
-                self.viewModel.delegate?.openSearchViewController()
+                self.viewModel.delegate?.closeSideMenu()
+                
+                UIView.animate(withDuration: 0.4) {
+                    let progressPopupView = ProgressPopupView()
+                    progressPopupView.backgroundColor = .white
+                    DispatchQueue.main.async {
+                        progressPopupView.configureWith(title: "Do you want download all cities?")
+                    }
+                    
+                    
+                    ConstraintBuilder.setupConstraintFor(
+                        child: progressPopupView,
+                        into: self.view,
+                        constraints: [
+                            .height(constant: self.view.frame.height / 2),
+                            .bottom(),
+                            .leading(),
+                            .trailing()
+                        ]
+                    )
+                    
+                    self.view.bringSubviewToFront(progressPopupView)
+                }
+                
+               // self.viewModel.delegate?.openSearchViewController()
             }
             
             

@@ -9,6 +9,7 @@
 import UIKit
 import Lottie
 import Combine
+import RealmSwift
 
 class SearchForCityViewController: BaseViewController {
 
@@ -24,7 +25,7 @@ class SearchForCityViewController: BaseViewController {
 //    private var lottieContainer = UIView()
 //    private var loadingView = AnimationView()
     private lazy var dataSource = configureDataSource()
-    private var cityContainer: [CitiesListRealm] = []
+    private var cityContainer: [CityBulk] = []
     private let databaseRepository = DatabaseRepository()
     
     //MARK: - Lifecycle
@@ -67,9 +68,7 @@ class SearchForCityViewController: BaseViewController {
 //            print(result.count)
 //        }
         
-        databaseRepository.retriveAllDictByLetter("R") { cities in
-            print(cities)
-        }
+        
     }
     
 
@@ -106,42 +105,53 @@ class SearchForCityViewController: BaseViewController {
         
         let text = sender.text ?? ""
         
-        if cityContainer.isEmpty == false, text.isEmpty == false {
-            databaseRepository.retriveAllDictByLetter(text) { cities in
-                
-            }
-            let filteredCityContainer = cityContainer.filter { $0.name.starts(with: text)}
-            snapshotDataSource(filteredCityContainer)
+        if cityContainer.count == 0, text.isEmpty == false {
             
-        } else if text.isEmpty == false {
-            databaseRepository.retriveByLetter(text) { [weak self] cities in
+            databaseRepository.retriveAllDictByLetter(text) { [weak self] cities in
                 guard let self = self, let cities = cities else { return }
-                self.cityContainer = cities
-                self.snapshotDataSource(cities)
+                let filtered = Array(cities).filter { $0.name.contains(text) }
+                self.cityContainer = filtered
+                self.snapshotDataSource(self.cityContainer)
             }
             
-        } else {
+        } else if text.isEmpty == false, cityContainer.count > 0 {
+            
+            let filtered = cityContainer.filter { $0.name.contains(text) }
+            snapshotDataSource(filtered)
+            
+        } else if text.isEmpty {
             cityContainer.removeAll()
-            snapshotDataSource([])
+            snapshotDataSource(cityContainer)
         }
-//        if let text = sender.text, text.isEmpty == false {
+//        else {
+//            guard let cities = cityContainer else { return }
+//            var filtered = Array(cities)
+//            snapshotDataSource(filtered)
+//            cityContainer?.removeAll()
+//            snapshotDataSource(cityContainer!)
+//        }
+        
+        
+        
+//        if cityContainer.isEmpty == false, text.isEmpty == false {
+//            databaseRepository.retriveAllDictByLetter(text) { cities in
+//                
+//            }
+//            let filteredCityContainer = cityContainer.filter { $0.name.starts(with: text)}
+//            snapshotDataSource(filteredCityContainer)
 //            
-//            if self.cityContainer.count > 0 {
-//                self.snapshotDataSource(self.cityContainer.filter { $0.name.starts(with: text) })
-//                super.animationIsNeeded = false
-//            } else {
-//                self.viewModel.fetchBySearch(startWith: text) { result in
-//                    self.cityContainer = result
-//                    self.snapshotDataSource(result)
-//                    super.animationIsNeeded = false
-//                }
+//        } else if text.isEmpty == false {
+//            databaseRepository.retriveByLetter(text) { [weak self] cities in
+//                guard let self = self, let cities = cities else { return }
+//                self.cityContainer = cities
+//                self.snapshotDataSource(cities)
 //            }
 //            
 //        } else {
-//            self.cityContainer.removeAll()
-//            self.snapshotDataSource(self.cityContainer)
-//            super.animationIsNeeded = false
+//            cityContainer.removeAll()
+//            snapshotDataSource([])
 //        }
+
     }
 }
 
@@ -176,7 +186,7 @@ extension SearchForCityViewController: UITableViewDelegate {
             //delegate?.sideMenuDidPressOption(option)
         }
 
-    private func configureDataSource() -> UITableViewDiffableDataSource<Section, CitiesListRealm> {
+    private func configureDataSource() -> UITableViewDiffableDataSource<Section, CityBulk> {
         return UITableViewDiffableDataSource(tableView: tableView) { (tableView, indexPath, city) -> UITableViewCell? in
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "MenuCell",
@@ -188,14 +198,28 @@ extension SearchForCityViewController: UITableViewDelegate {
             return cell
         }
     }
-
-    private func snapshotDataSource(_ data: [CitiesListRealm]) {
+    
+    
+    
+    private func snapshotDataSource(_ data: [CityBulk]) {
         //let optionsContainer = MenuOptions.allCases
         print("SnapshotData: \(data.count)")
-        var snapshot = NSDiffableDataSourceSnapshot<Section, CitiesListRealm>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, CityBulk>()
         snapshot.appendSections([.main])
         snapshot.appendItems(data)
         snapshot.reloadItems(data)
+        
+        dataSource.apply(snapshot, animatingDifferences: false)
+        super.animationIsNeeded = false
+    }
+
+    private func snapshotDataSource(_ data: List<CityBulk>) {
+        //let optionsContainer = MenuOptions.allCases
+        print("SnapshotData: \(data.count)")
+        var snapshot = NSDiffableDataSourceSnapshot<Section, CityBulk>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(data.map { $0 })
+        snapshot.reloadItems(data.map { $0 })
         
         dataSource.apply(snapshot, animatingDifferences: false)
         super.animationIsNeeded = false

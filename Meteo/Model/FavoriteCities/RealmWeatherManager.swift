@@ -9,13 +9,13 @@
 import UIKit
 import RealmSwift
 
-
-class RealmWeatherManager: Object {
-    
-    @objc dynamic var name: String = ""
-    @objc dynamic var latitude: Double = 0.0
-    @objc dynamic var longitude: Double = 0.0
-}
-
-
+//
+//class RealmWeatherManager: Object {
+//    
+//    @objc dynamic var name: String = ""
+//    @objc dynamic var latitude: Double = 0.0
+//    @objc dynamic var longitude: Double = 0.0
+//}
+//
+//
 

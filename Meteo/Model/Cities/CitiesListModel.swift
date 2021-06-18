@@ -8,52 +8,42 @@
 
 import UIKit
 import RealmSwift
+import Realm
 
 //@objcMembers
-class CitiesListRealm: Object, Decodable {
-    //@objc dynamic var reference = UUID().uuidString
+
+/// CityBulk class is used for decoding "cityList.json"
+class CityBulk: Object, Codable {
+    
     @objc dynamic var id: Int = 0
     @objc dynamic var name: String = ""
     @objc dynamic var country: String = ""
-    @objc dynamic var coord: CityCoordRealm? 
+    @objc dynamic var coord: CoordBulk? = nil
     
     override static func primaryKey() -> String? {
         return "id"
-      }
-    
-//    init(id: Int, name: String, country: String, coord: CityCoordRealm) {
-//        //self.reference = reference
-//        self.id = id
-//        self.name = name
-//        self.country = country
-//        self.coord = coord
-//    }
-}
-
-class CityCoordRealm: Object, Decodable {
-    @objc dynamic var lat: Double = 0.0
-    @objc dynamic var lon: Double = 0.0
-}
-
-class CitiesList: Decodable, Hashable {
-    let reference = UUID()
-    let id: Int
-    let name: String
-    let country: String
-    let coord: CityCoord
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(reference)
     }
-
-    static func == (lhs: CitiesList, rhs: CitiesList) -> Bool {
-        return lhs.reference == rhs.reference
+    
+    static func == (lhs: CityBulk, rhs: CityBulk) -> Bool {
+        return lhs.name == rhs.name
     }
 }
 
+/// CoordBulk is used for instantiate an attribute in CityBulk class
+class CoordBulk: Object, Codable {
+    @objc var lat: Double = 0.0
+    @objc var lon: Double = 0.0
+}
 
+/// CitybulkDictionary is used for storage data usign Realm
+class CityBulkDictionary: Object, Codable {
+    @objc dynamic var index: String = ""
+    dynamic var cities = List<CityBulk>()
+    
+    override init() { super.init() }
 
-struct CityCoord: Decodable {
-    let lat: Double
-    let lon: Double
+    init(index: String, cities: List<CityBulk>) {
+        self.index = index
+        self.cities = cities
+    }
 }

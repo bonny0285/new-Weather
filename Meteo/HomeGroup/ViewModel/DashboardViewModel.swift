@@ -9,11 +9,13 @@
 import UIKit
 import CoreLocation
 import Combine
+import RealmSwift
 
 protocol DashboardViewModelDelegate: AnyObject {
     func openSideMenu(parent: UIViewController & SideMenuViewControllerDelegate, height: CGFloat, width: CGFloat, navigationBarHeight: CGFloat)
     func openSearchViewController()
     func openSavedViewController()
+    func closeSideMenu()
 }
 
 class DashboardViewModel: NSObject {
@@ -44,20 +46,15 @@ class DashboardViewModel: NSObject {
         defaults.set(longitude, forKey: "longitude")
     }
     
-    func fetchCities(_ completion: @escaping(Result<[CitiesListRealm], Error>) -> ()) {
-   
-        let file = Bundle.main.path(forResource: "cityList", ofType: "json")
-        
+    func fetchCities(completion: @escaping (Result<[String : [CityBulk]], Error>) -> ()) {
+        let file = Bundle.main.path(forResource: "cityList", ofType: "json")!
+                
         do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: file!))
-            let decoder = JSONDecoder()
-            let result = try decoder.decode([CitiesListRealm].self, from: data)
-            
-            let cities = result.sorted { $0.name < $1.name}.compactMap { $0 }
-            
-            //let newCities = cities.map { CitiesListRealm(reference: $0.reference, id: $0.id, name: $0.name, country: $0.country, latitude: $0.coord.lat, longitude: $0.coord.lon)}
-            
-            completion(.success(cities))
+            let data = try Data(contentsOf: URL(fileURLWithPath: file))
+            let result = try JSONDecoder().decode([CityBulk].self, from: data)//.sorted { $0.name < $1.name}.compactMap { $0 }//.filter { $0.name.starts(with: text) }
+            let cities = result.filter { $0.name != "" }
+            let dict: [String : [CityBulk]] = Dictionary(grouping: cities, by: { String($0.name.first!) })
+            completion(.success(dict))
             
         } catch let error {
             completion(.failure(error))

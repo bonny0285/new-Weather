@@ -41,6 +41,11 @@ class DashboardCoordinator: BaseCoordinator {
 }
 
 extension DashboardCoordinator: DashboardViewModelDelegate {
+    func closeSideMenu() {
+        guard let parent = rootNavigationController.viewControllers.first else { return }
+        sideMenu.close(parent: parent, withDuration: 0.2)
+    }
+    
     func openSearchViewController() {
         guard let parent = rootNavigationController.viewControllers.first else { return }
         sideMenu.close(parent: parent)
