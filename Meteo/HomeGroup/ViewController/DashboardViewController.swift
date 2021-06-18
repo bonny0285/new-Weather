@@ -41,11 +41,11 @@ class DashboardViewController: BaseViewController {
     private let menuButton = UIButton()
     
     //MARK: - Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         super.animationIsNeeded = true
-
+        
         viewModel.$_weatherObject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -61,11 +61,17 @@ class DashboardViewController: BaseViewController {
         createBarButtonMenu()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        menuButton.removeFromSuperview()
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
     }
     
     private func createBarButtonMenu() {
+        
         guard let navigationBar = navigationController?.navigationBar else { return }
         
         menuButton.addTarget(self, action: #selector(menuIsPressed(_:)), for: .touchUpInside)
@@ -96,7 +102,7 @@ class DashboardViewController: BaseViewController {
     }
     
     //MARK: - Methods
-
+    
     private func setupUIForWeather(_ weather: JSONObject) {
         let temp = weather.list.first!.main.temp.temperatureString
         self.title = "\(weather.city.name) \(temp)°C"
@@ -153,8 +159,8 @@ class DashboardViewController: BaseViewController {
     }
     
     //MARK: - Actions
-
-
+    
+    
 }
 
 //MARK: - SideMenuViewControllerDelegate
@@ -162,70 +168,54 @@ class DashboardViewController: BaseViewController {
 extension DashboardViewController: SideMenuViewControllerDelegate {
     func sideMenuDidPressOption(_ option: SideMenuViewController.MenuOptions) {
         guard let _ = navigationController?.navigationBar else { return }
-        menuButton.removeFromSuperview()
         
         switch option {
         case .search:
-            
+            menuButton.isEnabled = false
             if retriveSearchForFirstTime() == false {
-                let controller = UIAlertController(title: "Do you want download all cities?", message: "Press Yes for download all cities list or No for not", preferredStyle: .alert)
-                
-                let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
-                    
-                    self.viewModel.fetchCities { [weak self] result in
-                        guard let self = self else { return }
-                        
-                        switch result {
-                        case .success(let citiesList):
-                            let databaseRepository = DatabaseRepository()
-                            databaseRepository.saveToDict(citiesList)
-                            setSearchForFirstTime(true)
-                            self.viewModel.delegate?.openSearchViewController()
-                            
-                        case .failure(let error):
-                            print("Error during download cities list: \(error)")
-                        }
-                    }
-                }
-                
-                let noAction = UIAlertAction(title: "No", style: .cancel, handler: nil)
-                
-                controller.addAction(yesAction)
-                controller.addAction(noAction)
-                self.present(controller, animated: true, completion: nil)
-                
-            } else {
                 self.viewModel.delegate?.closeSideMenu()
-                
-                UIView.animate(withDuration: 0.4) {
-                    let progressPopupView = ProgressPopupView()
-                    progressPopupView.backgroundColor = .white
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    UIView.animate(withDuration: 0.4) {
+                        let progressPopupView = ProgressPopupView()
+                        progressPopupView.delegate = self
+                        progressPopupView.backgroundColor = .white
                         progressPopupView.configureWith(title: "Do you want download all cities?")
+                        
+                        ConstraintBuilder.setupConstraintFor(
+                            child: progressPopupView,
+                            into: self.view,
+                            constraints: [
+                                .height(constant: self.view.frame.height / 2),
+                                .bottom(),
+                                .leading(),
+                                .trailing()
+                            ]
+                        )
+                        
+                        self.view.bringSubviewToFront(progressPopupView)
                     }
-                    
-                    
-                    ConstraintBuilder.setupConstraintFor(
-                        child: progressPopupView,
-                        into: self.view,
-                        constraints: [
-                            .height(constant: self.view.frame.height / 2),
-                            .bottom(),
-                            .leading(),
-                            .trailing()
-                        ]
-                    )
-                    
-                    self.view.bringSubviewToFront(progressPopupView)
                 }
-                
-               // self.viewModel.delegate?.openSearchViewController()
+            } else {
+                self.viewModel.delegate?.openSearchViewController()
             }
-            
-            
             
         case .saved:
             viewModel.delegate?.openSavedViewController()
         }
+    }
+}
+
+//MARK: - ProgressPopupViewDelegate
+
+extension DashboardViewController: ProgressPopupViewDelegate {
+    func closeProgressPopupView(_ progressPopupView: ProgressPopupView) {
+        menuButton.isEnabled = true
+        progressPopupView.removeFromSuperview()
+    }
+    
+    func fetchAndSaveCitiesAreFinisched(_ progressPopupView: ProgressPopupView) {
+        setSearchForFirstTime(true)
+        progressPopupView.removeFromSuperview()
+        self.viewModel.delegate?.openSearchViewController()
     }
 }

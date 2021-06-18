@@ -10,7 +10,8 @@ import UIKit
 import Combine
 
 protocol ProgressPopupViewDelegate: AnyObject {
-    func closeProgressPopupView()
+    func closeProgressPopupView(_ progressPopupView: ProgressPopupView)
+    func fetchAndSaveCitiesAreFinisched(_ progressPopupView: ProgressPopupView)
 }
 
 class ProgressPopupView: UIView {
@@ -94,50 +95,52 @@ class ProgressPopupView: UIView {
         progressView.heightAnchor.constraint(equalToConstant: 10).isActive = true
         progressView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20).isActive = true
         progressView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        progressView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -20).isActive = true
+        progressView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -40).isActive = true
         progressView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
     }
     
     private func setupScoreOnProgressView(_ score: Int64) {
-        DispatchQueue.main.async {
-            let totalProgress = Progress(totalUnitCount: 209579)
-            self.progressView.progress = 0.0
-            totalProgress.completedUnitCount = 0
-            self.progressView.tintColor = .blue
-            self.progressView.progressTintColor = .blue
+        //DispatchQueue.main.async {
+            self.progressView.progressTintColor = .red
             self.progressView.trackTintColor = .gray
-            totalProgress.completedUnitCount = Int64(score)
+            let totalProgress = Progress(totalUnitCount: 100)
+            totalProgress.completedUnitCount = score
             let progressFloat = Float(totalProgress.fractionCompleted)
             self.progressView.setProgress(progressFloat, animated: true)
-        }
+      //  }
     }
     
     @objc private func confirmButtonAction(_ sender: UIButton) {
         
-        DispatchQueue.main.async {
-            self.progressView.progressTintColor = .red
-            self.progressView.trackTintColor = .gray
-            self.progressView.progress = 10
-            let progress: Float = Float(self.viewModel.score) / Float(209579)
-            //self.progressView.progress = Float(self.viewModel.score) / Float(209579)
-            self.progressView.setProgress(progress, animated: true)
-        }
+        let groupOfDispatch = DispatchGroup()
+//        DispatchQueue.main.async {
+//            self.progressView.progressTintColor = .red
+//            self.progressView.trackTintColor = .gray
+//            self.progressView.progress = 10
+//            let progress: Float = Float(self.viewModel.score) / Float(209579)
+//            //self.progressView.progress = Float(self.viewModel.score) / Float(209579)
+//            self.progressView.setProgress(progress, animated: true)
+//        }
+        groupOfDispatch.enter()
+        setupScoreOnProgressView(30)
+        groupOfDispatch.leave()
         
-
-
         
-
+        
+        groupOfDispatch.enter()
         self.viewModel.fetchCities { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let citiesList):
-                print(citiesList.count)
-//                let databaseRepository = DatabaseRepository()
-//                databaseRepository.saveToDict(citiesList)
+                print("Fetching reuslt cities list by ProgressPopupView are: \(citiesList.count)")
+                let databaseRepository = DatabaseRepository()
+                databaseRepository.saveToDict(citiesList)
 //                setSearchForFirstTime(true)
 //                self.viewModel.delegate?.openSearchViewController()
-                
+                self.delegate?.fetchAndSaveCitiesAreFinisched(self)
+                self.setupScoreOnProgressView(100)
+                groupOfDispatch.leave()
             case .failure(let error):
                 print("Error during download cities list: \(error)")
             }
@@ -147,6 +150,6 @@ class ProgressPopupView: UIView {
     }
     
     @objc private func cancelButtonAction(_ sender: UIButton) {
-        delegate?.closeProgressPopupView()
+        delegate?.closeProgressPopupView(self)
     }
 }

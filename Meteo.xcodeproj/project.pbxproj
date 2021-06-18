@@ -30,6 +30,8 @@
 		B408AC97229AB56E0000AE68 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B408AC95229AB56E0000AE68 /* LaunchScreen.storyboard */; };
 		B408ACA2229AB56E0000AE68 /* MeteoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B408ACA1229AB56E0000AE68 /* MeteoTests.swift */; };
 		B4375BF926589E8000C57B36 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4375BF826589E8000C57B36 /* SideMenuViewController.swift */; };
+		B46CA557267CF77A004FE5DF /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA556267CF77A004FE5DF /* BaseViewController.swift */; };
+		B46CA559267CFA88004FE5DF /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA558267CFA88004FE5DF /* TODO.swift */; };
 		B48BAACF265433A700867253 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48BAACE265433A700867253 /* DashboardViewController.swift */; };
 		B48BAAD22654348800867253 /* BaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48BAAD12654348800867253 /* BaseCoordinator.swift */; };
 		B48BAAD42654350400867253 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48BAAD32654350400867253 /* AppCoordinator.swift */; };
@@ -99,6 +101,8 @@
 		B408ACA1229AB56E0000AE68 /* MeteoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeteoTests.swift; sourceTree = "<group>"; };
 		B408ACA3229AB56E0000AE68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B4375BF826589E8000C57B36 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
+		B46CA556267CF77A004FE5DF /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		B46CA558267CFA88004FE5DF /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		B48BAACE265433A700867253 /* DashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
 		B48BAAD12654348800867253 /* BaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoordinator.swift; sourceTree = "<group>"; };
 		B48BAAD32654350400867253 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -299,7 +303,6 @@
 		B408AC80229AB56B0000AE68 = {
 			isa = PBXGroup;
 			children = (
-				704F7AAC24D9590A008359D7 /* Localizable.strings */,
 				B408AC8B229AB56B0000AE68 /* Meteo */,
 				B408ACA0229AB56E0000AE68 /* MeteoTests */,
 				B408AC8A229AB56B0000AE68 /* Products */,
@@ -320,6 +323,8 @@
 		B408AC8B229AB56B0000AE68 /* Meteo */ = {
 			isa = PBXGroup;
 			children = (
+				B46CA558267CFA88004FE5DF /* TODO.swift */,
+				704F7AAC24D9590A008359D7 /* Localizable.strings */,
 				B4CCC6D3265CF9C700293437 /* ConstraintBuilder */,
 				B4ACA17A265C55250042ACB5 /* Extensions */,
 				7016320D25063C1900574882 /* LottieResurce */,
@@ -358,6 +363,14 @@
 			path = HomeGroup;
 			sourceTree = "<group>";
 		};
+		B46CA555267CF75D004FE5DF /* BaseViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B46CA556267CF77A004FE5DF /* BaseViewController.swift */,
+			);
+			path = BaseViewController;
+			sourceTree = "<group>";
+		};
 		B48BAAD02654346900867253 /* New Coordinator */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,6 +393,7 @@
 		B4A288BF2437D344002E857F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B46CA555267CF75D004FE5DF /* BaseViewController */,
 				B408317F267B7930003C0DD6 /* Weather */,
 				706EA85A24E6DA2A001354C7 /* Cities */,
 				706EA85924E6DA08001354C7 /* FavoriteCities */,
@@ -624,8 +638,10 @@
 				704F7A9124D7E275008359D7 /* CitiesListModel.swift in Sources */,
 				B4083186267B85EF003C0DD6 /* ProgressPopupViewViewModel.swift in Sources */,
 				B48BAACF265433A700867253 /* DashboardViewController.swift in Sources */,
+				B46CA559267CFA88004FE5DF /* TODO.swift in Sources */,
 				B48BAAD92654F46D00867253 /* WeatherRepository.swift in Sources */,
 				B4CCC6AD2657E33D00293437 /* WeatherMiddleView.swift in Sources */,
+				B46CA557267CF77A004FE5DF /* BaseViewController.swift in Sources */,
 				B4B3B07C266A6C3700C52809 /* CollectionExtensions.swift in Sources */,
 				701DA02524ED9CEE007F14DF /* CurrentWeatherView.swift in Sources */,
 				B4CCC6D9265CFEA100293437 /* SavedWeatherViewController.swift in Sources */,

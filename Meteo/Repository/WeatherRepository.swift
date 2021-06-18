@@ -19,7 +19,7 @@ class WeatherRepository {
         cancellable = URLSession.shared.dataTaskPublisher(for: url)
             .map { $0.data }
             .map {
-                print(String(data:$0, encoding: .utf8))
+                //print(String(data:$0, encoding: .utf8))
                 return $0
             }
             .decode(type: JSONObject.self, decoder: JSONDecoder())

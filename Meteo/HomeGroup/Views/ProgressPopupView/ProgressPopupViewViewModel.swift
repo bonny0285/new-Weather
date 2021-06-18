@@ -21,12 +21,7 @@ class ProgressPopupViewViewModel {
             let data = try Data(contentsOf: URL(fileURLWithPath: file))
             //print(data.count)
             let result = try JSONDecoder().decode([CityBulk].self, from: data)
-            let cities = result.filter { value in
-                counter += 1
-                score += 1
-                
-                return value.name != ""
-            }
+            let cities = result.filter { return $0.name != "" }
             let dict: [String : [CityBulk]] = Dictionary(grouping: cities, by: { String($0.name.first!) })
             completion(.success(dict))
             
