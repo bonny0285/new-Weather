@@ -10,6 +10,7 @@ import UIKit
 import CoreLocation
 import Combine
 import RealmSwift
+import SPMNetworkRepository
 
 protocol DashboardViewModelDelegate: AnyObject {
     func openSideMenu(parent: UIViewController & SideMenuViewControllerDelegate, height: CGFloat, width: CGFloat, navigationBarHeight: CGFloat)
@@ -24,7 +25,6 @@ class DashboardViewModel: NSObject {
 
     private let locationManager = CLLocationManager()
     private var language: String { Locale.current.languageCode! }
-    private var weatherRepository = WeatherRepository()
     private(set) var latitude: Double = 0.0
     private(set) var longitude: Double = 0.0
     @Published var _weatherObject: JSONObject?
@@ -80,9 +80,21 @@ extension DashboardViewModel: CLLocationManagerDelegate {
             let lon = location.coordinate.longitude
             longitude = lon
             
-            weatherRepository.fetchWeather(latitude: lat, longitude: lon, language: language) { [weak self] result in
+            let url = URL(string:  "http://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&lang=\(language)&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric")!
+            
+            let networkRepository = NetworkRepository(url: url)
+            
+            networkRepository.fetch { [weak self] (result: Result<JSONObject,Error>) in
                 guard let self = self else { return }
-                self._weatherObject = result
+                
+                switch result {
+                case .success( let value):
+                    print(value)
+                    self._weatherObject = value
+                    
+                case .failure(let error):
+                    print(error)
+                }
             }
         }
     }

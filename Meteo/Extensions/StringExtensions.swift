@@ -27,4 +27,27 @@ extension String {
        let date = dateFormatter.string(from: dateFromString!)
        return date
    }
+    
+    var uppercasedFirst: String {
+        return self.prefix(1).uppercased() + self.lowercased().dropFirst()
+    }
+}
+
+
+import SPMNetworkRepository
+
+
+func prova () {
+    let url = URL(string:  "http://api.openweathermap.org/data/2.5/forecast?lat=\(0.00)&lon=\(0.00)&lang=\("it")&APPID=b40d5e51a29e2610c4746682f85099b2&units=metric")!
+    let a = NetworkRepository(url: url)
+   
+   
+    a.fetch { (result: Result<JSONObject,Error>) in
+        switch result {
+        case .success( let value):
+            print(value)
+        case .failure(let error):
+            print(error)
+        }
+    }
 }

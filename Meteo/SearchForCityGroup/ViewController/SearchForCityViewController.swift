@@ -56,7 +56,7 @@ class SearchForCityViewController: BaseViewController {
     @IBAction func textFieldEditingDidChange(_ sender: UITextField) {
         super.animationIsNeeded = true
         
-        let text = sender.text ?? ""
+        let text = sender.text?.uppercasedFirst ?? ""
         
         if cityContainer.count == 0, text.isEmpty == false {
             
